@@ -9,7 +9,7 @@ const allCases = [
       { name: "Maid (Mrs. Higgins)", statement: "I heard a loud thud from the study right around 8:00 PM. It sounded almost like a heavy block cracking on the hardwood floor." },
       { name: "Nephew (Arthur)", statement: "I left the house at 7:30 PM for a drink at the docks. The heavy oak door was perfectly fine when I left. No one else was inside." },
       { name: "Neighbor (Mr. Clark)", statement: "I was having a smoke outside. I saw someone pulling a thick string out from beneath the gap of the study window around 8:15 PM, but it was too dark to see a face." },
-      { name: "Lord Harrington", statement: "Arthur is the only other person who knew the safe's combination. He has been complaining about his gambling debts all month." }
+      { name: "Lord Harrington", statement: "Arthur is the only other person who knew the safe's combination. His extensive gambling debts to the harbor syndicate are due on Friday... I fear the absolute worst." }
     ],
     evidence: [
       { type: "photo", text: "Sturdy white thread caught in the internal window latch.", image: "assets/thread.png" },
@@ -17,7 +17,8 @@ const allCases = [
       { type: "photo", text: "A receipt for a 50lb block of ice found in Arthur's coat pocket.", image: "assets/receipt.png" },
       { type: "lab", title: "WATER ANALYSIS", text: "The water sample from the study floor contains high traces of brackish river silt and fish scales, matching the commercial ice sold at the local harbor docks where Arthur works." },
       { type: "document", title: "INSURANCE AMENDMENT", text: "Policy No. 8832 on 'The Eye of Leviathan'. Beneficiary recently updated to Arthur Harrington. The amendment is dated exactly three days prior to the incident." },
-      { type: "document", title: "POLICE OBSERVATION", text: "The door's internal deadbolt lever operates smoothly. A loop of thread could easily be placed around it and pulled from the outside to engage the lock, provided the thread was guided under the window frame." }
+      { type: "document", title: "POLICE OBSERVATION", text: "The door's internal deadbolt lever operates smoothly. A loop of thread could easily be placed around it and pulled from the outside to engage the lock, provided the thread was guided under the window frame." },
+      { type: "document", title: "SYNDICATE LEDGER", text: "A recovered loan shark ledger reveals Arthur owes £50,000 to the local docks syndicate. Marked 'Pay or Swim'." }
     ],
     solution: {
       suspects: ["arthur", "nephew"],
@@ -25,7 +26,8 @@ const allCases = [
         ["ice", "frozen", "melt", "water", "block"],
         ["thread", "string", "loop", "pull", "outside", "under"]
       ],
-      narrative: "Arthur used a long loop of sturdy thread to pull the internal deadbolt closed from the outside, running it underneath the window gap before pulling it free. He placed the heavy block of ice near the door mechanism to slowly melt over time, creating a pool of water to mimic a structural leak and wash away traces of the thread's intense friction."
+      narrative: "Arthur used a long loop of sturdy thread to pull the internal deadbolt closed from the outside, running it underneath the window gap before pulling it free. He placed the heavy block of ice near the door mechanism to slowly melt over time, creating a pool of water to mimic a structural leak and wash away traces of the thread's intense friction.",
+      motive: "Arthur was drowning in severe gambling debts to a local harbor crime syndicate. Being the newly added beneficiary, he needed to steal the gemstone to pay off his illicit debts immediately before the syndicate made good on lethal threats."
     }
   },
   {
@@ -34,16 +36,17 @@ const allCases = [
     date: "November 12, 1987",
     fir: "Incident: Murder. Victim: Percival Blackwood, a wealthy author. Found dead at his mahogany desk. Cause of death determined to be a fast-acting poison absorbed through the skin. A half-sealed letter was found on his desk addressed to his publisher.",
     witnesses: [
-      { name: "Rival Author (Elias)", statement: "I hated his guts, sure. He stole my ideas. But I was at the pub all evening. Ask anyone." },
+      { name: "Rival Author (Elias)", statement: "I hated his guts, sure. Everyone says he stole my ideas for his latest bestseller. But I was at the pub all evening. Ask anyone." },
       { name: "Butler (Jeeves)", statement: "Master Percival was furious earlier. He received a special delivery of artisanal sealing wax from an anonymous fan. He insisted on using it for his new manuscript." },
-      { name: "Publisher", statement: "Percival called me in a panic, saying he figured out Elias was plagiarizing him and he was sending me the proof." }
+      { name: "Publisher", statement: "Percival called me in a panic yesterday, saying he finally gathered undeniable proof that Elias was heavily plagiarizing him, and he was sending me the proof via mail today." }
     ],
     evidence: [
       { type: "photo", text: "An elegant vintage envelope with a partially melted red wax seal on the mahogany desk.", image: "assets/letter.png" },
       { type: "photo", text: "A beautiful ornate glass inkwell tipped over, black ink pooling around it.", image: "assets/ink.png" },
       { type: "lab", title: "TOXICOLOGY REPORT", text: "Traces of a rare, lethal contact poison, 'Cyanogen-X', detected. The poison is inert when dry but extremely lethal when heated and touched." },
       { type: "lab", title: "MATERIAL ANALYSIS", text: "The red sealing wax found on the envelope contains very high concentrations of Cyanogen-X. The ink in the tipped bottle is standard non-toxic India ink." },
-      { type: "document", title: "FINANCIAL RECORDS", text: "Elias recently purchased 'rare botanical extracts' from a questionable overseas vendor known for supplying illicit toxic substances." }
+      { type: "document", title: "FINANCIAL RECORDS", text: "Elias recently purchased 'rare botanical extracts' from a questionable overseas vendor known for supplying illicit toxic substances." },
+      { type: "document", title: "LAWSUIT THREAT", text: "A drafted letter of litigation found in Percival's drawer, preparing a career-ending plagiarism lawsuit against Elias." }
     ],
     solution: {
       suspects: ["elias", "rival"],
@@ -51,7 +54,8 @@ const allCases = [
         ["wax", "seal", "stamp", "envelope", "letter"],
         ["poison", "cyanogen", "toxic", "heat", "melt"]
       ],
-      narrative: "Elias purchased the illegal toxin and sent a poisoned block of artisanal sealing wax as an anonymous fan gift to Percival. When Percival happily melted the wax to seal his letter to the publisher, the intense heat activated the Cyanogen-X, turning it into a lethal contact poison that killed him instantly."
+      narrative: "Elias purchased the illegal toxin and sent a poisoned block of artisanal sealing wax as an anonymous fan gift to Percival. When Percival happily melted the wax to seal his letter to the publisher, the intense heat activated the Cyanogen-X, turning it into a lethal contact poison that killed him instantly.",
+      motive: "Deep resentment and professional ruin. Elias knew Percival had gathered the proof needed to file a career-ending plagiarism lawsuit against him. Eliminating his wildly successful rival was his twisted path to silencing the truth."
     }
   },
   {
@@ -62,14 +66,15 @@ const allCases = [
     witnesses: [
       { name: "Security Guard", statement: "The lights went out, I heard running footsteps, then something heavy hit me on the back of the head. I didn't see anything." },
       { name: "Janitor (Boris)", statement: "I was cleaning the east wing. I didn't have a flashlight. I just stayed still until the lights came back on." },
-      { name: "Curator (Ms. Vance)", statement: "I was in my office. Boris is clumsy and I caught him admiring the painting far too often." }
+      { name: "Curator (Ms. Vance)", statement: "I was in my private office reading. Boris is incredibly clumsy, I've caught him admiring the priceless painting far too often." }
     ],
     evidence: [
       { type: "photo", text: "Expensive Oxford dress shoes caked in wet mud and dried leaves.", image: "assets/shoes.png" },
       { type: "photo", text: "A heavy metallic flashlight rolling on the museum floor, bulb still faintly glowing.", image: "assets/flashlight.png" },
       { type: "lab", title: "FORENSIC ANALYSIS", text: "The flashlight casing has traces of hair and blood matching the security guard. It was clearly the weapon used to knock him out." },
-      { type: "document", title: "MUSEUM LOGS", text: "Boris is required to wear standard issued rubber-soled work boots. Ms. Vance recently returned from an outdoor excavation site and was wearing high-end Oxford shoes today." },
-      { type: "document", title: "REPLICA EXAMINATION", text: "The fake painting has faint traces of glow-in-the-dark paint around the edges, suggesting someone needed to see the edges of the frame specifically in the pitch black." }
+      { type: "document", title: "MUSEUM LOGS", text: "Boris is required to wear standard issued rubber-soled work boots to avoid slipping. Ms. Vance recently returned from an outdoor expedition and was wearing high-end Oxford shoes today." },
+      { type: "document", title: "REPLICA EXAMINATION", text: "The fake painting has faint traces of glow-in-the-dark paint around the edges, suggesting someone needed to see the edges of the frame specifically in the pitch black." },
+      { type: "document", title: "BANK STATEMENT", text: "Ms. Vance's personal accounts are severely overdrawn, transferring millions into an offshore 'Expedition Fund' over the last six months." }
     ],
     solution: {
       suspects: ["vance", "curator"],
@@ -77,7 +82,8 @@ const allCases = [
         ["shoe", "oxford", "mud", "leaves", "foot"],
         ["glow", "paint", "dark", "pitch", "faint"]
       ],
-      narrative: "Ms. Vance orchestrated the power outage to execute the heist in pitch black. She utilized glow-in-the-dark paint strictly on the inside frame of the replica painting to swap them correctly without turning on a light. During the swap, she used her heavy metallic flashlight to bludgeon the guard. Her footprint mud matches her high-end oxfords."
+      narrative: "Ms. Vance orchestrated the power outage to execute the heist in pitch black. She utilized glow-in-the-dark paint strictly on the inside frame of the replica painting to swap them correctly without turning on a light. During the swap, she used her heavy metallic flashlight to bludgeon the guard. Her footprint mud matches her high-end oxfords.",
+      motive: "Ms. Vance's obsession with a deeply restricted and expensive archaeological expedition left her utterly bankrupt. She needed the illicit funds from selling her museum's very own masterpiece on the black market to finance her private obsessions."
     }
   }
 ];
@@ -344,6 +350,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function showSuccess() {
     feedbackModal.classList.add('hidden');
+    
+    // Inject the final narrative and motive into the success overlay
+    const storyContainer = document.getElementById('solved-story-container');
+    storyContainer.innerHTML = `
+      <p style="margin-bottom: 1.5rem;"><strong>THE DEDUCTION:</strong><br>${currentCaseData.solution.narrative}</p>
+      <p><strong>THE MOTIVE:</strong><br>${currentCaseData.solution.motive}</p>
+    `;
+
     overlay.classList.remove('hidden');
     suspectInput.disabled = true;
     reasoningInput.disabled = true;
