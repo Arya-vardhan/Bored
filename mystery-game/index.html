@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mystery Case Solver</title>
+  <meta name="description" content="A single-page detective mystery case solver game.">
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Permanent+Marker&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="app">
+    <header class="header">
+      <div class="header-content">
+        <div class="confidential-stamp">CONFIDENTIAL</div>
+        <h1 id="case-title">Loading Case...</h1>
+        <div class="fir-container">
+          <p class="fir-date" id="case-date"></p>
+          <p class="fir-report" id="case-fir"></p>
+        </div>
+      </div>
+    </header>
+
+    <main class="corkboard" id="evidence-grid">
+      <!-- Evidence cards injected here -->
+    </main>
+
+    <footer class="deduction-console">
+      <form id="solution-form">
+        <div class="console-inputs">
+          <div class="input-group">
+            <label for="suspect">PRIMARY SUSPECT</label>
+            <input type="text" id="suspect" placeholder="Enter suspect name..." required>
+          </div>
+          <div class="input-group textarea-group">
+            <label for="reasoning">DEDUCTION / REASONING (Must include keywords)</label>
+            <textarea id="reasoning" placeholder="Detail your step-by-step walkthrough..." required></textarea>
+          </div>
+        </div>
+        <button type="submit" class="submit-btn" id="submit-btn">SUBMIT CONCLUSION</button>
+      </form>
+    </footer>
+
+    <!-- Success Overlay -->
+    <div id="solved-overlay" class="overlay hidden">
+      <div class="overlay-content">
+        <h2 class="solved-text" data-text="CASE SOLVED!">CASE SOLVED!</h2>
+        <p>The truth has been uncovered. Your findings have been recorded.</p>
+        <button id="next-case-btn" class="submit-btn">REVIEW BOARD</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
