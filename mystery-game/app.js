@@ -24,7 +24,8 @@ const allCases = [
       concepts: [
         ["ice", "frozen", "melt", "water", "block"],
         ["thread", "string", "loop", "pull", "outside", "under"]
-      ]
+      ],
+      narrative: "Arthur used a long loop of sturdy thread to pull the internal deadbolt closed from the outside, running it underneath the window gap before pulling it free. He placed the heavy block of ice near the door mechanism to slowly melt over time, creating a pool of water to mimic a structural leak and wash away traces of the thread's intense friction."
     }
   },
   {
@@ -49,7 +50,8 @@ const allCases = [
       concepts: [
         ["wax", "seal", "stamp", "envelope", "letter"],
         ["poison", "cyanogen", "toxic", "heat", "melt"]
-      ]
+      ],
+      narrative: "Elias purchased the illegal toxin and sent a poisoned block of artisanal sealing wax as an anonymous fan gift to Percival. When Percival happily melted the wax to seal his letter to the publisher, the intense heat activated the Cyanogen-X, turning it into a lethal contact poison that killed him instantly."
     }
   },
   {
@@ -74,7 +76,8 @@ const allCases = [
       concepts: [
         ["shoe", "oxford", "mud", "leaves", "foot"],
         ["glow", "paint", "dark", "pitch", "faint"]
-      ]
+      ],
+      narrative: "Ms. Vance orchestrated the power outage to execute the heist in pitch black. She utilized glow-in-the-dark paint strictly on the inside frame of the replica painting to swap them correctly without turning on a light. During the swap, she used her heavy metallic flashlight to bludgeon the guard. Her footprint mud matches her high-end oxfords."
     }
   }
 ];
@@ -96,6 +99,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const suspectInput = document.getElementById('suspect');
   const reasoningInput = document.getElementById('reasoning');
   const overlay = document.getElementById('solved-overlay');
+  
+  // Custom Modal Elements
+  const feedbackModal = document.getElementById('feedback-modal');
+  const modalTitle = document.getElementById('modal-title');
+  const modalBody = document.getElementById('modal-body');
+  const modalActions = document.getElementById('modal-actions');
   
   let currentCaseData = null;
 
@@ -162,6 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
     reasoningInput.disabled = false;
     document.getElementById('submit-btn').disabled = false;
     overlay.classList.add('hidden');
+    feedbackModal.classList.add('hidden');
 
     // Resume local storage inputs state
     const savedSuspect = localStorage.getItem(`${caseData.id}-suspect`);
@@ -270,23 +280,70 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       showSuccess();
     } else {
-      // Failure Logic
+      // Failure Logic (Custom Feedback Modal)
       document.body.classList.remove('error-flash');
       void document.body.offsetWidth; // Force reflow
       document.body.classList.add('error-flash');
       
-      let errorMsg = "Conclusion rejected. ";
       if (!isSuspectCorrect) {
-        errorMsg += "Your primary suspect doesn't add up based on the evidence. ";
+        showFeedbackModal(
+          "CONCLUSION REJECTED", 
+          "Your primary suspect doesn't add up correctly based on the evidence parameters. Re-examine the testimonies and clues carefully.",
+          [{ text: "DISMISS", class: "secondary-btn" }]
+        );
       } else if (missingConcepts.length > 0) {
-        // Provide a hint based on missing concepts instead of keeping them in the dark
-        errorMsg += "Your suspect is correct, but your walkthrough misses critical mechanics of the crime. Think about how they did it.";
+        showFeedbackModal(
+          "PARTIAL MATCH", 
+          "You've correctly identified the suspect! However, your walkthrough mechanics miss critical factors of how the crime was executed.<br><br>Would you like to keep investigating, or read the full deduction?",
+          [
+            { text: "RE-THINK", class: "secondary-btn" },
+            { 
+               text: "REVEAL DEDUCTION", 
+               onClick: () => {
+                 showFeedbackModal(
+                   "THE TRUTH", 
+                   currentCaseData.solution.narrative, 
+                   [{ text: "MARK SOLVED", onClick: () => {
+                     // Force solve state upon reading reveal
+                     const solved = getSolvedCases();
+                     if (!solved.includes(currentCaseData.id)) {
+                       solved.push(currentCaseData.id);
+                       localStorage.setItem('solvedCases', JSON.stringify(solved));
+                     }
+                     showSuccess();
+                   } }] 
+                 );
+               },
+               close: false
+            }
+          ]
+        );
       }
-      alert(errorMsg);
     }
   });
 
+  // Modal helper
+  function showFeedbackModal(title, body, buttons) {
+    modalTitle.textContent = title;
+    modalBody.innerHTML = body;
+    modalActions.innerHTML = '';
+    
+    buttons.forEach(btnInfo => {
+      const btn = document.createElement('button');
+      btn.className = `submit-btn ${btnInfo.class || ''}`;
+      btn.textContent = btnInfo.text;
+      btn.addEventListener('click', () => {
+        if (btnInfo.onClick) btnInfo.onClick();
+        if (btnInfo.close !== false) feedbackModal.classList.add('hidden');
+      });
+      modalActions.appendChild(btn);
+    });
+    
+    feedbackModal.classList.remove('hidden');
+  }
+
   function showSuccess() {
+    feedbackModal.classList.add('hidden');
     overlay.classList.remove('hidden');
     suspectInput.disabled = true;
     reasoningInput.disabled = true;
