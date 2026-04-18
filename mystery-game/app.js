@@ -20,8 +20,11 @@ const allCases = [
       { type: "document", title: "POLICE OBSERVATION", text: "The door's internal deadbolt lever operates smoothly. A loop of thread could easily be placed around it and pulled from the outside to engage the lock, provided the thread was guided under the window frame." }
     ],
     solution: {
-      suspect: "Arthur",
-      keywords: ["ice", "thread", "pulled", "outside"]
+      suspects: ["arthur", "nephew"],
+      concepts: [
+        ["ice", "frozen", "melt", "water", "block"],
+        ["thread", "string", "loop", "pull", "outside", "under"]
+      ]
     }
   },
   {
@@ -42,8 +45,11 @@ const allCases = [
       { type: "document", title: "FINANCIAL RECORDS", text: "Elias recently purchased 'rare botanical extracts' from a questionable overseas vendor known for supplying illicit toxic substances." }
     ],
     solution: {
-      suspect: "Elias",
-      keywords: ["wax", "poison", "heated", "fan"]
+      suspects: ["elias", "rival"],
+      concepts: [
+        ["wax", "seal", "stamp", "envelope", "letter"],
+        ["poison", "cyanogen", "toxic", "heat", "melt"]
+      ]
     }
   },
   {
@@ -64,8 +70,11 @@ const allCases = [
       { type: "document", title: "REPLICA EXAMINATION", text: "The fake painting has faint traces of glow-in-the-dark paint around the edges, suggesting someone needed to see the edges of the frame specifically in the pitch black." }
     ],
     solution: {
-      suspect: "Ms. Vance",
-      keywords: ["flashlight", "shoes", "glow", "dark"]
+      suspects: ["vance", "curator"],
+      concepts: [
+        ["shoe", "oxford", "mud", "leaves", "foot"],
+        ["glow", "paint", "dark", "pitch", "faint"]
+      ]
     }
   }
 ];
@@ -243,13 +252,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const suspectVal = suspectInput.value.trim().toLowerCase();
     const reasoningVal = reasoningInput.value.trim().toLowerCase();
     
-    // Suspect Validation (Case-insensitive)
-    const isSuspectCorrect = suspectVal.includes(currentCaseData.solution.suspect.toLowerCase());
+    // Suspect Validation (Case-insensitive array check)
+    const isSuspectCorrect = currentCaseData.solution.suspects.some(name => suspectVal.includes(name));
     
-    // Reasoning Validation (Ensure all keywords exist)
-    const missingKeywords = currentCaseData.solution.keywords.filter(kw => !reasoningVal.includes(kw.toLowerCase()));
+    // Reasoning Validation: User must hit at least one word from every required concept group
+    const missingConcepts = currentCaseData.solution.concepts.filter(group => {
+      // Return true if NO keyword in this group is found in the reasoning
+      return !group.some(kw => reasoningVal.includes(kw));
+    });
     
-    if (isSuspectCorrect && missingKeywords.length === 0) {
+    if (isSuspectCorrect && missingConcepts.length === 0) {
       // Success Logic
       const solved = getSolvedCases();
       if (!solved.includes(currentCaseData.id)) {
@@ -265,9 +277,10 @@ document.addEventListener('DOMContentLoaded', () => {
       
       let errorMsg = "Conclusion rejected. ";
       if (!isSuspectCorrect) {
-        errorMsg += "Your primary suspect doesn't add up. ";
-      } else if (missingKeywords.length > 0) {
-        errorMsg += "Your walkthrough is incorrect or misses critical mechanics of the crime (Keywords missing).";
+        errorMsg += "Your primary suspect doesn't add up based on the evidence. ";
+      } else if (missingConcepts.length > 0) {
+        // Provide a hint based on missing concepts instead of keeping them in the dark
+        errorMsg += "Your suspect is correct, but your walkthrough misses critical mechanics of the crime. Think about how they did it.";
       }
       alert(errorMsg);
     }
