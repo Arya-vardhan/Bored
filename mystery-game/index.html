@@ -3,14 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mystery Case Solver</title>
+  <title>Bored?</title>
   <meta name="description" content="A single-page detective mystery case solver game.">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
   <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Permanent+Marker&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <div id="app">
-    <header class="header">
+
+    <!-- Case Selection View -->
+    <div id="case-selection" class="case-selection">
+      <h2>CONFIDENTIAL FILES</h2>
+      <div class="folder-grid" id="folder-grid">
+        <!-- Case folders injected here -->
+      </div>
+    </div>
+
+    <!-- Active Case View -->
+    <div id="active-case-view" class="active-case-view hidden">
+      <header class="header">
       <div class="header-content">
         <div class="confidential-stamp">CONFIDENTIAL</div>
         <h1 id="case-title">Loading Case...</h1>
@@ -37,7 +49,10 @@
             <textarea id="reasoning" placeholder="Detail your step-by-step walkthrough..." required></textarea>
           </div>
         </div>
-        <button type="submit" class="submit-btn" id="submit-btn">SUBMIT CONCLUSION</button>
+        <div class="action-buttons">
+          <button type="submit" class="submit-btn" id="submit-btn">SUBMIT CONCLUSION</button>
+          <button type="button" class="back-btn" id="back-btn">BACK TO FILES</button>
+        </div>
       </form>
     </footer>
 
@@ -46,9 +61,10 @@
       <div class="overlay-content">
         <h2 class="solved-text" data-text="CASE SOLVED!">CASE SOLVED!</h2>
         <p>The truth has been uncovered. Your findings have been recorded.</p>
-        <button id="next-case-btn" class="submit-btn">REVIEW BOARD</button>
+        <button id="next-case-btn" class="submit-btn">RETURN TO FILES</button>
       </div>
     </div>
+    </div> <!-- End Active Case View -->
   </div>
 
   <script src="app.js"></script>
