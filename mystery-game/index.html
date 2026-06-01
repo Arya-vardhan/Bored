@@ -25,10 +25,9 @@
       <header class="header">
       <div class="header-content">
         <div class="confidential-stamp">CONFIDENTIAL</div>
-        <h1 id="case-title">Loading Case...</h1>
-        <div class="fir-container">
-          <p class="fir-date" id="case-date"></p>
-          <p class="fir-report" id="case-fir"></p>
+        <div class="header-main-info">
+          <h1 id="case-title">Loading Case...</h1>
+          <button id="view-fir-btn" class="view-fir-btn">📂 VIEW OFFICIAL F.I.R.</button>
         </div>
       </div>
     </header>
@@ -38,22 +37,10 @@
     </main>
 
     <footer class="deduction-console">
-      <form id="solution-form">
-        <div class="console-inputs">
-          <div class="input-group">
-            <label for="suspect">PRIMARY SUSPECT</label>
-            <input type="text" id="suspect" placeholder="Enter suspect name..." required>
-          </div>
-          <div class="input-group textarea-group">
-            <label for="reasoning">DEDUCTION / REASONING (Must include keywords)</label>
-            <textarea id="reasoning" placeholder="Detail your step-by-step walkthrough..." required></textarea>
-          </div>
-        </div>
-        <div class="action-buttons">
-          <button type="submit" class="submit-btn" id="submit-btn">SUBMIT CONCLUSION</button>
-          <button type="button" class="back-btn" id="back-btn">BACK TO FILES</button>
-        </div>
-      </form>
+      <div class="console-actions">
+        <button type="button" class="submit-btn" id="open-deduction-btn">SUBMIT CONCLUSION</button>
+        <button type="button" class="back-btn" id="back-btn">BACK TO FILES</button>
+      </div>
     </footer>
 
     <!-- Custom Feedback Modal -->
@@ -73,6 +60,104 @@
         <h2 class="solved-text" data-text="CASE SOLVED!" style="font-size: 3rem;">CASE SOLVED!</h2>
         <div id="solved-story-container" style="text-align: left; margin-bottom: 2rem; color: #ddd; font-size: 1.05rem; line-height: 1.6;"></div>
         <button id="next-case-btn" class="submit-btn" style="width: 100%;">RETURN TO FILES</button>
+      </div>
+    </div>
+
+    <!-- Full-page F.I.R. Overlay -->
+    <div id="fir-overlay" class="fir-overlay hidden">
+      <div class="fir-paper-wrapper">
+        <button id="close-fir-btn" class="close-fir-btn" aria-label="Close Case File">&times;</button>
+        <div class="fir-paper">
+          <div class="fir-paper-header">
+            <div class="fir-badge-logo">CID</div>
+            <div class="fir-title-group">
+              <h2 class="fir-dept-title">METROPOLITAN POLICE DEPARTMENT</h2>
+              <h3 class="fir-sub-title">CRIMINAL INVESTIGATION DIVISION</h3>
+              <h4 class="fir-doc-type">FIRST INFORMATION REPORT (F.I.R.)</h4>
+              <p class="fir-legal-statute">Under Section 154 of the Criminal Procedure Code</p>
+            </div>
+          </div>
+          <div class="fir-metadata-grid">
+            <div class="metadata-cell"><span class="label">1. DISTRICT/DIVISION:</span> <span class="val">CENTRAL DISTRICT</span></div>
+            <div class="metadata-cell"><span class="label">2. F.I.R. NUMBER:</span> <span class="val" id="fir-no">MPD-1987-001</span></div>
+            <div class="metadata-cell"><span class="label">3. DATE OF REPORT:</span> <span class="val" id="fir-date-val">OCTOBER 24, 1987</span></div>
+            <div class="metadata-cell"><span class="label">4. STATUS:</span> <span class="val active-status">ACTIVE INVESTIGATION</span></div>
+          </div>
+          <div class="fir-section-title">5. DETAILS OF OCCURRENCE & CRIME</div>
+          <div class="fir-body-text" id="fir-report-text">
+            <!-- Dynamic case.fir text -->
+          </div>
+          <div class="fir-section-title">6. INVESTIGATING OFFICER REMARKS</div>
+          <div class="fir-body-text">
+            Evidence gathered at the scene has been pinned to the primary corkboard. Analyze statements, lab records, and physical evidence to formulate a deduction of the execution mechanics and suspect motivation.
+          </div>
+          <div class="fir-footer-signatures">
+            <div class="signature-block">
+              <div class="sig-line"></div>
+              <div class="sig-title">COMPLAINANT SIGNATURE</div>
+            </div>
+            <div class="signature-block">
+              <div class="sig-handwriting" id="io-sig">Lead Detective</div>
+              <div class="sig-line"></div>
+              <div class="sig-title">INVESTIGATING OFFICER</div>
+            </div>
+          </div>
+          <div class="fir-confidential-stamp">CLASSIFIED</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Case Conclusion Filing Modal -->
+    <div id="deduction-modal" class="overlay hidden">
+      <div class="overlay-content modal-content deduction-modal-content">
+        <button type="button" id="close-deduction-btn" class="close-fir-btn" aria-label="Close Case File">&times;</button>
+        <h2 class="fir-doc-type" style="margin-top: 0; font-size: 1.8rem; text-align: center; text-decoration: none; letter-spacing: 2px; color: var(--accent);">CASE CONCLUSION</h2>
+        <p style="font-size: 0.9rem; color: #ccc; text-align: center; margin-bottom: 2rem; font-family: var(--font-typewriter);">File your official findings below. All parameters must connect with the physical clues.</p>
+        
+        <form id="solution-form">
+          <div class="modal-form-inputs">
+            <div class="input-group select-group" style="margin-bottom: 1.2rem; display: flex; flex-direction: column; text-align: left;">
+              <label for="suspect-select">PRIMARY SUSPECT</label>
+              <select id="suspect-select" required>
+                <option value="" disabled selected>Select suspect...</option>
+              </select>
+            </div>
+            <div class="input-group select-group" style="margin-bottom: 1.2rem; display: flex; flex-direction: column; text-align: left;">
+              <label for="method-select">EXECUTION METHOD</label>
+              <select id="method-select" required>
+                <option value="" disabled selected>Select method...</option>
+              </select>
+            </div>
+            <div class="input-group select-group" style="margin-bottom: 1.2rem; display: flex; flex-direction: column; text-align: left;">
+              <label for="motive-select">CRIMINAL MOTIVE</label>
+              <select id="motive-select" required>
+                <option value="" disabled selected>Select motive...</option>
+              </select>
+            </div>
+            <div class="input-group evidence-selector-group" style="margin-bottom: 2rem; display: flex; flex-direction: column; text-align: left; width: 100%;">
+              <label>SUPPORTING EVIDENCE (SELECT 2)</label>
+              <div id="selected-clues-preview" class="selected-clues-preview-box">
+                <!-- Dynamically populated selected clues -->
+              </div>
+              <button type="button" id="select-evidence-trigger-btn" class="submit-btn secondary-btn" style="width: 100%; height: 45px; margin-top: 0.5rem; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+                🔗 SELECT EVIDENCE FROM CORKBOARD
+              </button>
+            </div>
+          </div>
+          
+          <button type="submit" class="submit-btn" id="submit-btn" style="width: 100%; height: 50px;">FILE OFFICIAL REPORT</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Floating Selection Dock (Active when picking evidence on corkboard) -->
+    <div id="evidence-selection-dock" class="selection-dock hidden">
+      <div class="dock-content">
+        <span class="dock-title">📍 SELECTING EVIDENCE</span>
+        <span class="badge-count" id="dock-badge-count">0 / 2 CLUES LINKED</span>
+        <button type="button" id="confirm-evidence-btn" class="submit-btn" style="height: 40px; padding: 0 1.5rem; font-size: 0.9rem;">
+          CONFIRM SELECTION
+        </button>
       </div>
     </div>
     </div> <!-- End Active Case View -->
