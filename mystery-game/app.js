@@ -1070,6 +1070,9 @@ document.addEventListener('DOMContentLoaded', () => {
     solvedResetCaseBtn.addEventListener('click', () => {
       sfx.playClick();
       if (currentCaseData) {
+        // Hide solved overlay temporarily to avoid overlay stack overlap/z-index issues
+        overlay.classList.add('hidden');
+        
         showFeedbackModal(
           "RESET CASE FILE",
           `Are you sure you want to reset the case <strong>${currentCaseData.title}</strong>? This will wipe your notes, linked clues, and solved status for this case file only.`,
@@ -1078,13 +1081,16 @@ document.addEventListener('DOMContentLoaded', () => {
               text: "CONFIRM RESET",
               onClick: () => {
                 resetSingleCase(currentCaseData.id);
-                overlay.classList.add('hidden');
                 loadCase(currentCaseData);
               }
             },
             {
               text: "CANCEL",
-              class: "secondary-btn"
+              class: "secondary-btn",
+              onClick: () => {
+                // Restore solved success overlay if canceled
+                showSuccess();
+              }
             }
           ]
         );
