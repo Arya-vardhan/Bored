@@ -120,7 +120,10 @@
       <div class="overlay-content modal-content" style="max-width: 650px;">
         <h2 class="solved-text" data-text="CASE SOLVED!" style="font-size: 3rem;">CASE SOLVED!</h2>
         <div id="solved-story-container" style="text-align: left; margin-bottom: 2rem; color: #ddd; font-size: 1.05rem; line-height: 1.6;"></div>
-        <button id="next-case-btn" class="submit-btn" style="width: 100%;">RETURN TO FILES</button>
+        <div class="modal-actions" style="display: flex; gap: 15px; margin-top: 1.5rem; justify-content: center; width: 100%; flex-wrap: wrap;">
+          <button id="next-case-btn" class="submit-btn" style="flex: 1; min-width: 200px; height: 50px;">RETURN TO FILES</button>
+          <button id="solved-reset-case-btn" class="submit-btn secondary-btn reset-case-btn" style="flex: 1; min-width: 200px; height: 50px; border-color: rgba(216, 49, 49, 0.4); color: #ff7b7b;">🔄 RESET CASE</button>
+        </div>
       </div>
     </div>
 

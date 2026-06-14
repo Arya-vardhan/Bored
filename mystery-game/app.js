@@ -1065,6 +1065,33 @@ document.addEventListener('DOMContentLoaded', () => {
     renderCaseSelection();
   });
 
+  const solvedResetCaseBtn = document.getElementById('solved-reset-case-btn');
+  if (solvedResetCaseBtn) {
+    solvedResetCaseBtn.addEventListener('click', () => {
+      sfx.playClick();
+      if (currentCaseData) {
+        showFeedbackModal(
+          "RESET CASE FILE",
+          `Are you sure you want to reset the case <strong>${currentCaseData.title}</strong>? This will wipe your notes, linked clues, and solved status for this case file only.`,
+          [
+            {
+              text: "CONFIRM RESET",
+              onClick: () => {
+                resetSingleCase(currentCaseData.id);
+                overlay.classList.add('hidden');
+                loadCase(currentCaseData);
+              }
+            },
+            {
+              text: "CANCEL",
+              class: "secondary-btn"
+            }
+          ]
+        );
+      }
+    });
+  }
+
   // ==========================================================================
   // DETAIL INSPECTOR SYSTEM
   // ==========================================================================
