@@ -392,6 +392,13 @@
     box-shadow: 0 0 12px rgba(216, 49, 49, 0.4);
   }
 
+  /* Reset button specific styles */
+  .reset-case-btn:hover {
+    background: rgba(216, 49, 49, 0.15) !important;
+    border-color: var(--accent) !important;
+    color: #fff !important;
+  }
+
   /* Glow notification effect for FIR button */
   .view-fir-btn.notify-glow {
     animation: btnGlow 1.5s infinite ease-in-out;
@@ -1663,6 +1670,28 @@
   border: 2px solid var(--accent);
   border-radius: 12px;
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 25px rgba(216, 49, 49, 0.2);
+}
+
+/* Contrast fixes for text inside magnifier layers */
+.inspector-card-layer p,
+.inspector-card-layer h3,
+.inspector-card-layer h2,
+.inspector-card-layer .card-lab-header {
+  margin-bottom: 0 !important;
+}
+
+.base-gray p,
+.base-gray h3,
+.base-gray h2,
+.base-gray .card-lab-header {
+  color: #3b3528 !important;
+}
+
+.zoom-sepia p,
+.zoom-sepia h3,
+.zoom-sepia h2,
+.zoom-sepia .card-lab-header {
+  color: #1a1a1a !important;
 }
 
 .inspector-workspace {

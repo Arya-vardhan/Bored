@@ -18,6 +18,9 @@
       <div class="folder-grid" id="folder-grid">
         <!-- Case folders injected here -->
       </div>
+      <div class="selection-actions" style="margin-top: auto; display: flex; justify-content: center; padding-top: 2rem; flex-shrink: 0;">
+        <button id="reset-all-btn" class="submit-btn secondary-btn" style="height: 45px; font-size: 0.9rem;">⚠️ WIPE SYSTEM CACHE / RESET ALL</button>
+      </div>
     </div>
 
     <!-- Active Case View -->
@@ -27,9 +30,9 @@
         <div class="confidential-stamp">CONFIDENTIAL</div>
         <div class="header-main-info">
           <h1 id="case-title">Loading Case...</h1>
-          <div class="header-actions" style="display: flex; align-items: center; gap: 1rem;">
-            <button id="audio-toggle-btn" class="view-fir-btn audio-toggle-btn">🔊 AMBIENT RAIN: OFF</button>
+          <div class="header-actions" style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
             <button id="view-fir-btn" class="view-fir-btn">📂 VIEW OFFICIAL F.I.R.</button>
+            <button id="reset-case-btn" class="view-fir-btn reset-case-btn" style="border-color: rgba(216, 49, 49, 0.5); color: #ff7b7b;">🔄 RESET CASE</button>
           </div>
         </div>
       </div>
@@ -68,6 +71,7 @@
         <button type="button" class="back-btn" id="back-btn">BACK TO FILES</button>
       </div>
     </footer>
+    </div> <!-- End Active Case View -->
 
     <!-- Detail Inspector Modal -->
     <div id="inspector-modal" class="overlay hidden">
@@ -215,9 +219,7 @@
         <button type="button" id="confirm-evidence-btn" class="submit-btn" style="height: 40px; padding: 0 1.5rem; font-size: 0.9rem;">
           CONFIRM SELECTION
         </button>
-      </div>
     </div>
-    </div> <!-- End Active Case View -->
   </div>
 
   <script src="app.js"></script>

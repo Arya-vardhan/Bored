@@ -229,90 +229,6 @@ class SoundEffects {
   }
 }
 
-class RainAmbient {
-  constructor(soundFxInstance) {
-    this.soundFx = soundFxInstance;
-    this.noiseNode = null;
-    this.gainNode = null;
-    this.isPlaying = false;
-  }
-
-  start() {
-    try {
-      this.soundFx.init();
-      const ctx = this.soundFx.ctx;
-      if (ctx.state === 'suspended') ctx.resume();
-      
-      if (this.isPlaying) return;
-      this.isPlaying = true;
-      
-      // Procedurally generate pink noise for a soft natural rain patter
-      const bufferSize = 2 * ctx.sampleRate;
-      const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-      const output = noiseBuffer.getChannelData(0);
-      
-      let b0 = 0.0, b1 = 0.0, b2 = 0.0, b3 = 0.0, b4 = 0.0, b5 = 0.0, b6 = 0.0;
-      
-      for (let i = 0; i < bufferSize; i++) {
-        const white = Math.random() * 2 - 1;
-        b0 = 0.99886 * b0 + white * 0.0555179;
-        b1 = 0.99332 * b1 + white * 0.0750759;
-        b2 = 0.96900 * b2 + white * 0.1538520;
-        b3 = 0.86650 * b3 + white * 0.3104856;
-        b4 = 0.55000 * b4 + white * 0.5329522;
-        b5 = -0.7616 * b5 - white * 0.0168980;
-        output[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
-        output[i] *= 0.11; // normalise volume bounds
-        b6 = white * 0.115926;
-      }
-      
-      this.noiseNode = ctx.createBufferSource();
-      this.noiseNode.buffer = noiseBuffer;
-      this.noiseNode.loop = true;
-      
-      const filter = ctx.createBiquadFilter();
-      filter.type = 'lowpass';
-      filter.frequency.value = 450; // heavily muffle the rain to sound like a distant soft murmur
-      
-      this.gainNode = ctx.createGain();
-      this.gainNode.gain.setValueAtTime(0.0, ctx.currentTime);
-      this.gainNode.gain.linearRampToValueAtTime(0.035, ctx.currentTime + 1.5); // very faint background level
-      
-      this.noiseNode.connect(filter);
-      filter.connect(this.gainNode);
-      this.gainNode.connect(ctx.destination);
-      
-      this.noiseNode.start();
-    } catch (e) {
-      console.warn("Rain ambient start failed", e);
-      this.isPlaying = false;
-    }
-  }
-
-  stop() {
-    try {
-      if (!this.isPlaying) return;
-      this.isPlaying = false;
-      
-      const ctx = this.soundFx.ctx;
-      const currentGain = this.gainNode.gain.value;
-      this.gainNode.gain.setValueAtTime(currentGain, ctx.currentTime);
-      this.gainNode.gain.linearRampToValueAtTime(0.0, ctx.currentTime + 0.8); // 0.8s fade-out
-      
-      const nodeToStop = this.noiseNode;
-      setTimeout(() => {
-        if (nodeToStop && !this.isPlaying) {
-          try {
-            nodeToStop.stop();
-            nodeToStop.disconnect();
-          } catch (e) {}
-        }
-      }, 900);
-    } catch (e) {
-      console.warn("Rain ambient stop failed", e);
-    }
-  }
-}
 
 document.addEventListener('DOMContentLoaded', () => {
   // Global View Elements
@@ -383,51 +299,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentCaseData = null;
   let linkedEvidenceIds = []; // Track currently pinned evidence cards
 
-  const audioToggleBtn = document.getElementById('audio-toggle-btn');
-  
   // Instantiate procedural synthesizer controllers
   const sfx = new SoundEffects();
-  const rain = new RainAmbient(sfx);
-  
-  // Track rain toggle state
-  let isRainPlaying = localStorage.getItem('isRainPlaying') === 'true';
-
-  // Set initial rain button UI label based on stored state
-  if (audioToggleBtn) {
-    if (isRainPlaying) {
-      audioToggleBtn.textContent = "🔊 AMBIENT RAIN: ON";
-      audioToggleBtn.classList.add('playing');
-    } else {
-      audioToggleBtn.textContent = "🔊 AMBIENT RAIN: OFF";
-      audioToggleBtn.classList.remove('playing');
-    }
-
-    audioToggleBtn.addEventListener('click', () => {
-      sfx.init();
-      sfx.playClick(); // snappy click sound
-      isRainPlaying = !isRainPlaying;
-      localStorage.setItem('isRainPlaying', isRainPlaying);
-      
-      if (isRainPlaying) {
-        rain.start();
-        audioToggleBtn.textContent = "🔊 AMBIENT RAIN: ON";
-        audioToggleBtn.classList.add('playing');
-      } else {
-        rain.stop();
-        audioToggleBtn.textContent = "🔊 AMBIENT RAIN: OFF";
-        audioToggleBtn.classList.remove('playing');
-      }
-    });
-  }
-
-  // Resume or start rain on first player gesture if isRainPlaying is enabled
-  function handleFirstUserGesture() {
-    if (isRainPlaying) {
-      rain.start();
-    }
-    document.removeEventListener('click', handleFirstUserGesture);
-  }
-  document.addEventListener('click', handleFirstUserGesture);
 
   // Initialize
   renderCaseSelection();
@@ -934,11 +807,86 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  function resetSingleCase(caseId) {
+    localStorage.removeItem(`${caseId}-eliminated-suspects`);
+    localStorage.removeItem(`${caseId}-notes-text`);
+    localStorage.removeItem(`${caseId}-suspect-select`);
+    localStorage.removeItem(`${caseId}-method-select`);
+    localStorage.removeItem(`${caseId}-motive-select`);
+    localStorage.removeItem(`${caseId}-puzzle-solved`);
+    
+    try {
+      let solved = JSON.parse(localStorage.getItem('solvedCases') || '[]');
+      solved = solved.filter(id => id !== caseId);
+      localStorage.setItem('solvedCases', JSON.stringify(solved));
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  function resetAllCases() {
+    allCases.forEach(c => {
+      resetSingleCase(c.id);
+    });
+    localStorage.removeItem('solvedCases');
+  }
+
   // Back button functionality
   backBtn.addEventListener('click', () => {
     sfx.playFolder();
     renderCaseSelection();
   });
+
+  // Reset case and reset all event listeners
+  const resetAllBtn = document.getElementById('reset-all-btn');
+  if (resetAllBtn) {
+    resetAllBtn.addEventListener('click', () => {
+      sfx.playClick();
+      showFeedbackModal(
+        "CONFIRM SYSTEM WIPE",
+        "Are you sure you want to reset all confidential case files? This will clear all notes, solved states, and puzzle progress across the entire system. This action cannot be undone.",
+        [
+          {
+            text: "WIPE ALL CACHE",
+            onClick: () => {
+              resetAllCases();
+              renderCaseSelection();
+            }
+          },
+          {
+            text: "CANCEL",
+            class: "secondary-btn"
+          }
+        ]
+      );
+    });
+  }
+
+  const resetCaseBtn = document.getElementById('reset-case-btn');
+  if (resetCaseBtn) {
+    resetCaseBtn.addEventListener('click', () => {
+      sfx.playClick();
+      if (currentCaseData) {
+        showFeedbackModal(
+          "RESET CASE FILE",
+          `Are you sure you want to reset the case <strong>${currentCaseData.title}</strong>? This will wipe your notes, linked clues, and solved status for this case file only.`,
+          [
+            {
+              text: "CONFIRM RESET",
+              onClick: () => {
+                resetSingleCase(currentCaseData.id);
+                loadCase(currentCaseData);
+              }
+            },
+            {
+              text: "CANCEL",
+              class: "secondary-btn"
+            }
+          ]
+        );
+      }
+    });
+  }
 
   // Case Conclusion Modal filing triggers
   if (openDeductionBtn) {
