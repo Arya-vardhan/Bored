@@ -42,17 +42,16 @@
 
  /* Header Sections */
   .header {
-    position: fixed;
-    top: 0;
-    left: 0;
+    position: relative;
     width: 100%;
-    background: rgba(18, 18, 20, 0.45);
+    background: rgba(18, 18, 20, 0.95);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     padding: 0.8rem 1.5rem;
     border-bottom: 1px solid rgba(216, 49, 49, 0.2);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     z-index: 500;
+    flex-shrink: 0;
   }
 
   .header-content {
@@ -385,6 +384,14 @@
     transform: translateY(0);
   }
 
+  /* Audio toggle active glow override */
+  .audio-toggle-btn.playing {
+    border-color: var(--accent);
+    color: #fff;
+    background: rgba(216, 49, 49, 0.12);
+    box-shadow: 0 0 12px rgba(216, 49, 49, 0.4);
+  }
+
   /* Glow notification effect for FIR button */
   .view-fir-btn.notify-glow {
     animation: btnGlow 1.5s infinite ease-in-out;
@@ -446,13 +453,39 @@
       radial-gradient(var(--cork-dark) 15%, transparent 16%);
     background-size: 30px 30px;
     background-position: 0 0, 15px 15px;
-    padding: 7.5rem 3rem 8rem 3rem;
+    padding: 2rem 3rem 8rem 3rem;
     overflow-y: auto;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 2.5rem;
     align-items: start;
     box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.85);
+  }
+
+  /* Dynamic SVG String Board */
+  #string-board {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  #string-board path {
+    stroke: #ff3b3b;
+    stroke-width: 6px;
+    fill: none;
+    stroke-linecap: round;
+    filter: drop-shadow(3px 5px 6px rgba(0, 0, 0, 0.8));
+    stroke-dasharray: 1200;
+    stroke-dashoffset: 1200;
+    animation: drawString 0.7s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  }
+
+  @keyframes drawString {
+    to {
+      stroke-dashoffset: 0;
+    }
   }
 
  /* Evidence Cards */
@@ -464,6 +497,7 @@
    cursor: grab;
    color: #111;
    animation: fadeIn 0.6s ease backwards;
+   z-index: 5;
  }
 
  .card:active {
@@ -611,15 +645,16 @@
  }
 
  /* Case Selection UI */
- .case-selection {
-   background-color: #111;
-   background-image: linear-gradient(#1a1a1a 1px, transparent 1px), linear-gradient(90deg, #1a1a1a 1px, transparent 1px);
-   background-size: 30px 30px;
-   min-height: 100vh;
-   padding: 4rem;
-   display: flex;
-   flex-direction: column;
- }
+  .case-selection {
+    background-color: #111;
+    background-image: linear-gradient(#1a1a1a 1px, transparent 1px), linear-gradient(90deg, #1a1a1a 1px, transparent 1px);
+    background-size: 30px 30px;
+    height: 100%;
+    overflow-y: auto;
+    padding: 4rem;
+    display: flex;
+    flex-direction: column;
+  }
 
  .case-selection h2 {
    font-family: var(--font-typewriter);
@@ -1083,15 +1118,16 @@
    background: rgba(255,255,255,0.2);
  }
 
- .overlay-content {
-   text-align: center;
-   background: #151515;
-   padding: 5rem 4rem;
-   border: 2px solid var(--accent);
-   border-radius: 12px;
-   box-shadow: 0 0 80px rgba(216, 49, 49, 0.25);
-   max-width: 600px;
- }
+  .overlay-content {
+    position: relative;
+    text-align: center;
+    background: #151515;
+    padding: 5rem 4rem;
+    border: 2px solid var(--accent);
+    border-radius: 12px;
+    box-shadow: 0 0 80px rgba(216, 49, 49, 0.25);
+    max-width: 600px;
+  }
 
  .solved-text {
    font-family: var(--font-typewriter);
@@ -1165,6 +1201,253 @@
    animation: flashError 0.8s ease-out;
  }
 
+  /* Collapsible Detective Notebook Drawer */
+  .notebook-drawer {
+    position: fixed;
+    right: 0;
+    top: 90px;
+    bottom: 90px;
+    width: 380px;
+    z-index: 450;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: -10px 10px 30px rgba(0, 0, 0, 0.7);
+    pointer-events: auto;
+    border-left: 1px solid rgba(0,0,0,0.3);
+  }
+
+  .notebook-drawer.closed {
+    transform: translateX(100%);
+  }
+
+  .notebook-toggle-btn {
+    position: absolute;
+    left: -42px;
+    top: 40px;
+    width: 42px;
+    height: 140px;
+    background: #c39d5b;
+    border: 2px solid #5c3a21;
+    border-right: none;
+    border-radius: 8px 0 0 8px;
+    cursor: pointer;
+    color: #222;
+    font-family: var(--font-typewriter);
+    font-weight: bold;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: -5px 4px 15px rgba(0, 0, 0, 0.4);
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+
+  .notebook-toggle-btn:hover {
+    background: #dbb87d;
+    box-shadow: -8px 4px 20px rgba(216, 49, 49, 0.35), -5px 4px 15px rgba(0, 0, 0, 0.4);
+    color: #000;
+  }
+
+  .notebook-toggle-btn span {
+    letter-spacing: 2px;
+  }
+
+  .notebook-binding {
+    height: 28px;
+    background: linear-gradient(to bottom, #5c3a21, #402817);
+    border-bottom: 3px solid #2d1c10;
+    width: 100%;
+    position: relative;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.35);
+    flex-shrink: 0;
+  }
+
+  .notebook-binding::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    transform: translateY(-50%);
+    background-image: radial-gradient(circle, #222 2px, transparent 3px);
+    background-size: 50px 100%;
+    opacity: 0.85;
+  }
+
+  .notebook-paper {
+    flex: 1;
+    background-color: var(--notepad-bg);
+    position: relative;
+    box-sizing: border-box;
+    padding: 1.5rem 1.2rem 1.5rem 2.8rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    border-radius: 0 0 0 6px;
+    border-left: 1px solid rgba(0,0,0,0.1);
+  }
+
+  .notebook-paper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 2.2rem;
+    width: 2px;
+    height: 100%;
+    background-color: rgba(216, 49, 49, 0.35);
+    border-right: 1px solid rgba(216, 49, 49, 0.15);
+  }
+
+  .notebook-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .notebook-section-title {
+    font-family: var(--font-handwriting);
+    font-size: 1.25rem;
+    color: #b82525;
+    margin: 0.5rem 0 1rem 0;
+    letter-spacing: 1.5px;
+    text-shadow: 1px 1px 0px rgba(0,0,0,0.05);
+    border-bottom: 1px dashed rgba(184, 37, 37, 0.2);
+    padding-bottom: 4px;
+  }
+
+  .notebook-suspects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .notebook-suspect-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-typewriter);
+    font-size: 0.95rem;
+    color: #1b365d;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.25s ease;
+    position: relative;
+    padding-right: 120px;
+  }
+
+  .notebook-suspect-item input[type="checkbox"] {
+    cursor: pointer;
+    accent-color: #1b365d;
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  .notebook-suspect-item.eliminated {
+    text-decoration: line-through;
+    text-decoration-color: rgba(184, 37, 37, 0.85);
+    text-decoration-thickness: 2px;
+    opacity: 0.55;
+    font-style: italic;
+    color: #66788f;
+  }
+
+  /* Red Distressed 'RULED OUT' Ink Stamp */
+  .notebook-stamp {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%) rotate(-8deg);
+    border: 2px double rgba(184, 37, 37, 0.75);
+    color: rgba(184, 37, 37, 0.75);
+    padding: 2px 8px;
+    font-family: var(--font-handwriting);
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 4px;
+    pointer-events: none;
+    letter-spacing: 1.5px;
+    transform-origin: center center;
+    background: rgba(249, 242, 184, 0.9); /* Masks background pad lines */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    animation: stampIn 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+
+  @keyframes stampIn {
+    0% {
+      opacity: 0;
+      transform: translateY(-50%) scale(2.2) rotate(-22deg);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(-50%) scale(1) rotate(-8deg);
+    }
+  }
+
+  .notebook-divider {
+    height: 1px;
+    border-bottom: 1px dashed rgba(27, 54, 93, 0.15);
+    margin: 1.5rem 0 1rem 0;
+  }
+
+  .textarea-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #notebook-textarea {
+    width: 100%;
+    flex: 1;
+    min-height: 250px;
+    background: transparent;
+    border: none;
+    outline: none;
+    resize: none;
+    font-family: var(--font-typewriter);
+    font-size: 1.05rem;
+    line-height: 1.8rem;
+    color: #2e3b4e; /* Graphite slate gray */
+    padding: 0;
+    margin: 0;
+    background-image: linear-gradient(transparent 95%, var(--notepad-lines) 5%);
+    background-size: 100% 1.8rem;
+    background-attachment: local;
+    text-shadow: 0.5px 0.5px 1px rgba(27, 54, 93, 0.25), 0px 0px 0.5px rgba(0, 0, 0, 0.15); /* Pencil graphite grainy shadow */
+  }
+
+  /* Page flip animations */
+  .notebook-paper.page-turning {
+    animation: turnPage 0.48s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  }
+
+  @keyframes turnPage {
+    0% {
+      transform: translateY(0) rotate(0);
+      opacity: 1;
+    }
+    45% {
+      transform: translateY(-100%) rotate(-4deg);
+      opacity: 0;
+    }
+    50% {
+      transform: translateY(100%) rotate(4deg);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0) rotate(0);
+      opacity: 1;
+    }
+  }
+
  /* Responsive */
  @media (max-width: 900px) {
    #solution-form {
@@ -1188,7 +1471,7 @@
    }
 
    .corkboard {
-     padding: 1.5rem;
+     padding: 1.5rem 1.5rem 8rem 1.5rem;
    }
 
    .confidential-stamp {
@@ -1251,4 +1534,588 @@
    .view-fir-btn {
      justify-content: center;
    }
+
+   /* Mobile Detective Notebook Rules */
+   .notebook-drawer {
+     width: calc(100% - 42px);
+     top: 140px; /* Lower down on mobile to clear header and stack actions */
+     bottom: 80px;
+   }
+    
+   .notebook-toggle-btn {
+     width: 42px;
+     height: 110px;
+     left: -42px;
+     font-size: 0.8rem;
+   }
+
+   #notebook-textarea {
+     min-height: 180px;
+   }
+
+   /* Stacking and centering deduction console on mobile */
+   .deduction-console {
+     padding: 0 1.5rem;
+     bottom: 1rem;
+   }
+
+   .console-actions {
+     flex-direction: column;
+     gap: 0.8rem;
+     width: 100%;
+   }
+
+   .console-actions button {
+     width: 100% !important;
+     margin: 0 !important;
+   }
+
+   .selection-dock {
+     padding: 1rem;
+     bottom: 1rem;
+   }
+
+   .dock-content {
+     flex-direction: column;
+     gap: 0.6rem;
+     text-align: center;
+   }
+
+   .dock-content button {
+     width: 100%;
+   }
  }
+
+ @media (max-width: 600px) {
+   .case-selection {
+     padding: 2rem 1.5rem;
+   }
+
+   .case-selection h2 {
+     font-size: 2.2rem;
+     margin-bottom: 2.5rem;
+     letter-spacing: 2px;
+   }
+
+   .folder-grid {
+     gap: 2rem;
+   }
+
+   .folder-card {
+     width: 100%;
+     max-width: 280px;
+     height: auto;
+     aspect-ratio: 5 / 6;
+   }
+
+   .overlay-content {
+     padding: 2.5rem 1.5rem !important;
+   }
+
+   .solved-text {
+     font-size: 2.5rem !important;
+   }
+
+   /* Mobile workspace magnifier adjustments */
+   .inspector-modal-content {
+     padding: 1.5rem !important;
+   }
+
+   .inspector-workspace {
+     height: 320px !important;
+   }
+
+   .inspector-card-layer {
+     width: 280px !important;
+     height: 205px !important;
+   }
+
+   .zoom-sepia {
+     width: 560px !important;
+     height: 410px !important;
+     font-size: 1.5rem !important;
+     padding: 1.5rem !important;
+   }
+
+   .zoom-sepia .card-evidence-photo {
+     height: 180px !important;
+   }
+
+   .deduction-modal-content {
+     padding: 2rem 1.5rem !important;
+     max-height: 90vh;
+   }
+
+   .puzzle-modal-content {
+     padding: 2rem 1rem !important;
+   }
+ }
+
+/* ==========================================================================
+   DETAIL INSPECTOR & LAB MINI-GAME STYLES
+   ========================================================================== */
+
+.inspector-modal-content {
+  max-width: 620px;
+  width: 90%;
+  padding: 2.5rem;
+  background: rgba(18, 18, 20, 0.99);
+  border: 2px solid var(--accent);
+  border-radius: 12px;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 25px rgba(216, 49, 49, 0.2);
+}
+
+.inspector-workspace {
+  position: relative;
+  width: 100%;
+  height: 380px;
+  background-color: #0f0f11;
+  background-image: 
+    radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 15px 15px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: none; /* Hide default cursor to make the magnifying lens track it */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.85);
+}
+
+.inspector-card-layer {
+  position: absolute;
+  width: 340px;
+  height: 250px;
+  border-radius: 4px;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+  box-sizing: border-box;
+}
+
+.base-gray {
+  background-color: #c4bca6;
+  color: #3b3528;
+  filter: grayscale(100%) blur(1.2px) contrast(0.85);
+}
+
+.magnifying-lens {
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 4px solid #bfa462; /* Vintage Brass Gold Frame */
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.65), inset 2px 3px 10px rgba(0,0,0,0.55), 0 8px 25px rgba(0,0,0,0.85);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  z-index: 10;
+}
+
+.zoom-sepia {
+  background-color: #f7f4eb;
+  color: #1a1a1a;
+  filter: sepia(0.7) saturate(1.35) contrast(1.1);
+  width: 680px; /* 2x size */
+  height: 500px;
+  position: absolute;
+  padding: 3rem;
+  font-size: 1.9rem;
+  box-shadow: none;
+}
+
+/* Base Card Content Inspectors */
+.inspector-card-layer.card-evidence {
+  padding-bottom: 5.5rem;
+}
+.inspector-card-layer.card-evidence-photo {
+  height: 130px;
+  margin-bottom: 0.8rem;
+  background-size: cover;
+  background-position: center;
+  box-shadow: inset 0 0 15px #000;
+  width: 100%;
+}
+.zoom-sepia .card-evidence-photo {
+  height: 260px; /* 2x size */
+  margin-bottom: 1.6rem;
+}
+.inspector-card-layer p {
+  text-align: center;
+  font-size: 0.9rem;
+  margin: 0;
+}
+.zoom-sepia p {
+  font-size: 1.8rem;
+}
+.inspector-card-layer.card-lab {
+  border: 1px solid #999;
+  padding: 1.5rem;
+}
+.inspector-card-layer.card-document {
+  padding: 1.5rem;
+  background-color: #ebdcb9;
+}
+.zoom-sepia.card-document {
+  background-color: #f7f4eb;
+  padding: 3rem;
+}
+
+/* Hidden Microscopic Clues Vector Icons and Texts */
+.hidden-clue {
+  position: absolute;
+  pointer-events: none;
+  font-family: var(--font-handwriting);
+  font-size: 0.65rem;
+  color: #a31c1c;
+  font-weight: bold;
+  opacity: 0;
+  transform: rotate(-10deg);
+  text-shadow: 0.5px 0.5px 0px rgba(0,0,0,0.1);
+}
+
+.zoom-sepia .hidden-clue {
+  opacity: 1; /* Fully visible in zoom lens! */
+}
+
+/* Lab Workstation Puzzle Layouts */
+.puzzle-modal-content {
+  max-width: 680px;
+  width: 95%;
+  padding: 2.5rem;
+  background: rgba(18, 18, 20, 0.99);
+  border: 2px solid var(--accent);
+  border-radius: 12px;
+  box-shadow: 0 0 50px rgba(0,0,0,0.95);
+  position: relative;
+}
+
+.puzzle-workspace {
+  width: 100%;
+  min-height: 280px;
+  background: #0d0d0f;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* DNA / Oscilloscope Matcher */
+.oscilloscope-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.oscilloscope-screen {
+  width: 100%;
+  height: 120px;
+  background-color: #06140b;
+  border: 2px solid #133a1f;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 20px #000;
+}
+
+.oscilloscope-screen::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-image: 
+    linear-gradient(rgba(19, 58, 31, 0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(19, 58, 31, 0.15) 1px, transparent 1px);
+  background-size: 15px 15px;
+}
+
+.oscilloscope-label {
+  position: absolute;
+  top: 6px;
+  left: 10px;
+  font-family: var(--font-typewriter);
+  font-size: 0.7rem;
+  font-weight: bold;
+  color: #39a85a;
+  letter-spacing: 1px;
+  z-index: 5;
+  text-shadow: 0 0 4px #000;
+}
+
+.osci-canvas {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+}
+
+.puzzle-controls {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 0.8rem;
+  background: rgba(255,255,255,0.02);
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+.puzzle-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #bbb;
+  font-family: var(--font-typewriter);
+  font-size: 0.8rem;
+}
+
+.puzzle-slider-row label {
+  width: 130px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.puzzle-slider-row input[type="range"] {
+  flex: 1;
+  height: 4px;
+  background: #252528;
+  border-radius: 2px;
+  outline: none;
+  accent-color: var(--accent);
+}
+
+/* Cipher Wheel Decrypter */
+.cipher-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  width: 100%;
+}
+
+.cipher-disc-wrapper {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, #aa8657 20%, #765431 60%, #3e2815 100%);
+  border: 3px solid #d4af37;
+  border-radius: 50%;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7), inset 0 2px 4px rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  user-select: none;
+}
+
+.cipher-disc-wrapper:active {
+  cursor: grabbing;
+}
+
+.cipher-letters {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.cipher-letter-node {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  font-family: var(--font-typewriter);
+  font-size: 0.7rem;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-shadow: 0px 1px 2px #000;
+}
+
+.cipher-center-hub {
+  width: 50px;
+  height: 50px;
+  background: #d4af37;
+  border-radius: 50%;
+  border: 3px double #3e2815;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #111;
+  font-size: 0.85rem;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+  font-family: var(--font-typewriter);
+  z-index: 5;
+}
+
+.cipher-arrow {
+  position: absolute;
+  top: -12px;
+  font-size: 1.1rem;
+  color: #d4af37;
+  text-shadow: 0 0 5px rgba(0,0,0,0.5);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.cipher-text-display {
+  width: 100%;
+  background: rgba(0,0,0,0.3);
+  border: 1px dashed rgba(255,255,255,0.1);
+  border-radius: 6px;
+  padding: 0.8rem 1.2rem;
+  color: #ccc;
+  font-family: var(--font-typewriter);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  text-align: center;
+  min-height: 55px;
+  box-sizing: border-box;
+}
+
+/* Shredded Document Restoration */
+.shredred-container {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 1.2rem;
+  border-radius: 8px;
+  min-height: 220px;
+  border: 1px dashed rgba(255,255,255,0.08);
+  box-sizing: border-box;
+}
+
+.shred-strip {
+  width: 72px;
+  height: 180px;
+  background: #fdfdfd;
+  border: 1px solid rgba(0,0,0,0.12);
+  box-shadow: 2px 4px 8px rgba(0,0,0,0.3);
+  cursor: grab;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+  border-radius: 1px;
+}
+
+.shred-strip:active {
+  cursor: grabbing;
+  transform: scale(1.02);
+  box-shadow: 4px 8px 12px rgba(0,0,0,0.4);
+  z-index: 50;
+}
+
+.shred-content-block {
+  position: absolute;
+  width: 360px; /* combined total width = 5 strips x 72px */
+  height: 100%;
+  top: 0;
+  background-color: #f7f4eb;
+  color: #222;
+  font-family: var(--font-typewriter);
+  font-size: 0.58rem;
+  padding: 12px 8px;
+  pointer-events: none;
+  box-sizing: border-box;
+  line-height: 1.3;
+}
+
+/* Retro-Tech Laboratory Verified Stamps */
+.puzzle-stamp {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-12deg);
+  border: 4px double var(--accent);
+  color: var(--accent);
+  padding: 8px 24px;
+  font-family: var(--font-typewriter);
+  font-size: 2.2rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  border-radius: 8px;
+  pointer-events: none;
+  z-index: 80;
+  background: rgba(18, 18, 20, 0.96);
+  box-shadow: 0 5px 25px rgba(0,0,0,0.85);
+  animation: stampIn 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.analyzed-stamp-badge {
+  color: #39a85a !important;
+  border-color: #39a85a !important;
+}
+
+/* Card Button Glows and Stamps */
+.card-inspect-btn,
+.card-analyze-btn {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #eee;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: var(--font-system);
+  font-size: 0.72rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 5;
+  opacity: 0.7;
+  backdrop-filter: blur(4px);
+}
+
+.card:hover .card-inspect-btn,
+.card:hover .card-analyze-btn {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.card-inspect-btn:hover,
+.card-analyze-btn:hover {
+  background: #333 !important;
+  color: #fff !important;
+  border-color: #555 !important;
+  transform: scale(1.05);
+}
+
+.card-analyze-btn.glowing-btn {
+  background: rgba(216, 49, 49, 0.2) !important;
+  border-color: var(--accent) !important;
+  color: #fff !important;
+  opacity: 0.9;
+  animation: btnGlow 1.8s infinite ease-in-out;
+}
+
+.card-analyze-btn.glowing-btn:hover {
+  background: var(--accent) !important;
+}
+
+.solved-puzzle-badge {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  color: #39a85a;
+  border: 2px solid #39a85a;
+  padding: 3px 6px;
+  font-family: var(--font-typewriter);
+  font-size: 0.65rem;
+  font-weight: bold;
+  transform: rotate(-10deg);
+  background: rgba(18, 18, 20, 0.85);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  z-index: 6;
+  pointer-events: none;
+  letter-spacing: 0.5px;
+}

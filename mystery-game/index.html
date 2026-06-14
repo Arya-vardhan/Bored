@@ -27,14 +27,40 @@
         <div class="confidential-stamp">CONFIDENTIAL</div>
         <div class="header-main-info">
           <h1 id="case-title">Loading Case...</h1>
-          <button id="view-fir-btn" class="view-fir-btn">📂 VIEW OFFICIAL F.I.R.</button>
+          <div class="header-actions" style="display: flex; align-items: center; gap: 1rem;">
+            <button id="audio-toggle-btn" class="view-fir-btn audio-toggle-btn">🔊 AMBIENT RAIN: OFF</button>
+            <button id="view-fir-btn" class="view-fir-btn">📂 VIEW OFFICIAL F.I.R.</button>
+          </div>
         </div>
       </div>
     </header>
 
-    <main class="corkboard" id="evidence-grid">
+    <main class="corkboard" id="evidence-grid" style="position: relative;">
+      <!-- Dynamic SVG Red String Board -->
+      <svg id="string-board"></svg>
       <!-- Evidence cards injected here -->
     </main>
+
+    <!-- Collapsible Detective Notebook Side Drawer -->
+    <div id="detective-notebook" class="notebook-drawer closed">
+      <button id="notebook-toggle-btn" class="notebook-toggle-btn" aria-label="Toggle Notebook">
+        <span>📓 NOTES</span>
+      </button>
+      <div class="notebook-binding"></div>
+      <div class="notebook-paper">
+        <div class="notebook-content">
+          <h2 class="notebook-section-title">ELIMINATE SUSPECTS</h2>
+          <div id="notebook-suspects-list" class="notebook-suspects-list">
+            <!-- Dynamically populated checklist -->
+          </div>
+          <div class="notebook-divider"></div>
+          <h2 class="notebook-section-title">CASE OBSERVATIONS</h2>
+          <div class="textarea-container">
+            <textarea id="notebook-textarea" placeholder="Record your observations and deductions here..."></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <footer class="deduction-console">
       <div class="console-actions">
@@ -42,6 +68,37 @@
         <button type="button" class="back-btn" id="back-btn">BACK TO FILES</button>
       </div>
     </footer>
+
+    <!-- Detail Inspector Modal -->
+    <div id="inspector-modal" class="overlay hidden">
+      <div class="overlay-content inspector-modal-content">
+        <button type="button" id="close-inspector-btn" class="close-fir-btn" aria-label="Close Inspector">&times;</button>
+        <h2 class="fir-doc-type" style="margin-top: 0; font-size: 1.6rem; text-align: center; text-decoration: none; letter-spacing: 2px; color: var(--accent);">🔍 DETAIL INSPECTOR</h2>
+        <p style="font-size: 0.85rem; color: #ccc; text-align: center; margin-bottom: 1.5rem; font-family: var(--font-typewriter);">Hover cursor over the card to slide the circular brass lens and scan for hidden microscopic clues.</p>
+        
+        <div id="inspector-workspace" class="inspector-workspace">
+          <div id="inspector-base-layer" class="inspector-card-layer base-gray"></div>
+          <div id="magnifying-lens" class="magnifying-lens">
+            <div id="inspector-zoom-layer" class="inspector-card-layer zoom-sepia"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Laboratory Matching & Decryption Puzzle Modal -->
+    <div id="puzzle-modal" class="overlay hidden">
+      <div class="overlay-content puzzle-modal-content">
+        <button type="button" id="close-puzzle-btn" class="close-fir-btn" aria-label="Close Puzzle">&times;</button>
+        <h2 id="puzzle-title" class="fir-doc-type" style="margin-top: 0; font-size: 1.6rem; text-align: center; text-decoration: none; letter-spacing: 2px; color: var(--accent);">🔬 LAB WORKSTATION</h2>
+        <p id="puzzle-instructions" style="font-size: 0.85rem; color: #ccc; text-align: center; margin-bottom: 1.5rem; font-family: var(--font-typewriter);">Perform advanced analytics to verify evidence parameters.</p>
+        
+        <div id="puzzle-workspace" class="puzzle-workspace">
+          <!-- puzzles dynamically loaded here -->
+        </div>
+        
+        <div id="puzzle-stamp" class="puzzle-stamp hidden">VERIFIED</div>
+      </div>
+    </div>
 
     <!-- Custom Feedback Modal -->
     <div id="feedback-modal" class="overlay hidden">
