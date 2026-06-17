@@ -363,6 +363,11 @@ document.addEventListener('DOMContentLoaded', () => {
     caseSelectionView.classList.add('hidden');
     activeCaseView.classList.remove('hidden');
 
+    // Reset scroll and header visibility
+    if (evidenceGrid) evidenceGrid.scrollTop = 0;
+    const headerEl = document.querySelector('.header');
+    if (headerEl) headerEl.classList.remove('header-hidden');
+
     // Populate header
     titleEl.textContent = caseData.title;
 
@@ -1583,6 +1588,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     renderShreds();
+  }
+
+  // Auto-hide header on scroll down, show on scroll up
+  let lastScrollTop = 0;
+  const headerEl = document.querySelector('.header');
+  if (evidenceGrid && headerEl) {
+    evidenceGrid.addEventListener('scroll', () => {
+      const scrollTop = evidenceGrid.scrollTop;
+      // Do not collapse when near the top of the board
+      if (scrollTop <= 40) {
+        headerEl.classList.remove('header-hidden');
+      } else if (scrollTop > lastScrollTop) {
+        // Scrolling down -> Hide header
+        headerEl.classList.add('header-hidden');
+      } else {
+        // Scrolling up -> Show header
+        headerEl.classList.remove('header-hidden');
+      }
+      lastScrollTop = scrollTop;
+    });
   }
 
   // Redraw strings on window resize to match layout updates
