@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const inspectorZoomLayer = document.getElementById('inspector-zoom-layer');
   const magnifyingLens = document.getElementById('magnifying-lens');
   const inspectorWorkspace = document.getElementById('inspector-workspace');
+  const inspectorInstructions = document.getElementById('inspector-instructions');
 
   // Lab Puzzle Elements
   const puzzleModal = document.getElementById('puzzle-modal');
@@ -311,7 +312,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (isPuzzleCard && !isSolved) {
         card.classList.add('card-locked-puzzle');
         // Custom puzzle text depending on puzzle type/ID if not solved
-        if (ev.id === 'water') {
+        if (ev.puzzle.lockedText) {
+          cardText = ev.puzzle.lockedText;
+        } else if (ev.id === 'water') {
           cardText = "🔬 WATER SPECTROSCOPY ANALYSIS REQUIRED. Perform compositional wave alignment matching to verify the study floor water source.";
         } else if (ev.id === 'records' || ev.id === 'logs') {
           cardText = `🔓 ENCRYPTED TRANSMISSION / RECORD. Solve the alphabetical cipher shift to read the confidential file.`;
@@ -341,6 +344,13 @@ document.addEventListener('DOMContentLoaded', () => {
           <h3>${ev.title}</h3>
           <p>${cardText}</p>
         `;
+      } else if (ev.type === 'folder') {
+        card.className = 'card card-folder';
+        innerHTML = `
+          <div class="card-folder-tab-label">📂 DOSSIER</div>
+          <h3>${ev.title}</h3>
+          <p>${cardText}</p>
+        `;
       }
 
       // Solved badge indicator
@@ -354,9 +364,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const btnLabel = ev.puzzle.btnLabel || "🔬 ANALYZE";
         actionButtons = `<button type="button" class="card-analyze-btn glowing-btn" data-id="${ev.id}">${btnLabel}</button>`;
       } else {
-        actionButtons = `<button type="button" class="card-link-btn" data-id="${ev.id}">📌 LINK CLUE</button>`;
-        if (!isPuzzleCard && (ev.type === 'photo' || ev.type === 'document' || ev.type === 'lab')) {
-          actionButtons += `<button type="button" class="card-inspect-btn" data-id="${ev.id}">🔍 INSPECT</button>`;
+        if (ev.type !== 'folder') {
+          actionButtons = `<button type="button" class="card-link-btn" data-id="${ev.id}">📌 LINK CLUE</button>`;
+        }
+        if (!isPuzzleCard && (ev.type === 'photo' || ev.type === 'document' || ev.type === 'lab' || ev.type === 'folder')) {
+          const btnLabel = ev.type === 'folder' ? "📂 OPEN FILE" : "🔍 INSPECT";
+          actionButtons += `<button type="button" class="card-inspect-btn" data-id="${ev.id}">${btnLabel}</button>`;
         }
       }
 
@@ -859,6 +872,12 @@ document.addEventListener('DOMContentLoaded', () => {
     sfx.playFolder();
     inspectorModal.classList.remove('hidden');
     
+    if (evidence.type === 'folder') {
+      inspectorModal.classList.add('large-inspector');
+    } else {
+      inspectorModal.classList.remove('large-inspector');
+    }
+    
     // Clear layers
     inspectorBaseLayer.innerHTML = '';
     inspectorZoomLayer.innerHTML = '';
@@ -872,44 +891,79 @@ document.addEventListener('DOMContentLoaded', () => {
     let innerHTML = '';
     let zoomHTML = '';
     
-    // Get hidden clue configurations from case data
-    const clueText = evidence.inspector ? evidence.inspector.clueText : '';
-    const clueStyle = evidence.inspector ? evidence.inspector.clueStyle : '';
-    const hiddenClueTag = clueText ? `<div class="hidden-clue" style="${clueStyle}">${clueText}</div>` : '';
+    if (evidence.type === 'folder') {
+      // Hide magnifying lens circular track
+      magnifyingLens.style.display = 'none';
+      if (inspectorInstructions) inspectorInstructions.style.display = 'none';
+      inspectorBaseLayer.style.overflowY = 'auto';
+      
+      let docsHTML = `<div class="dossier-container">
+        <h2 class="dossier-main-title">${evidence.title}</h2>`;
+      
+      if (evidence.documents && evidence.documents.length > 0) {
+        evidence.documents.forEach((doc, idx) => {
+          docsHTML += `
+            <div class="dossier-paper">
+              <div class="dossier-paper-header">PAGE ${idx + 1}: ${doc.title}</div>
+              <div class="dossier-paper-content">${doc.content}</div>
+            </div>
+          `;
+        });
+      } else {
+        docsHTML += `<p>No documents inside this dossier.</p>`;
+      }
+      
+      docsHTML += `</div>`;
+      innerHTML = docsHTML;
+    } else {
+      // Reset magnifier and base layer styles
+      magnifyingLens.style.display = 'block';
+      if (inspectorInstructions) inspectorInstructions.style.display = 'block';
+      inspectorBaseLayer.style.overflowY = 'hidden';
+      
+      // Get hidden clue configurations from case data
+      const clueText = evidence.inspector ? evidence.inspector.clueText : '';
+      const clueStyle = evidence.inspector ? evidence.inspector.clueStyle : '';
+      const hiddenClueTag = clueText ? `<div class="hidden-clue" style="${clueStyle}">${clueText}</div>` : '';
 
-    if (evidence.type === 'photo') {
-      innerHTML = `
-        <div class="card-evidence-photo" style="background-image: url('${evidence.image}')"></div>
-        <p>${evidence.text}</p>
-      `;
-      zoomHTML = `
-        <div class="card-evidence-photo" style="background-image: url('${evidence.image}')"></div>
-        <p>${evidence.text}</p>
-        ${hiddenClueTag}
-      `;
-    } else if (evidence.type === 'lab') {
-      innerHTML = `
-        <div class="card-lab-header">${evidence.title || "LAB REPORT"}</div>
-        <p>${evidence.text}</p>
-      `;
-      zoomHTML = `
-        <div class="card-lab-header">${evidence.title || "LAB REPORT"}</div>
-        <p>${evidence.text}</p>
-        ${hiddenClueTag}
-      `;
-    } else if (evidence.type === 'document') {
-      innerHTML = `
-        <h3>${evidence.title}</h3>
-        <p>${evidence.text}</p>
-      `;
-      zoomHTML = `
-        <h3>${evidence.title}</h3>
-        <p>${evidence.text}</p>
-        ${hiddenClueTag}
-      `;
+      if (evidence.type === 'photo') {
+        innerHTML = `
+          <div class="card-evidence-photo" style="background-image: url('${evidence.image}')"></div>
+          <p>${evidence.text}</p>
+        `;
+        zoomHTML = `
+          <div class="card-evidence-photo" style="background-image: url('${evidence.image}')"></div>
+          <p>${evidence.text}</p>
+          ${hiddenClueTag}
+        `;
+      } else if (evidence.type === 'lab') {
+        innerHTML = `
+          <div class="card-lab-header">${evidence.title || "LAB REPORT"}</div>
+          <p>${evidence.text}</p>
+        `;
+        zoomHTML = `
+          <div class="card-lab-header">${evidence.title || "LAB REPORT"}</div>
+          <p>${evidence.text}</p>
+          ${hiddenClueTag}
+        `;
+      } else if (evidence.type === 'document') {
+        innerHTML = `
+          <h3>${evidence.title}</h3>
+          <p>${evidence.text}</p>
+        `;
+        zoomHTML = `
+          <h3>${evidence.title}</h3>
+          <p>${evidence.text}</p>
+          ${hiddenClueTag}
+        `;
+      }
     }
 
-    inspectorBaseLayer.className = `inspector-card-layer base-gray card-${evidence.type}`;
+    if (evidence.type === 'folder') {
+      inspectorBaseLayer.className = `inspector-card-layer card-${evidence.type}`;
+    } else {
+      inspectorBaseLayer.className = `inspector-card-layer base-gray card-${evidence.type}`;
+    }
     inspectorBaseLayer.innerHTML = innerHTML;
     
     inspectorZoomLayer.className = `inspector-card-layer zoom-sepia card-${evidence.type}`;

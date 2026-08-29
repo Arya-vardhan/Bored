@@ -1,85 +1,173 @@
 window.case004 = {
+  // Unique case identifier
   id: "case-004",
-  title: "The Dragon's Fire",
-  date: "December 18, 1987",
-  fir: "Incident: High-Tech Heist. Missing: 'The Dragon's Fire', a priceless 100-carat crimson ruby. The security vault of the City Bank was breached overnight. Curiously, the physical door mechanism was untouched, but the surrounding high-voltage laser protection grid was temporarily deactivated using a custom frequency override.",
+
+  // Title displayed in case selection and header
+  title: "The Clockwork Alibi",
+
+  // Incident date formatted as string
+  date: "January 1, 1987",
+
+  // The official police First Information Report text
+  fir: "Incident: Capital Homicide. Victim: Benedict Thorne (Age: 67), Master Horologist. Location: Thorne Horological Sanctuary, Riverbed Lane. Discovery Time: January 1, 1987, 00:20 Hours. Cause of Death: Penetrating chest trauma causing acute cardiac tamponade via mechanical lance deployment. Physical Evidence: Custom spring-tensioned gear assembly locked into the workshop's primary structural drive-shaft. Main pendulum of the central grandfather clock halted precisely at midnight.",
+
+  // Dropdown options for Suspect selection
   suspectOptions: [
-    { value: "draken", label: "Draken (Security Grid Engineer)" },
-    { value: "banks", label: "Mr. Banks (Bank Manager)" },
-    { value: "viper", label: "Viper (Notorious Safecracker)" }
+    { value: "julian", label: "Julian Thorne (Lead Apprentice)" },
+    { value: "gideon", label: "Gideon Vance (Rival Horologist)" },
+    { value: "beatrix", label: "Beatrix Thorne (Eldest Daughter)" }
   ],
+
+  // Dropdown options for Execution Method selection
   methodOptions: [
-    { value: "laser_bypass", label: "Overrode the laser grid with a custom-tuned frequency transmitter and slipped inside" },
-    { value: "vault_tunnel", label: "Tunneled up from the subway system beneath the bank vault floor" },
-    { value: "manager_key", label: "Cloned the manager's master physical vault key during his lunch break" }
+    { value: "delayed_escapement", label: "Rigged a delayed gravity escapement to execute Benedict at 10:00 PM and halt the pendulum at 12:00 AM" },
+    { value: "direct_assassination", label: "Infiltrated the workshop at midnight to kill Benedict directly and stop the clock manually" },
+    { value: "clock_rigging", label: "Wired the clock's pendulum to fire the spring-loaded lance immediately at midnight" }
   ],
+
+  // Dropdown options for Motive selection
   motiveOptions: [
-    { value: "blackmarket_collector", label: "Settle an astronomical black-market debt with an underground art dealer" },
-    { value: "insurance_fraud", label: "Split the multi-million dollar insurance payout with the bank's underwriters" },
-    { value: "grid_revenge", label: "Expose vulnerabilities in the bank's security layout to ruin his employer's reputation" },
-    { value: "grid_revenge", label: "Expose vulnerabilities in the bank's security layout to ruin his employer's reputation" }
+    { value: "patent_theft", label: "Claim sole credit and financial gain for the Aethelgard Escapement patent" },
+    { value: "corporate_revenge", label: "Avenge multiple public litigations regarding corporate gear profile theft" },
+    { value: "estate_inheritance", label: "Secure the family estate's liquidation assets after being disinherited" }
   ],
+
+  // List of witness statements displayed on the corkboard
   witnesses: [
-    { name: "Security Engineer (Draken)", statement: "I was off-duty that night. The vault security layout is solid—only someone with my custom testing transmitter could override the laser frequencies, and mine was locked in my safe." },
-    { name: "Bank Manager (Mr. Banks)", statement: "I lock the bank every evening. I didn't see anyone enter. The vault's entry logs showed no physical door activity, which is simply impossible unless the lasers were deactivated first." },
-    { name: "Safecracker (Viper)", statement: "I'm clean! Why build a tunnel or copy keys when someone can just shut down the lasers? Ask Draken what he did with his private frequency controller." }
+    { 
+      name: "Julian Thorne (Apprentice)", 
+      statement: "I was at the town square presenting the Great Clock tower from 11:30 PM to 12:15 AM. Hundreds of people saw me, and it was broadcasted live. Benedict was going to submit the patent application soon; he said it was the culmination of both our lives' work." 
+    },
+    { 
+      name: "Gideon Vance (Rival)", 
+      statement: "Benedict had been suing me for years over gear profiles, trying to ruin my business. I was drinking at the local tavern by the river junction from 10:00 PM onwards. I didn't see anyone, and I was drinking alone, but I had nothing to do with his death." 
+    },
+    { 
+      name: "Beatrix Thorne (Daughter)", 
+      statement: "My father disinherited me years ago because I chose music over gears. I was at my piano studio all night. I don't care about his clocks or his patents, and I certainly wouldn't know how to build those overly complex machines of his." 
+    }
   ],
+
+  // Physical evidence and clue cards pinned on the corkboard
   evidence: [
     { 
-      id: "transmitter", 
+      id: "victim_dossier", 
+      type: "folder", 
+      title: "VICTIM PROFILE & BACKGROUND", 
+      text: "Open dossier for victim diary excerpts, patent records, and workshop mechanics.",
+      documents: [
+        {
+          title: "PERSONAL PROFILE & DAILY TIMELINE",
+          content: "Victim: Benedict Thorne (Age 67)\nOccupation: Master Horologist\nLocation: Thorne Horological Sanctuary, Riverbed Lane\n\nA strict, solitary man who dedicated his life to high-complication mechanical timing. Benedict lived and worked in his riverside sanctuary, powered by the large timber water wheel. He kept few companions, other than his adopted apprentice Julian, and was estranged from his eldest daughter, Beatrix.\n\nOn December 31, 1986, Benedict was seen working at his desk by neighbors as early as 8:00 PM. He was last heard alive at approximately 9:30 PM by a delivery boy leaving a coal shipment at the workshop gate."
+        },
+        {
+          title: "THE AETHELGARD PATENT DISPUTE",
+          content: "A confidential draft of the 'Aethelgard Escapement' patent application was found locked in Benedict's safe. It describes a revolutionary hydrostatic perpetual motion design that draws energy from the river's pressure shifts to remain wound forever.\n\nCrucially, the patent lists Benedict Thorne as the sole inventor, with no credit or financial sharing allocated to Julian, who had spent years co-designing the escapement. Correspondence records show a heated argument occurred between the two on December 28 over this document."
+        },
+        {
+          title: "WORKSHOP POWER MECHANICS",
+          content: "Sanctuary Blueprint Observations:\n- The entire workshop's secondary gear shafts, lathe pulleys, and timing lines are driven by the massive timber waterwheel outside.\n- When active, the waterwheel rotates at a steady, regulated 60 RPM.\n- The primary lathe in the corner has a custom pitch setting of 4.5mm. Any bespoke gear milled on this lathe would carry this exact thread profile."
+        }
+      ]
+    },
+    { 
+      id: "scene_dossier", 
+      type: "folder", 
+      title: "CRIME SCENE & OBSERVATIONS", 
+      text: "Open dossier for scene photos, coroner timeline analysis, and recovered logs.",
+      documents: [
+        {
+          title: "POLICE OBSERVATIONS & TIME PARADOX",
+          content: "Initial Scene Observations (Jan 1, 1987, 00:20 Hours):\n- Benedict Thorne is pinned to his desk by a spring-loaded driving apparatus containing milled steel gears and a blade.\n- The central grandfather clock overlooking his body has halted precisely at 12:00:00 AM, its massive iron pendulum snapped at the hanger.\n\nThe alibi of Julian Thorne is ironclad for midnight: he was on live, televised television presenting the town's square Great Clock tower from 11:30 PM to 12:15 AM, witnessed by hundreds.\n\nHowever, the medical examiner's report states that rigor mortis and body temperature placement put Benedict's time of death between 9:30 PM and 10:30 PM. This creates a temporal paradox: how did the grandfather clock stop at midnight if Benedict died two hours earlier?"
+        },
+        {
+          title: "EVIDENCE LOG & FORENSIC TESTS",
+          content: "Item #1: Custom Spring-Tensioned Gear Assembly\nFound locked directly into the workshop's overhead primary drive shaft. The lathe tooling profile matches a 4.5mm pitch, identifying it as custom-milled within this workshop. It was rigged to a slow-release gravity track.\n\nItem #2: The Snapped Pendulum\nThe pendulum hanger on the grandfather clock is clean but snapped. Nearby, an iron rod welded to a trip-latch was recovered. It seems designed to strike the pendulum rod and stop the clock mechanism.\n\nItem #3: Shattered Pocket Watch\nBenedict's silver watch was found on the floorboards, stopped at 12:00. However, laboratory inspection shows the watch balance spring has no impact micro-deformities. The crystal was crushed post-mortem, and the hands were wound forward manually to simulate a midnight impact.\n\nItem #4: Bloodied Craftsman Glove\nStained leather glove recovered from Julian's locker. Chemical screening confirms the red fluid is a mixture of porcine (pig) blood and tanning oils, used in the workshop for curing leather drive belts."
+        }
+      ]
+    },
+    { 
+      id: "gear_assembly_report", 
       type: "photo", 
-      text: "A metallic pocket frequency transmitter recovered near the vault entrance ventilation duct.", 
-      image: "assets/flashlight.png",
+      image: "assets/gear.png",
+      text: "A custom spring-tensioned gear assembly locked into the workshop's primary structural drive-shaft.",
       inspector: {
-        clueText: '📡 Serial Number: DX-990-DRAKEN',
-        clueStyle: 'top: 100px; left: 110px; font-size: 1.1rem; color: #a31c1c;'
+        clueText: "⚙️ 4.5mm lathe pitch • planetary reduction gear locked to drive axle",
+        clueStyle: "bottom: 30px; left: 40px; font-size: 1.1rem; color: #a31c1c; font-weight: bold;"
       }
     },
     { 
-      id: "schematic", 
-      type: "document", 
-      title: "LASER FIELD SCHEMATICS", 
-      text: "Technical layout blueprints of the bank's laser defense grid, detailing frequency thresholds and bypass ports.",
-      inspector: {
-        clueText: '✏️ Pencil note: override target 45.2 MHz',
-        clueStyle: 'bottom: 50px; right: 50px; font-size: 1.2rem;'
-      }
-    },
-    { 
-      id: "fingerprint", 
+      id: "pocket_watch_analysis", 
       type: "photo", 
-      text: "A clean fingerprint lifted from the transmitter's power button casing.", 
-      image: "assets/thread.png",
+      image: "assets/watch.png",
+      text: "Benedict's shattered silver pocket watch recovered beside the workshop desk.",
       inspector: {
-        clueText: '🩸 Print Match: Draken (Security Firm Index)',
-        clueStyle: 'top: 90px; left: 110px; font-size: 1.2rem; color: #a31c1c;'
+        clueText: "🔍 balance spring intact: manual post-mortem winding to simulate 12:00",
+        clueStyle: "bottom: 35px; left: 35px; font-size: 1.1rem; color: #1b365d; font-weight: bold;"
       }
     },
     { 
-      id: "logs", 
+      id: "grandfather_clock_report", 
       type: "document", 
-      title: "BANK TRANSMISSION LOGS", 
-      text: "The encrypted diagnostic reports from the night of the heist, containing a sequence of external RF bypass attempts.",
+      title: "PENDULUM FORENSICS", 
+      text: "The main pendulum of the grandfather clock. It was snapped by a horizontal blow from a trip-latch mechanism welded to the waterwheel timing shafts.",
+      inspector: {
+        clueText: "⚙️ horizontal strike shear mark: triggered by waterwheel trip-latch at midnight",
+        clueStyle: "bottom: 40px; left: 40px; font-size: 1.15rem; color: #a31c1c;"
+      }
+    },
+    { 
+      id: "glove_fluid_report", 
+      type: "lab", 
+      title: "FORENSIC FLUID REPORT", 
+      text: "A stained leather glove found in the locker. The stains contain organic oils and porcine blood, matching high-tension drive belt lubricants rather than human trauma.",
+      inspector: {
+        clueText: "🧪 porcine lipids & belt curing oils: rules out manual assault",
+        clueStyle: "bottom: 35px; left: 50px; font-size: 1.15rem; color: #39a85a;"
+      }
+    },
+    { 
+      id: "patent_draft", 
+      type: "document", 
+      title: "AETHELGARD PATENT DRAFT", 
+      text: "A draft patent listing Benedict Thorne as the sole inventor of the hydrostatic perpetual motion timing mechanism.",
+      inspector: {
+        clueText: "✒️ Sole Inventor: Benedict Thorne (Julian Thorne completely omitted)",
+        clueStyle: "bottom: 40px; right: 40px; font-size: 1.15rem; color: #a31c1c;"
+      }
+    },
+    { 
+      id: "escapement_schematic", 
+      type: "document", 
+      title: "REDUCTION GEAR DESIGN", 
+      text: "Calculations detailing a 12:1 reduction gear ratio on a waterwheel drive axle, designed to release tension after exactly 120 minutes of operation.",
+      inspector: {
+        clueText: "📐 12:1 planetary reduction ratio: 60 RPM waterwheel = exactly 120 min delay",
+        clueStyle: "bottom: 40px; left: 40px; font-size: 1.15rem; color: #1b365d;"
+      },
       puzzle: {
         type: "cipher",
-        title: "🔓 DECRYPT SECURITY LOGS",
-        instructions: "Decode the encrypted RF diagnostic stream to confirm the transmitter's unique broadcast ID.",
-        btnLabel: "🔓 DECRYPT",
+        title: "🔓 DECRYPT APPRENTICE TIMING CIPHER",
+        instructions: "Rotate the brass dial code disc to find the alphabetical ROT key and decipher Julian's handwritten timing notes.",
+        btnLabel: "🔓 DECRYPT SCHEMATIC",
         stampText: "DECRYPTED",
+        lockedText: "🔓 ENCRYPTED HOROLOGICAL CALCULATIONS. Decipher the apprentice's secret gear ratio notes to reveal the timing mechanism.",
         config: {
-          scrambled: "XQLTXH WUDQVPLWWHU LG GHWHFWHG: GUDNHQ-GB[-NPA. RF DFWLYDWLRN PORT WHPSRUDULOE EESDVVHG.",
-          decrypted: "UNIQUE TRANSMITTER ID DETECTED: DRAKEN-DX-KMX. RF ACTIVATION PORT TEMPORARILY BYPASSED.",
-          rotKey: 3
+          scrambled: "VIHYGXMSR KIEV VEXMS XAIPZI XS SRI. VIPIEWI PERGI EX XIR TQ ERH LEPX TIRHYPYQ EX QMHRMKLX.",
+          decrypted: "REDUCTION GEAR RATIO TWELVE TO ONE. RELEASE LANCE AT TEN PM AND HALT PENDULUM AT MIDNIGHT.",
+          rotKey: 4
         }
       }
     }
   ],
+
+  // The correct solutions required to solve the case
   solution: {
-    suspect: "draken",
-    method: "laser_bypass",
-    motive: "blackmarket_collector",
-    evidence: ["transmitter", "fingerprint", "logs", "schematic"],
-    narrative: "Draken constructed a duplicate pocket frequency transmitter using parts from his security firm. He used the pencil frequency notes on the laser schematic to tune his transmitter to 45.2 MHz, deactivating the bank's laser grid. He then slipped through the ventilation duct, bypassing the vault door sensors completely.",
-    motiveText: "Draken was heavily indebted to a black-market collector who demanded the ruby in exchange for clearing his debts. Knowing the exact frequency settings of the lasers, he carried out the theft in confidence."
+    suspect: "julian",
+    method: "delayed_escapement",
+    motive: "patent_theft",
+    evidence: ["gear_assembly_report", "grandfather_clock_report", "patent_draft", "escapement_schematic"],
+    narrative: "Julian Thorne engineered a delayed gravity escapement in Benedict's workshop, setting the planetary reduction gears before leaving for his public alibi. At 10:00 PM, the weight triggered a spring-loaded lance that killed Benedict. The mechanism continued to draw power from the waterwheel until 12:00 AM, at which point an auxiliary trip-latch snapped the grandfather clock's pendulum, creating a false temporal signature of midnight.",
+    motiveText: "Julian discovered that Benedict intended to file the revolutionary Aethelgard Escapement patent solely in his own name. Out of resentment and greed, Julian executed his master to claim sole credit and all future financial earnings for the invention."
   }
 };
