@@ -87,16 +87,17 @@
 
   .confidential-stamp {
     position: absolute;
-    top: 8px;
-    right: 25px;
-    color: var(--accent);
-    border: 3px solid var(--accent);
-    padding: 4px 10px;
-    font-size: 1rem;
-    font-weight: bold;
-    transform: rotate(12deg);
-    opacity: 0.5;
+    top: 50%;
+    left: 45%;
+    transform: translate(-50%, -50%) rotate(-8deg);
+    color: rgba(216, 49, 49, 0.2);
+    border: 2px dashed rgba(216, 49, 49, 0.25);
+    padding: 2px 14px;
+    font-size: 1.1rem;
+    font-weight: 900;
+    letter-spacing: 3px;
     pointer-events: none;
+    user-select: none;
   }
 
   .header h1 {
@@ -525,12 +526,12 @@
       radial-gradient(#5a3d24 15%, transparent 16%);
     background-size: 4px 4px, 6px 6px, 30px 30px, 30px 30px;
     background-position: 0 0, 2px 2px, 0 0, 15px 15px;
-    padding: 8rem 3rem 12rem 3rem;
+    padding: 6.5rem 3rem 14rem 3rem;
     overflow-y: auto;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     grid-auto-rows: max-content;
-    gap: 2.5rem;
+    gap: 2rem;
     align-items: start;
     
     /* Heavy vignette shadow plus wooden outline border */
@@ -714,22 +715,63 @@
    background-position: center;
  }
 
- .card-evidence p {
-   font-family: var(--font-handwriting);
-   text-align: center;
-   font-size: 1.25rem;
-   margin: 0;
-   font-weight: 400;
- }
+  .card-evidence {
+    background: #fafaf7;
+    padding: 1.2rem 1.2rem 3.8rem 1.2rem;
+    border: 1px solid #e2e2da;
+    border-radius: 2px;
+    box-shadow: 3px 5px 15px rgba(0, 0, 0, 0.35);
+  }
 
- /* Lab Report Card */
+  .card-evidence .polaroid-tape {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-3deg);
+    width: 75px;
+    height: 24px;
+    background: rgba(244, 240, 224, 0.6);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(1px);
+    border-left: 1px dashed rgba(0,0,0,0.05);
+    border-right: 1px dashed rgba(0,0,0,0.05);
+  }
+
+  .card-evidence::before {
+    display: none;
+  }
+
+  .card-evidence-photo {
+    background-color: #1a1a1a;
+    height: 170px;
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-family: var(--font-handwriting);
+    letter-spacing: 2px;
+    box-shadow: inset 0 0 20px #000;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .card-evidence p {
+    font-family: var(--font-handwriting);
+    text-align: center;
+    font-size: 1.25rem;
+    margin: 0;
+    font-weight: 400;
+  }
+
+  /* Lab Report Card */
   .card-lab {
     background: #f0f2f5;
     border: 1px solid #d1d5db;
     font-family: var(--font-system);
     font-size: 0.95rem;
     border-radius: 3px;
-    padding-bottom: 2.2rem;
+    padding: 1.5rem 1.5rem 3.8rem 1.5rem;
     /* Grid watermark background */
     background-image: 
       linear-gradient(rgba(0, 80, 179, 0.03) 1px, transparent 1px),
@@ -776,7 +818,7 @@
     color: #222;
     /* Vintage paper creased look */
     background-image: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 40%), linear-gradient(to right, rgba(0,0,0,0.02) 0%, transparent 50%, rgba(0,0,0,0.02) 100%);
-    padding: 1.5rem 1.5rem 2.2rem 1.5rem;
+    padding: 1.5rem 1.5rem 3.8rem 1.5rem;
   }
 
   .card-document h3 {
@@ -792,59 +834,68 @@
 
   /* Folder Card */
   .card-folder {
-    background: #e6c594; /* Manila folder color */
-    border: 1px solid #cbb28a;
+    background: #e8caa0; /* Manila folder color */
+    border: 1px solid #b8986c;
     font-family: var(--font-typewriter);
-    font-size: 0.95rem;
+    font-size: 0.88rem;
     line-height: 1.5;
-    border-radius: 4px 12px 4px 4px;
-    color: #4a341d;
-    padding: 2.2rem 1.5rem 3.8rem 1.5rem; /* added extra bottom padding for button */
+    border-radius: 4px 14px 4px 4px;
+    color: #3b2510;
+    padding: 2.2rem 1.4rem 4.2rem 1.4rem;
     box-shadow: 4px 6px 18px rgba(0, 0, 0, 0.45);
     position: relative;
   }
 
   .card-folder h3 {
-    margin-top: 10px;
-    border-bottom: 1.5px solid rgba(74, 52, 29, 0.3);
-    padding-bottom: 8px;
-    font-size: 1.05rem;
+    margin-top: 6px;
+    margin-bottom: 8px;
+    border-bottom: 1.5px solid rgba(74, 52, 29, 0.35);
+    padding-bottom: 6px;
+    font-size: 0.98rem;
     font-weight: bold;
-    letter-spacing: 1px;
-    color: #6b4318;
+    letter-spacing: 0.5px;
+    color: #5c3814;
+  }
+
+  .card-folder p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #4a3018;
   }
   
   .card-folder-tab-label {
     position: absolute;
     top: -20px;
     left: 15px;
-    background: #cbb28a;
-    color: #4a341d;
+    background: #b8986c;
+    color: #2b1706;
     font-size: 0.7rem;
     font-weight: bold;
     padding: 2px 10px;
     border-radius: 4px 4px 0 0;
-    border: 1px solid #cbb28a;
+    border: 1px solid #b8986c;
     border-bottom: none;
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.08);
   }
 
   .card-folder .card-inspect-btn {
-    left: 12px;
-    right: 12px;
-    width: calc(100% - 24px);
-    text-align: center;
-    background: #5c3a1a;
-    border: 1px solid #422912;
-    color: #fff;
+    left: 14px;
+    right: 14px;
+    width: calc(100% - 28px);
+    justify-content: center;
+    background: #503114;
+    border: 1px solid #331e0b;
+    color: #fff !important;
+    font-size: 0.78rem;
+    padding: 7px 12px;
     opacity: 0.95;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   }
 
   .card-folder .card-inspect-btn:hover {
-    background: #422912 !important;
+    background: #2b1706 !important;
     color: #fff !important;
-    border-color: #2b1a0b !important;
+    border-color: #000 !important;
   }
 
   /* Folder Dossier Inspector Layout */
@@ -1112,40 +1163,42 @@
   }
 
   #open-deduction-btn {
-    background: rgba(216, 49, 49, 0.35);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(216, 49, 49, 0.45);
-    color: rgba(255, 255, 255, 0.9);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 10px rgba(0, 0, 0, 0.4);
+    background: #d83131;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(216, 49, 49, 0.4);
     transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    font-family: var(--font-typewriter);
+    font-size: 0.95rem;
+    padding: 0 1.8rem;
   }
 
   #open-deduction-btn:hover {
-    background: rgba(216, 49, 49, 0.9);
+    background: #ff4747;
     color: #fff;
-    border-color: rgba(255, 255, 255, 0.25);
+    border-color: #fff;
     transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(216, 49, 49, 0.65), 0 0 15px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 8px 25px rgba(216, 49, 49, 0.75), 0 0 20px rgba(0, 0, 0, 0.7);
   }
 
   #back-btn {
-    background: rgba(18, 18, 20, 0.35);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: rgba(255, 255, 255, 0.85);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    background: #1c1c20;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #eeeeee;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
     transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
     align-self: auto;
+    font-family: var(--font-typewriter);
+    font-size: 0.95rem;
+    padding: 0 1.8rem;
   }
 
   #back-btn:hover {
-    background: rgba(18, 18, 20, 0.9);
+    background: #2b2b32;
     color: #fff;
-    border-color: rgba(255, 255, 255, 0.35);
+    border-color: rgba(255, 255, 255, 0.45);
     transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
   }
 
   #solution-form {
@@ -1335,39 +1388,43 @@
     position: absolute;
     bottom: 12px;
     right: 12px;
-    background: rgba(0, 0, 0, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #eee;
-    padding: 4px 10px;
+    background: #242426;
+    border: 1px solid #55555c;
+    color: #f5f5f5 !important;
+    padding: 5px 10px;
     border-radius: 4px;
-    font-family: var(--font-system);
-    font-size: 0.75rem;
+    font-family: var(--font-typewriter);
+    font-size: 0.72rem;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.2s ease;
     z-index: 5;
-    opacity: 0.7;
-    backdrop-filter: blur(4px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.35);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    opacity: 0.95;
   }
 
   .card:hover .card-link-btn {
     opacity: 1;
-    background: rgba(0, 0, 0, 0.8);
-    border-color: rgba(255, 255, 255, 0.5);
+    border-color: #888;
   }
 
   .card-link-btn:hover {
     background: var(--accent) !important;
     color: #fff !important;
     border-color: var(--accent) !important;
-    transform: scale(1.05);
+    transform: scale(1.04);
+    box-shadow: 0 4px 10px rgba(216, 49, 49, 0.4);
   }
 
   .card-link-btn.is-linked {
-    background: var(--accent);
-    color: #fff;
-    border-color: var(--accent);
-    opacity: 1;
+    background: var(--accent) !important;
+    color: #fff !important;
+    border-color: #ff7b7b !important;
+    opacity: 1 !important;
+    box-shadow: 0 0 10px rgba(216, 49, 49, 0.6);
   }
 
   /* Pinned/Linked Card Styling */
@@ -2620,45 +2677,50 @@
   position: absolute;
   bottom: 12px;
   left: 12px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #eee;
-  padding: 4px 8px;
+  background: #242426;
+  border: 1px solid #55555c;
+  color: #f5f5f5 !important;
+  padding: 5px 10px;
   border-radius: 4px;
-  font-family: var(--font-system);
+  font-family: var(--font-typewriter);
   font-size: 0.72rem;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s ease;
   z-index: 5;
-  opacity: 0.7;
-  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.35);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0.95;
 }
 
 .card:hover .card-inspect-btn,
 .card:hover .card-analyze-btn {
   opacity: 1;
-  background: rgba(0, 0, 0, 0.7);
+  border-color: #888;
 }
 
 .card-inspect-btn:hover,
 .card-analyze-btn:hover {
-  background: #333 !important;
+  background: #000 !important;
   color: #fff !important;
-  border-color: #555 !important;
-  transform: scale(1.05);
+  border-color: #aaa !important;
+  transform: scale(1.04);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 .card-analyze-btn.glowing-btn {
-  background: rgba(216, 49, 49, 0.2) !important;
-  border-color: var(--accent) !important;
+  background: #a81c1c !important;
+  border-color: #ff5252 !important;
   color: #fff !important;
-  opacity: 0.9;
+  opacity: 1;
   animation: btnGlow 1.8s infinite ease-in-out;
 }
 
 .card-analyze-btn.glowing-btn:hover {
   background: var(--accent) !important;
+  border-color: #fff !important;
 }
 
 .solved-puzzle-badge {
