@@ -109,3 +109,6 @@ Since the game is written in pure vanilla web technologies, there is **no instal
 3.  **Case MPD-1987-003: The Midnight Phantom**
     *   *Incident*: Art museum heist in pitch black where an original 16th-century painting was swapped.
     *   *Lab Tech Required*: Shredded ledger statement reconstruction.
+4.  **Case MPD-1987-004: The Clockwork Alibi**
+    *   *Incident*: Master horologist found murdered in his riverside sanctuary, with the central grandfather clock pendulum snapped at midnight despite death occurring hours earlier.
+    *   *Lab Tech Required*: Apprentice timing cipher wheel decryption & multi-document dossier analysis.

@@ -47,6 +47,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const magnifyingLens = document.getElementById('magnifying-lens');
   const inspectorWorkspace = document.getElementById('inspector-workspace');
   const inspectorInstructions = document.getElementById('inspector-instructions');
+  const inspectorModalContent = document.querySelector('.inspector-modal-content');
+  const dossierZoomBtn = document.getElementById('dossier-zoom-btn');
+
+  // Document Zoom Elements
+  const firPaperWrapper = document.querySelector('.fir-paper-wrapper');
+  const firPaper = document.querySelector('.fir-paper');
+  const firZoomBtn = document.getElementById('fir-zoom-btn');
+
+  let firZoomHelper = null;
+  let dossierZoomHelper = null;
+  let currentDossierPages = [];
+  let currentDossierPageIndex = 0;
 
   // Lab Puzzle Elements
   const puzzleModal = document.getElementById('puzzle-modal');
@@ -70,6 +82,140 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Instantiate procedural synthesizer controllers
   const sfx = new SoundEffects();
+
+  // Document Zoom Controller for strict physical A4 documents on mobile
+  function setupDocumentZoom(overlayEl, containerEl, paperEl, toggleBtn, options = {}) {
+    if (!overlayEl || !containerEl || !paperEl || !toggleBtn) return null;
+    let isZoomed = false;
+    const zoomTextEl = toggleBtn.querySelector('.zoom-text');
+    const extraElements = options.extraElements || [];
+
+    function applyZoom() {
+      if (window.innerWidth >= 820) {
+        containerEl.style.width = '794px';
+        containerEl.style.minWidth = '794px';
+        containerEl.style.maxWidth = '794px';
+        containerEl.style.height = '';
+        containerEl.style.margin = '0 auto';
+        extraElements.forEach(el => {
+          if (el) {
+            el.style.width = '794px';
+            el.style.minWidth = '794px';
+            el.style.maxWidth = '794px';
+            el.style.height = '';
+            el.style.display = '';
+          }
+        });
+        paperEl.style.transform = '';
+        paperEl.style.transformOrigin = '';
+        paperEl.style.left = '';
+        paperEl.style.top = '';
+        overlayEl.style.overflowX = 'auto';
+        toggleBtn.classList.add('hidden');
+        return;
+      }
+
+      toggleBtn.classList.remove('hidden');
+
+      if (isZoomed) {
+        containerEl.style.setProperty('width', '794px', 'important');
+        containerEl.style.setProperty('min-width', '794px', 'important');
+        containerEl.style.setProperty('max-width', '794px', 'important');
+        containerEl.style.setProperty('height', 'auto', 'important');
+        containerEl.style.setProperty('margin', '0 auto', 'important');
+        extraElements.forEach(el => {
+          if (el) {
+            el.style.setProperty('width', '794px', 'important');
+            el.style.setProperty('min-width', '794px', 'important');
+            el.style.setProperty('max-width', '794px', 'important');
+            el.style.setProperty('height', 'auto', 'important');
+            el.style.setProperty('display', 'block', 'important');
+          }
+        });
+        paperEl.style.setProperty('position', 'relative', 'important');
+        paperEl.style.setProperty('left', '0px', 'important');
+        paperEl.style.setProperty('top', '0px', 'important');
+        paperEl.style.setProperty('width', '794px', 'important');
+        paperEl.style.setProperty('transform', 'scale(1)', 'important');
+        paperEl.style.setProperty('transform-origin', '0 0', 'important');
+
+        overlayEl.style.overflowX = 'auto';
+        if (zoomTextEl) zoomTextEl.textContent = 'FIT PAGE';
+      } else {
+        const availW = window.innerWidth - 20;
+        const scale = Math.min(1, availW / 794);
+        const fitW = Math.round(794 * scale);
+
+        containerEl.style.setProperty('width', `${fitW}px`, 'important');
+        containerEl.style.setProperty('min-width', '0px', 'important');
+        containerEl.style.setProperty('max-width', 'none', 'important');
+        containerEl.style.setProperty('margin', '0 auto', 'important');
+        extraElements.forEach(el => {
+          if (el) {
+            el.style.setProperty('width', `${fitW}px`, 'important');
+            el.style.setProperty('min-width', '0px', 'important');
+            el.style.setProperty('max-width', 'none', 'important');
+            el.style.setProperty('display', 'block', 'important');
+            el.style.setProperty('position', 'relative', 'important');
+          }
+        });
+        paperEl.style.setProperty('position', 'relative', 'important');
+        paperEl.style.setProperty('left', '0px', 'important');
+        paperEl.style.setProperty('top', '0px', 'important');
+        paperEl.style.setProperty('width', '794px', 'important');
+        paperEl.style.setProperty('transform', `scale(${scale})`, 'important');
+        paperEl.style.setProperty('transform-origin', '0 0', 'important');
+
+        const scaledH = Math.round(paperEl.offsetHeight * scale);
+        if (scaledH > 0) {
+          containerEl.style.setProperty('height', `${scaledH + 20}px`, 'important');
+          extraElements.forEach(el => {
+            if (el) el.style.setProperty('height', `${scaledH + 20}px`, 'important');
+          });
+        }
+        overlayEl.style.overflowX = 'hidden';
+        overlayEl.scrollLeft = 0;
+        overlayEl.scrollTop = 0;
+        if (zoomTextEl) zoomTextEl.textContent = 'ZOOM 100%';
+      }
+    }
+
+    toggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sfx.playClick();
+      isZoomed = !isZoomed;
+      applyZoom();
+    });
+
+    let lastTap = 0;
+    paperEl.addEventListener('touchend', (e) => {
+      const now = Date.now();
+      if (now - lastTap < 350 && now - lastTap > 0) {
+        e.preventDefault();
+        sfx.playClick();
+        isZoomed = !isZoomed;
+        applyZoom();
+      }
+      lastTap = now;
+    });
+
+    window.addEventListener('resize', () => {
+      if (!overlayEl.classList.contains('hidden')) {
+        applyZoom();
+      }
+    });
+
+    return {
+      reset: () => {
+        isZoomed = false;
+        setTimeout(applyZoom, 50);
+      },
+      apply: applyZoom
+    };
+  }
+
+  firZoomHelper = setupDocumentZoom(firOverlay, firPaperWrapper, firPaper, firZoomBtn);
+  dossierZoomHelper = setupDocumentZoom(inspectorModal, inspectorModalContent, inspectorBaseLayer, dossierZoomBtn, { extraElements: [inspectorWorkspace] });
 
   // Initialize
   renderCaseSelection();
@@ -151,6 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!isSolved) {
       firOverlay.classList.remove('hidden');
       viewFirBtn.classList.remove('notify-glow');
+      if (firZoomHelper) firZoomHelper.reset();
     } else {
       firOverlay.classList.add('hidden');
       viewFirBtn.classList.add('notify-glow'); // Suggest opening F.I.R. even if solved
@@ -568,6 +715,7 @@ document.addEventListener('DOMContentLoaded', () => {
       sfx.playFolder();
       firOverlay.classList.remove('hidden');
       viewFirBtn.classList.remove('notify-glow');
+      if (firZoomHelper) firZoomHelper.reset();
     });
   }
 
@@ -868,14 +1016,231 @@ document.addEventListener('DOMContentLoaded', () => {
   // DETAIL INSPECTOR SYSTEM
   // ==========================================================================
   
+  // ==========================================================================
+  // MULTI-PAGE DOSSIER SYSTEM
+  // ==========================================================================
+
+  function buildDossierPages(evidence) {
+    const pages = [];
+    // Max characters per single A4 page to strictly prevent overflowing the 1123px height
+    const MAX_PAGE_CHARS = 1200;
+
+    const docs = (evidence.documents && evidence.documents.length > 0)
+      ? evidence.documents
+      : (evidence.text ? [{ title: evidence.title || "CASE FILE", content: evidence.text }] : []);
+
+    if (docs.length === 0) {
+      return [{
+        title: evidence.title || "CASE DOSSIER",
+        docTitle: "OFFICIAL ARCHIVE",
+        content: "No confidential documents filed inside this dossier.",
+        docIndex: 1,
+        partIndex: 1,
+        totalParts: 1
+      }];
+    }
+
+    docs.forEach((doc, docIdx) => {
+      const rawContent = (doc.content || "").trim();
+      if (rawContent.length <= MAX_PAGE_CHARS) {
+        pages.push({
+          title: evidence.title,
+          docTitle: doc.title,
+          content: rawContent,
+          docIndex: docIdx + 1,
+          partIndex: 1,
+          totalParts: 1
+        });
+      } else {
+        // Content exceeds a single A4 page -> split into multiple pages by paragraph
+        const paragraphs = rawContent.split(/\n\s*\n/);
+        let currentChunk = "";
+        const chunks = [];
+        paragraphs.forEach((p) => {
+          if ((currentChunk + "\n\n" + p).trim().length > MAX_PAGE_CHARS && currentChunk.length > 0) {
+            chunks.push(currentChunk.trim());
+            currentChunk = p;
+          } else {
+            currentChunk = currentChunk ? (currentChunk + "\n\n" + p) : p;
+          }
+        });
+        if (currentChunk.trim().length > 0) chunks.push(currentChunk.trim());
+        if (chunks.length === 0) chunks.push(rawContent);
+
+        chunks.forEach((chunk, chunkIdx) => {
+          const partLabel = chunks.length > 1 ? ` (PART ${chunkIdx + 1}/${chunks.length})` : "";
+          pages.push({
+            title: evidence.title,
+            docTitle: `${doc.title}${partLabel}`,
+            content: chunk,
+            docIndex: docIdx + 1,
+            partIndex: chunkIdx + 1,
+            totalParts: chunks.length
+          });
+        });
+      }
+    });
+
+    return pages;
+  }
+
+  function renderDossierPage(pageIndex) {
+    if (!currentDossierPages || currentDossierPages.length === 0) return;
+    currentDossierPageIndex = Math.max(0, Math.min(pageIndex, currentDossierPages.length - 1));
+    const page = currentDossierPages[currentDossierPageIndex];
+    const total = currentDossierPages.length;
+
+    // Manila Folder Tabs
+    let tabsHTML = '';
+    if (total > 1) {
+      tabsHTML = `<div class="dossier-tab-bar" role="tablist">`;
+      currentDossierPages.forEach((p, idx) => {
+        const isActive = idx === currentDossierPageIndex;
+        const shortTitle = p.docTitle.length > 20 ? (p.docTitle.substring(0, 18) + '…') : p.docTitle;
+        tabsHTML += `
+          <button type="button" class="dossier-tab ${isActive ? 'active' : ''}" data-page="${idx}" role="tab" aria-selected="${isActive}" aria-label="Open Page ${idx + 1}: ${p.docTitle}">
+            <span class="dossier-tab-num">P.${idx + 1}</span>
+            <span class="dossier-tab-text">${shortTitle}</span>
+          </button>
+        `;
+      });
+      tabsHTML += `</div>`;
+    }
+
+    // Format paragraphs
+    const paragraphs = page.content.split(/\n\s*\n/).map(p => {
+      const lines = p.split('\n').join('<br>');
+      return `<p class="dossier-paragraph">${lines}</p>`;
+    }).join('');
+
+    // Bottom Navigation Bar
+    let paginationBarHTML = '';
+    if (total > 1) {
+      paginationBarHTML = `
+        <div class="dossier-pagination-bar">
+          <button type="button" class="dossier-nav-btn prev-page-btn" ${currentDossierPageIndex === 0 ? 'disabled' : ''} aria-label="Previous Page">
+            ◀ PREV PAGE
+          </button>
+          <div class="dossier-page-indicator">
+            PAGE <span class="current-page-num">${currentDossierPageIndex + 1}</span> OF <span class="total-page-num">${total}</span>
+          </div>
+          <button type="button" class="dossier-nav-btn next-page-btn" ${currentDossierPageIndex === total - 1 ? 'disabled' : ''} aria-label="Next Page">
+            NEXT PAGE ▶
+          </button>
+        </div>
+      `;
+    }
+
+    const html = `
+      <div class="dossier-container">
+        <div>
+          ${tabsHTML}
+          <div class="dossier-sheet-top-header">
+            <div class="dossier-dept-badge">CID • DOSSIER FILE</div>
+            <div class="dossier-sheet-title-group">
+              <div class="dossier-case-tag">CONFIDENTIAL RECORD // MPD-1987-CONF</div>
+              <h2 class="dossier-main-title">${page.title}</h2>
+            </div>
+            <div class="dossier-page-counter-stamp">PAGE ${currentDossierPageIndex + 1} / ${total}</div>
+          </div>
+
+          <div class="dossier-page-sub-header">
+            <div class="dossier-doc-indicator">DOCUMENT FILE #${page.docIndex}</div>
+            <h3 class="dossier-doc-title">${page.docTitle}</h3>
+          </div>
+
+          <div class="dossier-paper-content">
+            ${paragraphs}
+          </div>
+        </div>
+
+        <div>
+          ${paginationBarHTML}
+
+          <div class="dossier-sheet-footer">
+            <div class="dossier-footer-left">CLASSIFIED INVESTIGATION ARCHIVE • STRICTLY CONFIDENTIAL</div>
+            <div class="dossier-footer-right">PAGE ${currentDossierPageIndex + 1} OF ${total}</div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    inspectorBaseLayer.innerHTML = html;
+
+    // Attach tab click listeners
+    const tabs = inspectorBaseLayer.querySelectorAll('.dossier-tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const pIdx = parseInt(tab.dataset.page, 10);
+        if (pIdx !== currentDossierPageIndex) {
+          sfx.playFolder();
+          renderDossierPage(pIdx);
+          if (dossierZoomHelper) dossierZoomHelper.apply();
+        }
+      });
+    });
+
+    const prevBtn = inspectorBaseLayer.querySelector('.prev-page-btn');
+    if (prevBtn) {
+      prevBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (currentDossierPageIndex > 0) {
+          sfx.playFolder();
+          renderDossierPage(currentDossierPageIndex - 1);
+          if (dossierZoomHelper) dossierZoomHelper.apply();
+        }
+      });
+    }
+
+    const nextBtn = inspectorBaseLayer.querySelector('.next-page-btn');
+    if (nextBtn) {
+      nextBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (currentDossierPageIndex < total - 1) {
+          sfx.playFolder();
+          renderDossierPage(currentDossierPageIndex + 1);
+          if (dossierZoomHelper) dossierZoomHelper.apply();
+        }
+      });
+    }
+  }
+
   function openInspector(evidence) {
     sfx.playFolder();
     inspectorModal.classList.remove('hidden');
     
     if (evidence.type === 'folder') {
       inspectorModal.classList.add('large-inspector');
+      if (dossierZoomBtn) {
+        dossierZoomBtn.classList.remove('hidden');
+        if (dossierZoomHelper) dossierZoomHelper.reset();
+      }
     } else {
       inspectorModal.classList.remove('large-inspector');
+      if (dossierZoomBtn) dossierZoomBtn.classList.add('hidden');
+      if (inspectorModalContent) {
+        inspectorModalContent.style.width = '';
+        inspectorModalContent.style.minWidth = '';
+        inspectorModalContent.style.maxWidth = '';
+        inspectorModalContent.style.height = '';
+        inspectorModalContent.style.margin = '';
+      }
+      if (inspectorWorkspace) {
+        inspectorWorkspace.style.width = '';
+        inspectorWorkspace.style.minWidth = '';
+        inspectorWorkspace.style.maxWidth = '';
+        inspectorWorkspace.style.height = '';
+        inspectorWorkspace.style.display = '';
+      }
+      if (inspectorBaseLayer) {
+        inspectorBaseLayer.style.transform = '';
+        inspectorBaseLayer.style.transformOrigin = '';
+        inspectorBaseLayer.style.width = '';
+        inspectorBaseLayer.style.minHeight = '';
+        inspectorBaseLayer.style.left = '';
+        inspectorBaseLayer.style.top = '';
+      }
     }
     
     // Clear layers
@@ -895,31 +1260,17 @@ document.addEventListener('DOMContentLoaded', () => {
       // Hide magnifying lens circular track
       magnifyingLens.style.display = 'none';
       if (inspectorInstructions) inspectorInstructions.style.display = 'none';
-      inspectorBaseLayer.style.overflowY = 'auto';
+      inspectorBaseLayer.style.overflowY = 'visible';
+      inspectorBaseLayer.className = `inspector-card-layer card-${evidence.type}`;
       
-      let docsHTML = `<div class="dossier-container">
-        <h2 class="dossier-main-title">${evidence.title}</h2>`;
-      
-      if (evidence.documents && evidence.documents.length > 0) {
-        evidence.documents.forEach((doc, idx) => {
-          docsHTML += `
-            <div class="dossier-paper">
-              <div class="dossier-paper-header">PAGE ${idx + 1}: ${doc.title}</div>
-              <div class="dossier-paper-content">${doc.content}</div>
-            </div>
-          `;
-        });
-      } else {
-        docsHTML += `<p>No documents inside this dossier.</p>`;
-      }
-      
-      docsHTML += `</div>`;
-      innerHTML = docsHTML;
+      currentDossierPages = buildDossierPages(evidence);
+      renderDossierPage(0);
     } else {
       // Reset magnifier and base layer styles
       magnifyingLens.style.display = 'block';
       if (inspectorInstructions) inspectorInstructions.style.display = 'block';
       inspectorBaseLayer.style.overflowY = 'hidden';
+      inspectorBaseLayer.className = `inspector-card-layer base-gray card-${evidence.type}`;
       
       // Get hidden clue configurations from case data
       const clueText = evidence.inspector ? evidence.inspector.clueText : '';
@@ -957,39 +1308,106 @@ document.addEventListener('DOMContentLoaded', () => {
           ${hiddenClueTag}
         `;
       }
-    }
 
-    if (evidence.type === 'folder') {
-      inspectorBaseLayer.className = `inspector-card-layer card-${evidence.type}`;
-    } else {
-      inspectorBaseLayer.className = `inspector-card-layer base-gray card-${evidence.type}`;
+      inspectorBaseLayer.innerHTML = innerHTML;
+      inspectorZoomLayer.className = `inspector-card-layer zoom-sepia card-${evidence.type}`;
+      inspectorZoomLayer.innerHTML = zoomHTML;
     }
-    inspectorBaseLayer.innerHTML = innerHTML;
-    
-    inspectorZoomLayer.className = `inspector-card-layer zoom-sepia card-${evidence.type}`;
-    inspectorZoomLayer.innerHTML = zoomHTML;
+  }
+
+  function closeInspector() {
+    sfx.playFolder();
+    inspectorModal.classList.add('hidden');
+    inspectorModal.classList.remove('large-inspector');
+    if (dossierZoomBtn) dossierZoomBtn.classList.add('hidden');
+    currentDossierPages = [];
+    currentDossierPageIndex = 0;
+    if (inspectorModalContent) {
+      inspectorModalContent.style.width = '';
+      inspectorModalContent.style.minWidth = '';
+      inspectorModalContent.style.maxWidth = '';
+      inspectorModalContent.style.height = '';
+      inspectorModalContent.style.margin = '';
+    }
+    if (inspectorWorkspace) {
+      inspectorWorkspace.style.width = '';
+      inspectorWorkspace.style.minWidth = '';
+      inspectorWorkspace.style.maxWidth = '';
+      inspectorWorkspace.style.height = '';
+      inspectorWorkspace.style.display = '';
+    }
+    if (inspectorBaseLayer) {
+      inspectorBaseLayer.style.transform = '';
+      inspectorBaseLayer.style.transformOrigin = '';
+      inspectorBaseLayer.style.width = '';
+      inspectorBaseLayer.style.minHeight = '';
+      inspectorBaseLayer.style.left = '';
+      inspectorBaseLayer.style.top = '';
+    }
   }
 
   if (closeInspectorBtn) {
-    closeInspectorBtn.addEventListener('click', () => {
-      sfx.playFolder();
-      inspectorModal.classList.add('hidden');
-    });
+    closeInspectorBtn.addEventListener('click', closeInspector);
   }
 
   inspectorModal.addEventListener('click', (e) => {
     if (e.target === inspectorModal) {
-      sfx.playFolder();
-      inspectorModal.classList.add('hidden');
+      closeInspector();
     }
   });
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && !inspectorModal.classList.contains('hidden')) {
-      sfx.playFolder();
-      inspectorModal.classList.add('hidden');
+      closeInspector();
+    } else if (inspectorModal.classList.contains('large-inspector') && !inspectorModal.classList.contains('hidden')) {
+      if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+        if (currentDossierPages && currentDossierPageIndex < currentDossierPages.length - 1) {
+          sfx.playFolder();
+          renderDossierPage(currentDossierPageIndex + 1);
+          if (dossierZoomHelper) dossierZoomHelper.apply();
+        }
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        if (currentDossierPages && currentDossierPageIndex > 0) {
+          sfx.playFolder();
+          renderDossierPage(currentDossierPageIndex - 1);
+          if (dossierZoomHelper) dossierZoomHelper.apply();
+        }
+      }
     }
   });
+
+  // Touch Swipe for Dossier pagination
+  let dossierTouchStartX = 0;
+  let dossierTouchStartY = 0;
+
+  inspectorBaseLayer.addEventListener('touchstart', (e) => {
+    if (e.touches && e.touches[0]) {
+      dossierTouchStartX = e.touches[0].clientX;
+      dossierTouchStartY = e.touches[0].clientY;
+    }
+  }, { passive: true });
+
+  inspectorBaseLayer.addEventListener('touchend', (e) => {
+    if (inspectorModal.classList.contains('large-inspector') && !inspectorModal.classList.contains('hidden')) {
+      if (e.changedTouches && e.changedTouches[0]) {
+        const deltaX = e.changedTouches[0].clientX - dossierTouchStartX;
+        const deltaY = e.changedTouches[0].clientY - dossierTouchStartY;
+        if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY) * 1.3) {
+          if (deltaX < 0 && currentDossierPages && currentDossierPageIndex < currentDossierPages.length - 1) {
+            // Swipe Left -> Next Page
+            sfx.playFolder();
+            renderDossierPage(currentDossierPageIndex + 1);
+            if (dossierZoomHelper) dossierZoomHelper.apply();
+          } else if (deltaX > 0 && currentDossierPages && currentDossierPageIndex > 0) {
+            // Swipe Right -> Prev Page
+            sfx.playFolder();
+            renderDossierPage(currentDossierPageIndex - 1);
+            if (dossierZoomHelper) dossierZoomHelper.apply();
+          }
+        }
+      }
+    }
+  }, { passive: true });
 
   // Circular brass lens track math
   if (inspectorWorkspace && magnifyingLens && inspectorZoomLayer) {
