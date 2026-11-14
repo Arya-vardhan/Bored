@@ -1899,10 +1899,11 @@
     background-color: #faf6d5;
     position: relative;
     box-sizing: border-box;
-    padding: 1.5rem 1.2rem 1.5rem 2.8rem;
+    padding: 1.2rem 1.2rem 1.5rem 2.8rem;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
     border-radius: 0 0 0 6px;
     border-left: 1px solid rgba(0,0,0,0.1);
     box-shadow: inset 5px 0 10px rgba(0,0,0,0.08);
@@ -1917,12 +1918,84 @@
     height: 100%;
     background-color: rgba(216, 49, 49, 0.35);
     border-right: 1px solid rgba(216, 49, 49, 0.15);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Notebook Top Navigation Tabs */
+  .notebook-nav-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1.2rem;
+    border-bottom: 2px solid #8c7f60;
+    padding-bottom: 4px;
+    position: relative;
+    z-index: 3;
+    flex-shrink: 0;
+  }
+
+  .notebook-nav-tab {
+    flex: 1;
+    background: #ede6d4;
+    border: 1.5px solid #8c7f60;
+    border-bottom: none;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    font-family: var(--font-typewriter);
+    font-size: 0.78rem;
+    font-weight: bold;
+    color: #4a3e2a;
+    padding: 0.45rem 0.5rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+  }
+
+  .notebook-nav-tab:hover {
+    background: #ded4bf;
+    color: #1a1a1a;
+  }
+
+  .notebook-nav-tab.active {
+    background: #faf6d5 !important;
+    border-color: #8c7f60 #8c7f60 #faf6d5 #8c7f60 !important;
+    color: #1a1a1a !important;
+    border-top: 3px solid var(--accent) !important;
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 2;
+  }
+
+  .dispatch-tab-badge {
+    background: var(--accent);
+    color: #fff;
+    border-radius: 10px;
+    padding: 1px 6px;
+    font-size: 0.68rem;
+    font-weight: bold;
+    letter-spacing: 0;
   }
 
   .notebook-content {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .notebook-panel {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .notebook-panel.hidden {
+    display: none !important;
   }
 
   .notebook-section-title {
@@ -2022,12 +2095,13 @@
 
   #notebook-textarea {
     width: 100%;
-    flex: 1;
-    min-height: 250px;
+    min-height: 180px;
+    height: 220px;
+    flex: none;
     background: transparent;
     border: none;
     outline: none;
-    resize: none;
+    resize: vertical;
     font-family: var(--font-typewriter);
     font-size: 1.05rem;
     line-height: 1.8rem;

@@ -414,6 +414,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize Dispatch Leads for this Case
     renderDispatchLeads(caseData);
 
+    // Reset notebook tab to observations
+    const obsTab = document.getElementById('tab-btn-observations');
+    if (obsTab) {
+      notebookNavTabs.forEach(t => t.classList.remove('active'));
+      obsTab.classList.add('active');
+      if (panelObservations) panelObservations.classList.remove('hidden');
+      if (panelDispatch) panelDispatch.classList.add('hidden');
+    }
+
     // Resume choices from localStorage
     const savedSuspect = localStorage.getItem(`${caseData.id}-suspect-select`);
     const savedMethod = localStorage.getItem(`${caseData.id}-method-select`);
@@ -730,6 +739,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const remaining = Math.max(0, hints.length - unlockedIndices.length);
     if (dispatchRemainingCount) dispatchRemainingCount.textContent = remaining;
+    const dispatchTabBadge = document.getElementById('dispatch-tab-badge');
+    if (dispatchTabBadge) {
+      dispatchTabBadge.textContent = remaining;
+      dispatchTabBadge.style.display = remaining === 0 ? 'none' : 'inline-block';
+    }
 
     if (remaining === 0) {
       requestDispatchBtn.disabled = true;
@@ -738,6 +752,31 @@ document.addEventListener('DOMContentLoaded', () => {
       requestDispatchBtn.disabled = false;
       requestDispatchBtn.innerHTML = `<span class="dispatch-btn-icon">📞</span> <span class="dispatch-btn-label">REQUEST FORENSIC LEAD</span> (<span id="dispatch-remaining-count">${remaining}</span> LEFT)`;
     }
+  }
+
+  // Notebook Tab Switching
+  const notebookNavTabs = document.querySelectorAll('.notebook-nav-tab');
+  const panelObservations = document.getElementById('notebook-panel-observations');
+  const panelDispatch = document.getElementById('notebook-panel-dispatch');
+
+  if (notebookNavTabs.length > 0) {
+    notebookNavTabs.forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        e.stopPropagation();
+        sfx.playClick();
+        const targetTab = tab.dataset.tab;
+        notebookNavTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        if (targetTab === 'dispatch') {
+          if (panelObservations) panelObservations.classList.add('hidden');
+          if (panelDispatch) panelDispatch.classList.remove('hidden');
+        } else {
+          if (panelDispatch) panelDispatch.classList.add('hidden');
+          if (panelObservations) panelObservations.classList.remove('hidden');
+        }
+      });
+    });
   }
 
   if (requestDispatchBtn) {
