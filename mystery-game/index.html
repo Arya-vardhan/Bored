@@ -7,7 +7,7 @@
   <title>Bored?</title>
   <meta name="description" content="A single-page detective mystery case solver game.">
   <link rel="icon" type="image/png" href="assets/favicon.png">
-  <link rel="stylesheet" href="styles.css?v=2">
+  <link rel="stylesheet" href="styles.css?v=3">
   <link
     href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Permanent+Marker&family=Roboto:wght@300;400;700&family=Caveat:wght@400;700&family=Patrick+Hand&display=swap"
     rel="stylesheet">
@@ -69,6 +69,17 @@
             <h2 class="notebook-section-title">CASE OBSERVATIONS</h2>
             <div class="textarea-container">
               <textarea id="notebook-textarea" placeholder="Record your observations and deductions here..."></textarea>
+            </div>
+            <div class="notebook-divider"></div>
+            <h2 class="notebook-section-title">DISPATCH TELETYPE LEADS</h2>
+            <div class="notebook-dispatch-container">
+              <p class="dispatch-flavor-text">Request confidential analytical cables from Headquarters when investigation stalls.</p>
+              <div id="dispatch-leads-list" class="dispatch-leads-list">
+                <!-- Dynamically populated unlocked dispatch telegrams -->
+              </div>
+              <button type="button" id="request-dispatch-btn" class="submit-btn secondary-btn dispatch-btn">
+                <span class="dispatch-btn-icon">📞</span> <span class="dispatch-btn-label">REQUEST FORENSIC LEAD</span> (<span id="dispatch-remaining-count">2</span> LEFT)
+              </button>
             </div>
           </div>
         </div>
@@ -273,15 +284,15 @@
     </div>
   </div>
 
-  <script src="js/cases/case-001.js?v=2"></script>
-  <script src="js/cases/case-002.js?v=2"></script>
-  <script src="js/cases/case-003.js?v=2"></script>
-  <script src="js/cases/case-004.js?v=2"></script>
-  <script src="js/cases/index.js?v=2"></script>
-  <script src="js/sound.js?v=2"></script>
-  <script src="js/puzzles.js?v=2"></script>
-  <script src="js/deductions.js?v=2"></script>
-  <script src="js/app.js?v=2"></script>
+  <script src="js/cases/case-001.js?v=3"></script>
+  <script src="js/cases/case-002.js?v=3"></script>
+  <script src="js/cases/case-003.js?v=3"></script>
+  <script src="js/cases/case-004.js?v=3"></script>
+  <script src="js/cases/index.js?v=3"></script>
+  <script src="js/sound.js?v=3"></script>
+  <script src="js/puzzles.js?v=3"></script>
+  <script src="js/deductions.js?v=3"></script>
+  <script src="js/app.js?v=3"></script>
 </body>
 
 </html>

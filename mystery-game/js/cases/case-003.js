@@ -107,5 +107,17 @@ window.case003 = {
     evidence: ["shoes", "logs", "replica", "bank"],
     narrative: "Ms. Vance orchestrated the power outage to execute the heist in pitch black. She utilized glow-in-the-dark paint strictly on the inside frame of the replica painting to swap them correctly without turning on a light. During the swap, she used her heavy metallic flashlight to bludgeon the guard. Her footprint mud matches her high-end oxfords.",
     motiveText: "Ms. Vance's obsession with a deeply restricted and expensive archaeological expedition left her utterly bankrupt. She needed the illicit funds from selling her museum's very own masterpiece on the black market to finance her private obsessions."
-  }
+  },
+  hints: [
+    {
+      level: 1,
+      title: "HQ DISPATCH CABLE #1",
+      text: "Substation logs show the blackout lasted exactly 60 seconds and required Level 4 executive clearance. Compare the suspect's footwear to mud found outside in the museum garden."
+    },
+    {
+      level: 2,
+      title: "FORENSIC TELETYPE #2",
+      text: "Swapping a canvas in total darkness is impossible without guidance. The replica's frame was marked with 365nm UV phosphorescent paint dots, and the museum's emergency breaker was tripped 4 minutes after Curator Vance swiped her keycard."
+    }
+  ]
 };

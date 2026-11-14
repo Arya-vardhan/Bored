@@ -123,5 +123,17 @@ window.case001 = {
     evidence: ["thread", "receipt", "water", "ledger"],
     narrative: "Arthur used a long loop of sturdy thread to pull the internal deadbolt closed from the outside, running it underneath the window gap before pulling it free. He placed the heavy block of ice near the door mechanism to slowly melt over time, creating a pool of water to mimic a structural leak and wash away traces of the thread's intense friction.",
     motiveText: "Arthur was drowning in severe gambling debts to a local harbor crime syndicate. Being the newly added beneficiary, he needed to steal the gemstone to pay off his illicit debts immediately before the syndicate made good on lethal threats."
-  }
+  },
+  hints: [
+    {
+      level: 1,
+      title: "HQ DISPATCH CABLE #1",
+      text: "Examine the heating records against the coroner's temperature reading in the study. Why was a room with a boiling 82°F radiator recorded at a freezing 38°F upon entry?"
+    },
+    {
+      level: 2,
+      title: "FORENSIC TELETYPE #2",
+      text: "A 50lb ice block leaves behind brackish dock sediment when melted. Notice the 0.8-inch window gap clearance and thread caught in the latch. Thread looped from outside can flip a deadbolt shut without entry."
+    }
+  ]
 };

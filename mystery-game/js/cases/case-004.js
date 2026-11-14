@@ -169,5 +169,17 @@ window.case004 = {
     evidence: ["gear_assembly_report", "grandfather_clock_report", "patent_draft", "escapement_schematic"],
     narrative: "Julian Thorne engineered a delayed gravity escapement in Benedict's workshop, setting the planetary reduction gears before leaving for his public alibi. At 10:00 PM, the weight triggered a spring-loaded lance that killed Benedict. The mechanism continued to draw power from the waterwheel until 12:00 AM, at which point an auxiliary trip-latch snapped the grandfather clock's pendulum, creating a false temporal signature of midnight.",
     motiveText: "Julian discovered that Benedict intended to file the revolutionary Aethelgard Escapement patent solely in his own name. Out of resentment and greed, Julian executed his master to claim sole credit and all future financial earnings for the invention."
-  }
+  },
+  hints: [
+    {
+      level: 1,
+      title: "HQ DISPATCH CABLE #1",
+      text: "Medical examiner rigor mortis places Benedict's death between 9:30 PM and 10:30 PM, yet the grandfather clock stopped at midnight. Consider how a mechanical escapement could be delayed by hours."
+    },
+    {
+      level: 2,
+      title: "FORENSIC TELETYPE #2",
+      text: "The lathe pitch of 4.5mm proves the gear apparatus was milled in the sanctuary. A planetary reduction gear attached to the 60 RPM timber waterwheel can delay a mechanical strike by exactly two hours."
+    }
+  ]
 };

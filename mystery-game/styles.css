@@ -2040,6 +2040,108 @@
     text-shadow: 0.5px 0.5px 1px rgba(27, 54, 93, 0.25), 0px 0px 0.5px rgba(0, 0, 0, 0.15); /* Pencil graphite grainy shadow */
   }
 
+  /* Dispatch Leads Section in Detective Notebook */
+  .notebook-dispatch-container {
+    margin-top: 0.5rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .dispatch-flavor-text {
+    font-family: var(--font-typewriter);
+    font-size: 0.76rem;
+    color: #665b45;
+    font-style: italic;
+    margin: 0 0 0.8rem 0;
+    line-height: 1.4;
+  }
+
+  .dispatch-leads-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    margin-bottom: 1rem;
+  }
+
+  .dispatch-telegram-card {
+    background: #fffef5;
+    border: 1.5px solid #8c7f60;
+    border-left: 4px solid var(--accent);
+    padding: 0.85rem 1rem;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+    font-family: var(--font-typewriter);
+    animation: telegramSlide 0.35s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+    position: relative;
+    border-radius: 2px;
+  }
+
+  @keyframes telegramSlide {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .dispatch-telegram-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed rgba(140, 127, 96, 0.45);
+    padding-bottom: 0.4rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .dispatch-badge {
+    font-size: 0.68rem;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  .dispatch-cable-id {
+    font-size: 0.68rem;
+    color: #554832;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+
+  .dispatch-telegram-body {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: #111111 !important;
+    margin: 0 0 0.6rem 0;
+    text-align: left;
+    font-style: italic;
+  }
+
+  .dispatch-telegram-footer {
+    font-size: 0.62rem;
+    letter-spacing: 1px;
+    color: #776e5c;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+
+  .dispatch-btn {
+    width: 100%;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    border-color: #8c7f60;
+    transition: all 0.2s ease;
+  }
+
+  .dispatch-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #ede7d8 !important;
+    border-color: #ccc !important;
+    color: #888 !important;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
   /* Page flip animations */
   .notebook-paper.page-turning {
     animation: turnPage 0.48s cubic-bezier(0.25, 1, 0.5, 1) forwards;

@@ -103,5 +103,17 @@ window.case002 = {
     evidence: ["envelope", "toxicology", "wax_analysis", "records"],
     narrative: "Elias purchased the illegal toxin and sent a poisoned block of artisanal sealing wax as an anonymous fan gift to Percival. When Percival happily melted the wax to seal his letter to the publisher, the intense heat activated the Cyanogen-X, turning it into a lethal contact poison that killed him instantly.",
     motiveText: "Deep resentment and professional ruin. Elias knew Percival had gathered the proof needed to file a career-ending plagiarism lawsuit against him. Eliminating his wildly successful rival was his twisted path to silencing the truth."
-  }
+  },
+  hints: [
+    {
+      level: 1,
+      title: "HQ DISPATCH CABLE #1",
+      text: "The tipped inkwell contains standard, non-toxic India ink. Re-read the butler's statement regarding an anonymous gift Percival was eager to use for sealing his new manuscript."
+    },
+    {
+      level: 2,
+      title: "FORENSIC TELETYPE #2",
+      text: "Cyanogen-X is a transdermal contact poison that remains completely inert at room temperature. It only liquefies into a lethal neurotoxin under direct flame heat, such as molten sealing wax."
+    }
+  ]
 };

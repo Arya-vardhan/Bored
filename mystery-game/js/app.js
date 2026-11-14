@@ -38,6 +38,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const notebookToggleBtn = document.getElementById('notebook-toggle-btn');
   const notebookSuspectsList = document.getElementById('notebook-suspects-list');
   const notebookTextarea = document.getElementById('notebook-textarea');
+  const dispatchLeadsList = document.getElementById('dispatch-leads-list');
+  const requestDispatchBtn = document.getElementById('request-dispatch-btn');
+  const dispatchRemainingCount = document.getElementById('dispatch-remaining-count');
 
   // Detail Inspector Elements
   const inspectorModal = document.getElementById('inspector-modal');
@@ -408,6 +411,9 @@ document.addEventListener('DOMContentLoaded', () => {
       notebookTextarea.value = localStorage.getItem(`${caseData.id}-notes-text`) || '';
     }
 
+    // Initialize Dispatch Leads for this Case
+    renderDispatchLeads(caseData);
+
     // Resume choices from localStorage
     const savedSuspect = localStorage.getItem(`${caseData.id}-suspect-select`);
     const savedMethod = localStorage.getItem(`${caseData.id}-method-select`);
@@ -699,6 +705,65 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function renderDispatchLeads(caseData) {
+    if (!dispatchLeadsList || !requestDispatchBtn) return;
+    const hints = caseData.hints || [];
+    const unlockedIndices = JSON.parse(localStorage.getItem(`${caseData.id}-unlocked-hints`) || '[]');
+
+    dispatchLeadsList.innerHTML = '';
+    unlockedIndices.forEach(hintIdx => {
+      const hint = hints[hintIdx];
+      if (hint) {
+        const card = document.createElement('div');
+        card.className = 'dispatch-telegram-card';
+        card.innerHTML = `
+          <div class="dispatch-telegram-header">
+            <span class="dispatch-badge">CID WIRE TRANSMISSION</span>
+            <span class="dispatch-cable-id">#LEAD-0${hint.level || (hintIdx + 1)}</span>
+          </div>
+          <p class="dispatch-telegram-body">"${hint.text}"</p>
+          <div class="dispatch-telegram-footer">METROPOLITAN POLICE HEADQUARTERS // CONFIDENTIAL</div>
+        `;
+        dispatchLeadsList.appendChild(card);
+      }
+    });
+
+    const remaining = Math.max(0, hints.length - unlockedIndices.length);
+    if (dispatchRemainingCount) dispatchRemainingCount.textContent = remaining;
+
+    if (remaining === 0) {
+      requestDispatchBtn.disabled = true;
+      requestDispatchBtn.innerHTML = `<span>✓ ALL DISPATCH LEADS RECEIVED</span>`;
+    } else {
+      requestDispatchBtn.disabled = false;
+      requestDispatchBtn.innerHTML = `<span class="dispatch-btn-icon">📞</span> <span class="dispatch-btn-label">REQUEST FORENSIC LEAD</span> (<span id="dispatch-remaining-count">${remaining}</span> LEFT)`;
+    }
+  }
+
+  if (requestDispatchBtn) {
+    requestDispatchBtn.addEventListener('click', () => {
+      if (!currentCaseData) return;
+      const hints = currentCaseData.hints || [];
+      const unlockedIndices = JSON.parse(localStorage.getItem(`${currentCaseData.id}-unlocked-hints`) || '[]');
+
+      if (unlockedIndices.length < hints.length) {
+        sfx.playFolder();
+        const nextIdx = unlockedIndices.length;
+        unlockedIndices.push(nextIdx);
+        localStorage.setItem(`${currentCaseData.id}-unlocked-hints`, JSON.stringify(unlockedIndices));
+        renderDispatchLeads(currentCaseData);
+
+        // Scroll notebook paper down to view the newly arrived telegram
+        const notebookPaper = detectiveNotebook ? detectiveNotebook.querySelector('.notebook-paper') : null;
+        if (notebookPaper) {
+          setTimeout(() => {
+            notebookPaper.scrollTo({ top: notebookPaper.scrollHeight, behavior: 'smooth' });
+          }, 100);
+        }
+      }
+    });
+  }
+
   // Escape key close binders
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
@@ -745,6 +810,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function resetSingleCase(caseId) {
     localStorage.removeItem(`${caseId}-eliminated-suspects`);
     localStorage.removeItem(`${caseId}-notes-text`);
+    localStorage.removeItem(`${caseId}-unlocked-hints`);
     localStorage.removeItem(`${caseId}-suspect-select`);
     localStorage.removeItem(`${caseId}-method-select`);
     localStorage.removeItem(`${caseId}-motive-select`);
