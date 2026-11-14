@@ -81,6 +81,8 @@ document.addEventListener('DOMContentLoaded', () => {
   
   let currentCaseData = null;
   let linkedEvidenceIds = []; // Track currently pinned evidence cards
+  let linkedSuspectId = null;  // Track currently pinned suspect card (e.g. 'witness-arthur')
+  let linkedSuspectKey = null; // Track suspect key for deduction (e.g. 'arthur')
   let activePuzzle = null;    // Track active puzzle instance for cleanup
 
   // Instantiate procedural synthesizer controllers
@@ -334,8 +336,14 @@ document.addEventListener('DOMContentLoaded', () => {
       motiveSelect.appendChild(option);
     });
 
-    // Reset linked evidence
-    linkedEvidenceIds = [];
+    // Restore or reset linked evidence and suspect
+    const savedSuspect = localStorage.getItem(`${caseData.id}-linked-suspect`);
+    const savedSuspectKey = localStorage.getItem(`${caseData.id}-linked-suspect-key`);
+    linkedSuspectId = savedSuspect || null;
+    linkedSuspectKey = savedSuspectKey || null;
+
+    const savedClues = localStorage.getItem(`${caseData.id}-linked-clues`);
+    linkedEvidenceIds = savedClues ? JSON.parse(savedClues) : [];
     updateLinkedCluesUI(caseData);
 
     // Reset disabled states
@@ -424,16 +432,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Resume choices from localStorage
-    const savedSuspect = localStorage.getItem(`${caseData.id}-suspect-select`);
+    const savedSuspectVal = localStorage.getItem(`${caseData.id}-suspect-select`) || linkedSuspectKey;
     const savedMethod = localStorage.getItem(`${caseData.id}-method-select`);
     const savedMotive = localStorage.getItem(`${caseData.id}-motive-select`);
-    if (savedSuspect) suspectSelect.value = savedSuspect;
+    if (savedSuspectVal) suspectSelect.value = savedSuspectVal;
     if (savedMethod) methodSelect.value = savedMethod;
     if (savedMotive) motiveSelect.value = savedMotive;
 
     suspectSelect.onchange = () => {
       sfx.playClick();
-      if(currentCaseData) localStorage.setItem(`${currentCaseData.id}-suspect-select`, suspectSelect.value);
+      if (currentCaseData) {
+        localStorage.setItem(`${currentCaseData.id}-suspect-select`, suspectSelect.value);
+        const match = currentCaseData.witnesses.find(w => w.suspectKey === suspectSelect.value);
+        if (match) {
+          const wCard = document.getElementById(`card-${match.id}`);
+          toggleLinkSuspect(match.id, match.suspectKey, wCard, currentCaseData, true);
+        }
+      }
     };
     methodSelect.onchange = () => {
       sfx.playClick();
@@ -448,6 +463,13 @@ document.addEventListener('DOMContentLoaded', () => {
     caseData.witnesses.forEach((witness, index) => {
       const card = document.createElement('div');
       card.className = 'card card-witness';
+      const witnessDomId = witness.id || `witness-${index}`;
+      card.id = `card-${witnessDomId}`;
+      const isSuspectLinked = linkedSuspectId === witnessDomId;
+      if (isSuspectLinked) {
+        card.classList.add('card-linked');
+      }
+
       const cardRotation = (Math.random() * 4 - 2).toFixed(1);
       card.style.transform = `rotate(${cardRotation}deg)`;
       card.style.animationDelay = `${index * 0.15}s`;
@@ -497,9 +519,17 @@ document.addEventListener('DOMContentLoaded', () => {
             <h3>- ${witness.name}</h3>
           </div>
         </div>
+        <div class="witness-actions">
+          <button type="button" class="card-inspect-btn witness-inspect-btn" data-id="${witnessDomId}">🔍 INSPECT</button>
+          <button type="button" class="card-link-btn witness-link-btn ${isSuspectLinked ? 'is-linked' : ''}" 
+                  data-id="${witnessDomId}" 
+                  data-suspect="${witness.suspectKey || ''}">
+            ${isSuspectLinked ? '📍 SUSPECT PINNED' : '📌 LINK SUSPECT'}
+          </button>
+        </div>
       `;
 
-      // Allow clicking polaroid to inspect suspect in magnifying glass
+      // Allow clicking polaroid or inspect button to examine suspect in magnifying glass
       const polaroidEl = card.querySelector('.witness-polaroid');
       if (polaroidEl && hasImage) {
         polaroidEl.addEventListener('click', (e) => {
@@ -512,6 +542,37 @@ document.addEventListener('DOMContentLoaded', () => {
           });
         });
       }
+
+      const inspectBtn = card.querySelector('.witness-inspect-btn');
+      if (inspectBtn && hasImage) {
+        inspectBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          openInspector({
+            type: 'photo',
+            image: witness.image,
+            title: `SUSPECT DOSSIER: ${witness.name}`,
+            text: `[POLICE ARCHIVE] ${witness.name}: "${witness.statement}"`
+          });
+        });
+      }
+
+      // Link suspect button
+      const linkBtn = card.querySelector('.witness-link-btn');
+      if (linkBtn) {
+        linkBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleLinkSuspect(witnessDomId, witness.suspectKey, card, caseData);
+        });
+      }
+
+      // Clicking top thumbtack area on the card toggles suspect yarn pin
+      card.addEventListener('click', (e) => {
+        const rect = card.getBoundingClientRect();
+        if (e.clientY - rect.top < 38) {
+          e.stopPropagation();
+          toggleLinkSuspect(witnessDomId, witness.suspectKey, card, caseData);
+        }
+      });
 
       evidenceGrid.appendChild(card);
     });
@@ -622,14 +683,83 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
 
+      // Clicking the red thumbtack pins the evidence clue
+      card.addEventListener('click', (e) => {
+        const rect = card.getBoundingClientRect();
+        if (e.clientY - rect.top < 38) {
+          e.stopPropagation();
+          toggleLinkClue(ev.id, card, caseData);
+        }
+      });
+
       evidenceGrid.appendChild(card);
     });
 
     checkFastForwardProgress();
   }
 
+  function toggleLinkSuspect(suspectId, suspectKey, cardElement, caseData, isFromDropdown = false) {
+    if (!isFromDropdown) {
+      sfx.playPin();
+      sfx.playYarnPluck();
+    }
+
+    if (linkedSuspectId === suspectId && !isFromDropdown) {
+      // Unlink suspect
+      linkedSuspectId = null;
+      linkedSuspectKey = null;
+      if (cardElement) {
+        cardElement.classList.remove('card-linked');
+        const linkBtn = cardElement.querySelector('.witness-link-btn');
+        if (linkBtn) {
+          linkBtn.classList.remove('is-linked');
+          linkBtn.textContent = "📌 LINK SUSPECT";
+        }
+      }
+    } else {
+      // Remove previous linked suspect styling
+      if (linkedSuspectId && linkedSuspectId !== suspectId) {
+        const prevCard = document.getElementById(`card-${linkedSuspectId}`);
+        if (prevCard) {
+          prevCard.classList.remove('card-linked');
+          const oldBtn = prevCard.querySelector('.witness-link-btn');
+          if (oldBtn) {
+            oldBtn.classList.remove('is-linked');
+            oldBtn.textContent = "📌 LINK SUSPECT";
+          }
+        }
+      }
+      linkedSuspectId = suspectId;
+      linkedSuspectKey = suspectKey;
+      if (cardElement) {
+        cardElement.classList.add('card-linked');
+        const linkBtn = cardElement.querySelector('.witness-link-btn');
+        if (linkBtn) {
+          linkBtn.classList.add('is-linked');
+          linkBtn.textContent = "📍 SUSPECT PINNED";
+        }
+      }
+
+      // Synchronize deduction dropdown
+      if (suspectSelect && suspectKey && !isFromDropdown) {
+        suspectSelect.value = suspectKey;
+        if (caseData) {
+          localStorage.setItem(`${caseData.id}-suspect-select`, suspectKey);
+        }
+      }
+    }
+
+    if (caseData) {
+      localStorage.setItem(`${caseData.id}-linked-suspect`, linkedSuspectId || '');
+      localStorage.setItem(`${caseData.id}-linked-suspect-key`, linkedSuspectKey || '');
+    }
+
+    updateLinkedCluesUI(caseData);
+  }
+
   function toggleLinkClue(evidenceId, cardElement, caseData) {
     sfx.playPin();
+    sfx.playYarnPluck();
     const idx = linkedEvidenceIds.indexOf(evidenceId);
     if (idx !== -1) {
       // Unlink
@@ -668,11 +798,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     }
+
+    if (caseData) {
+      localStorage.setItem(`${caseData.id}-linked-clues`, JSON.stringify(linkedEvidenceIds));
+    }
+
     updateLinkedCluesUI(caseData);
   }
 
   function updateLinkedCluesUI(caseData) {
-    // 1. Update Floating Selection Dock Badge Count
+    // 1. Update Floating Selection Dock Badges
+    const dockSuspectBadge = document.getElementById('dock-suspect-badge');
+    if (dockSuspectBadge) {
+      if (linkedSuspectId && caseData.witnesses) {
+        const found = caseData.witnesses.find(w => w.id === linkedSuspectId);
+        const sName = found ? found.name.split('(')[0].trim() : 'SUSPECT';
+        dockSuspectBadge.textContent = `👤 ${sName}`;
+        dockSuspectBadge.style.color = '#ff6b6b';
+        dockSuspectBadge.style.borderColor = '#ff6b6b';
+      } else {
+        dockSuspectBadge.textContent = '👤 NO SUSPECT PINNED';
+        dockSuspectBadge.style.color = '';
+        dockSuspectBadge.style.borderColor = '';
+      }
+    }
+
     if (dockBadgeCount) {
       dockBadgeCount.textContent = `${linkedEvidenceIds.length} / 2 CLUES LINKED`;
     }
@@ -680,69 +830,129 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Update Selected Clues Preview Box inside Deduction Modal
     if (selectedCluesPreview) {
       selectedCluesPreview.innerHTML = '';
-      if (linkedEvidenceIds.length === 0) {
-        selectedCluesPreview.innerHTML = '<span style="color: #888; font-style: italic;">No evidence linked yet. Click "SELECT EVIDENCE FROM CORKBOARD" to pick clues.</span>';
+      const previewWrapper = document.createElement('div');
+      previewWrapper.style.display = 'flex';
+      previewWrapper.style.flexDirection = 'column';
+      previewWrapper.style.gap = '8px';
+      previewWrapper.style.width = '100%';
+
+      // Suspect Preview Line
+      const suspectRow = document.createElement('div');
+      suspectRow.className = 'preview-suspect-row';
+      if (linkedSuspectId && caseData.witnesses) {
+        const found = caseData.witnesses.find(w => w.id === linkedSuspectId);
+        const sName = found ? found.name : 'Unknown Suspect';
+        suspectRow.innerHTML = `<span style="color: #ff5252; font-weight: bold; letter-spacing: 1px;">👤 ACCUSED CULPRIT:</span> <span style="color: #f1f1f1; font-weight: bold;">${sName} (Pinned via Yarn)</span>`;
       } else {
+        suspectRow.innerHTML = `<span style="color: #888; font-style: italic;">👤 Suspect: Select from dropdown or pin suspect on corkboard.</span>`;
+      }
+      previewWrapper.appendChild(suspectRow);
+
+      // Clues Preview Line
+      if (linkedEvidenceIds.length === 0) {
+        const noClues = document.createElement('div');
+        noClues.innerHTML = '<span style="color: #888; font-style: italic;">📍 Supporting Clues: Click "SELECT EVIDENCE FROM CORKBOARD" to pin 2 physical clues.</span>';
+        previewWrapper.appendChild(noClues);
+      } else {
+        const cluesRow = document.createElement('div');
+        cluesRow.style.display = 'flex';
+        cluesRow.style.flexWrap = 'wrap';
+        cluesRow.style.gap = '6px';
         caseData.evidence.forEach(ev => {
           if (linkedEvidenceIds.includes(ev.id)) {
             const previewItem = document.createElement('div');
             previewItem.className = 'preview-clue-item';
             const labelText = ev.title || ev.text.split('.')[0];
             previewItem.textContent = labelText;
-            selectedCluesPreview.appendChild(previewItem);
+            cluesRow.appendChild(previewItem);
           }
         });
+        previewWrapper.appendChild(cluesRow);
       }
+
+      selectedCluesPreview.appendChild(previewWrapper);
     }
-    // 3. Render procedural Red String board
+
+    // 3. Render procedural multi-node Red Yarn board
     drawActiveStrings();
   }
 
   function drawActiveStrings() {
     const activeStringBoard = document.getElementById('string-board');
-    if (!activeStringBoard) return;
+    if (!activeStringBoard || !currentCaseData) return;
     
     // Clear previous elements
     activeStringBoard.innerHTML = '';
     
-    // We only draw strings if exactly 2 evidence clues are linked
-    if (linkedEvidenceIds.length !== 2) return;
-    
-    const id1 = linkedEvidenceIds[0];
-    const id2 = linkedEvidenceIds[1];
-    
-    const el1 = document.getElementById(`card-${id1}`);
-    const el2 = document.getElementById(`card-${id2}`);
-    
-    if (!el1 || !el2) return;
-    
+    // Build array of pairwise connections to render: [id1, id2]
+    const connections = [];
+
+    // If suspect is pinned, connect suspect to each linked clue
+    if (linkedSuspectId) {
+      linkedEvidenceIds.forEach(clueId => {
+        connections.push([linkedSuspectId, clueId]);
+      });
+    }
+
+    // Connect clues to each other
+    if (linkedEvidenceIds.length >= 2) {
+      connections.push([linkedEvidenceIds[0], linkedEvidenceIds[1]]);
+    }
+
+    if (connections.length === 0) return;
+
     // Compute scrollboard scale boundaries
     activeStringBoard.setAttribute('width', evidenceGrid.scrollWidth);
     activeStringBoard.setAttribute('height', evidenceGrid.scrollHeight);
     
     const boardRect = evidenceGrid.getBoundingClientRect();
-    const r1 = el1.getBoundingClientRect();
-    const r2 = el2.getBoundingClientRect();
-    
-    // Thumbtack pin offsets relative to the scroll container's top-left coordinates
-    const x1 = r1.left - boardRect.left + r1.width / 2 + evidenceGrid.scrollLeft;
-    const y1 = r1.top - boardRect.top + 15 + evidenceGrid.scrollTop;
-    
-    const x2 = r2.left - boardRect.left + r2.width / 2 + evidenceGrid.scrollLeft;
-    const y2 = r2.top - boardRect.top + 15 + evidenceGrid.scrollTop;
-    
-    // Gravity sag physics math depends on distance spacing
-    const dist = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
-    const sag = dist * 0.12 + 25;
-    
-    const mx = (x1 + x2) / 2;
-    const my = (y1 + y2) / 2 + sag;
-    
-    // Create path element
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.setAttribute('d', `M ${x1} ${y1} Q ${mx} ${my} ${x2} ${y2}`);
-    
-    activeStringBoard.appendChild(path);
+
+    connections.forEach(([id1, id2], index) => {
+      const el1 = document.getElementById(`card-${id1}`);
+      const el2 = document.getElementById(`card-${id2}`);
+      if (!el1 || !el2) return;
+
+      const r1 = el1.getBoundingClientRect();
+      const r2 = el2.getBoundingClientRect();
+
+      // Pin coordinates (center top of card where the red thumbtack sits)
+      const x1 = r1.left - boardRect.left + r1.width / 2 + evidenceGrid.scrollLeft;
+      const y1 = r1.top - boardRect.top + 16 + evidenceGrid.scrollTop;
+      
+      const x2 = r2.left - boardRect.left + r2.width / 2 + evidenceGrid.scrollLeft;
+      const y2 = r2.top - boardRect.top + 16 + evidenceGrid.scrollTop;
+
+      // Natural gravity sag math
+      const dist = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+      const sagOffset = (index % 2 === 0) ? 22 : 36;
+      const sag = dist * 0.11 + sagOffset;
+
+      const mx = (x1 + x2) / 2;
+      const my = (y1 + y2) / 2 + sag;
+
+      // Create SVG path element for the red yarn string
+      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      path.setAttribute('d', `M ${x1} ${y1} Q ${mx} ${my} ${x2} ${y2}`);
+      path.setAttribute('class', 'yarn-string');
+      path.style.animationDelay = `${index * 0.1}s`;
+
+      // Tactile sound & hover interaction on the yarn
+      path.addEventListener('mouseenter', () => {
+        sfx.playYarnPluck();
+      });
+
+      activeStringBoard.appendChild(path);
+
+      // Pin knot ring at each end
+      [ [x1, y1], [x2, y2] ].forEach(([px, py]) => {
+        const knot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        knot.setAttribute('cx', px);
+        knot.setAttribute('cy', py);
+        knot.setAttribute('r', '4');
+        knot.setAttribute('class', 'yarn-pin-knot');
+        activeStringBoard.appendChild(knot);
+      });
+    });
   }
 
   // Check if case is already solved on load
@@ -913,6 +1123,9 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.removeItem(`${caseId}-method-select`);
     localStorage.removeItem(`${caseId}-motive-select`);
     localStorage.removeItem(`${caseId}-puzzle-solved`);
+    localStorage.removeItem(`${caseId}-linked-suspect`);
+    localStorage.removeItem(`${caseId}-linked-suspect-key`);
+    localStorage.removeItem(`${caseId}-linked-clues`);
     
     // Clear individual puzzle states too
     const c = allCases.find(cs => cs.id === caseId);
@@ -1000,6 +1213,7 @@ document.addEventListener('DOMContentLoaded', () => {
     openDeductionBtn.addEventListener('click', () => {
       sfx.playClick();
       deductionModal.classList.remove('hidden');
+      if (currentCaseData) updateLinkedCluesUI(currentCaseData);
     });
   }
 
@@ -1042,6 +1256,46 @@ document.addEventListener('DOMContentLoaded', () => {
       evidenceSelectionDock.classList.add('hidden');
       deductionModal.classList.remove('hidden');
       if (currentCaseData) updateLinkedCluesUI(currentCaseData);
+    });
+  }
+
+  const clearYarnBtn = document.getElementById('clear-yarn-btn');
+  if (clearYarnBtn) {
+    clearYarnBtn.addEventListener('click', () => {
+      sfx.playPin();
+      // Unlink suspect
+      if (linkedSuspectId) {
+        const sc = document.getElementById(`card-${linkedSuspectId}`);
+        if (sc) {
+          sc.classList.remove('card-linked');
+          const sb = sc.querySelector('.witness-link-btn');
+          if (sb) {
+            sb.classList.remove('is-linked');
+            sb.textContent = "📌 LINK SUSPECT";
+          }
+        }
+        linkedSuspectId = null;
+        linkedSuspectKey = null;
+      }
+      // Unlink clues
+      linkedEvidenceIds.forEach(id => {
+        const ec = document.getElementById(`card-${id}`);
+        if (ec) {
+          ec.classList.remove('card-linked');
+          const eb = ec.querySelector('.card-link-btn');
+          if (eb) {
+            eb.classList.remove('is-linked');
+            eb.textContent = "📌 LINK CLUE";
+          }
+        }
+      });
+      linkedEvidenceIds = [];
+      if (currentCaseData) {
+        localStorage.removeItem(`${currentCaseData.id}-linked-suspect`);
+        localStorage.removeItem(`${currentCaseData.id}-linked-suspect-key`);
+        localStorage.removeItem(`${currentCaseData.id}-linked-clues`);
+        updateLinkedCluesUI(currentCaseData);
+      }
     });
   }
 

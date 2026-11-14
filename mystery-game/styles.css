@@ -577,6 +577,8 @@
     animation: drawString 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
     filter: drop-shadow(3px 6px 5px rgba(0, 0, 0, 0.75));
     transition: stroke 0.3s, filter 0.3s;
+    pointer-events: stroke;
+    cursor: pointer;
   }
 
   #string-board path:hover {
@@ -584,6 +586,14 @@
     filter: drop-shadow(3px 8px 6px rgba(0, 0, 0, 0.85));
     /* Wiggle effect crawls the dasharray pattern */
     animation: stringWiggle 0.4s linear infinite;
+  }
+
+  .yarn-pin-knot {
+    fill: #e72c2c;
+    stroke: #ff8585;
+    stroke-width: 1.5px;
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.7));
+    pointer-events: none;
   }
 
   @keyframes stringWiggle {
@@ -657,9 +667,23 @@
   border-left: 5px double rgba(184, 37, 37, 0.2);
   position: relative;
   overflow: visible;
-  padding: 2.2rem 1.3rem 1.4rem 1.3rem;
+  padding: 2.2rem 1.3rem 3.6rem 1.3rem;
   display: flex;
   flex-direction: column;
+}
+
+.card-witness .witness-link-btn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  left: auto;
+}
+
+.card-witness .card-inspect-btn {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: auto;
 }
 
 .card-witness p {
@@ -2616,7 +2640,21 @@
      font-size: 0.92rem !important;
      line-height: 1.45rem !important;
      background-size: 100% 1.45rem !important;
-     padding: 1.8rem 1rem 1rem 1rem !important;
+     padding: 1.8rem 1rem 3.2rem 1rem !important;
+   }
+
+   .card-witness .witness-link-btn {
+     bottom: 8px !important;
+     right: 8px !important;
+     left: auto !important;
+     width: auto !important;
+   }
+
+   .card-witness .card-inspect-btn {
+     bottom: 8px !important;
+     left: 8px !important;
+     right: auto !important;
+     width: auto !important;
    }
 
    .witness-polaroid-container {

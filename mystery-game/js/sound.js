@@ -93,4 +93,29 @@ window.SoundEffects = class SoundEffects {
       console.warn("Audio folder play blocked/failed", e);
     }
   }
+
+  playYarnPluck() {
+    try {
+      this.init();
+      if (this.ctx.state === 'suspended') this.ctx.resume();
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      
+      osc.type = 'triangle';
+      // Low-frequency tactile acoustic string pluck
+      osc.frequency.setValueAtTime(260, this.ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(85, this.ctx.currentTime + 0.18);
+      
+      gain.gain.setValueAtTime(0.06, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.18);
+      
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.19);
+    } catch (e) {
+      console.warn("Audio yarn pluck blocked/failed", e);
+    }
+  }
 }

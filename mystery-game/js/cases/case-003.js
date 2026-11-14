@@ -21,6 +21,7 @@ window.case003 = {
   witnesses: [
     { 
       id: "witness-guard",
+      suspectKey: "guard",
       name: "Security Guard", 
       image: "assets/suspects/guard.jpg",
       caption: "NIGHT GUARD",
@@ -29,6 +30,7 @@ window.case003 = {
     },
     { 
       id: "witness-boris",
+      suspectKey: "boris",
       name: "Janitor (Boris)", 
       image: "assets/suspects/boris.jpg",
       caption: "B. IVANOV",
@@ -37,6 +39,7 @@ window.case003 = {
     },
     { 
       id: "witness-vance",
+      suspectKey: "vance",
       name: "Curator (Ms. Vance)", 
       image: "assets/suspects/vance.jpg",
       caption: "ELIZA VANCE",

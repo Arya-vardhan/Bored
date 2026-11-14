@@ -21,6 +21,7 @@ window.case002 = {
   witnesses: [
     { 
       id: "witness-elias",
+      suspectKey: "elias",
       name: "Rival Author (Elias)", 
       image: "assets/suspects/elias.jpg",
       caption: "ELIAS THORNE",
@@ -29,6 +30,7 @@ window.case002 = {
     },
     { 
       id: "witness-jeeves",
+      suspectKey: "jeeves",
       name: "Butler (Jeeves)", 
       image: "assets/suspects/jeeves.jpg",
       caption: "JEEVES (BUTLER)",
@@ -37,6 +39,7 @@ window.case002 = {
     },
     { 
       id: "witness-publisher",
+      suspectKey: "publisher",
       name: "The Publisher", 
       image: "assets/suspects/publisher.jpg",
       caption: "M. STERLING",

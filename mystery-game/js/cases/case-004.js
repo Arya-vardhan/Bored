@@ -36,6 +36,7 @@ window.case004 = {
   witnesses: [
     { 
       id: "witness-julian",
+      suspectKey: "julian",
       name: "Julian Thorne (Apprentice)", 
       image: "assets/suspects/julian.jpg",
       caption: "JULIAN THORNE",
@@ -44,6 +45,7 @@ window.case004 = {
     },
     { 
       id: "witness-gideon",
+      suspectKey: "gideon",
       name: "Gideon Vance (Rival)", 
       image: "assets/suspects/gideon.jpg",
       caption: "GIDEON VANCE",
@@ -52,6 +54,7 @@ window.case004 = {
     },
     { 
       id: "witness-beatrix",
+      suspectKey: "beatrix",
       name: "Beatrix Thorne (Daughter)", 
       image: "assets/suspects/beatrix.jpg",
       caption: "BEATRIX THORNE",

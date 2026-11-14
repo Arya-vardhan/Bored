@@ -22,6 +22,7 @@ window.case001 = {
   witnesses: [
     { 
       id: "witness-higgins",
+      suspectKey: "higgins",
       name: "Maid (Mrs. Higgins)", 
       image: "assets/suspects/higgins.jpg",
       caption: "MRS. HIGGINS",
@@ -30,6 +31,7 @@ window.case001 = {
     },
     { 
       id: "witness-arthur",
+      suspectKey: "arthur",
       name: "Nephew (Arthur)", 
       image: "assets/suspects/arthur.jpg",
       caption: "A. HARRINGTON",
@@ -38,6 +40,7 @@ window.case001 = {
     },
     { 
       id: "witness-clark",
+      suspectKey: "clark",
       name: "Neighbor (Mr. Clark)", 
       image: "assets/suspects/clark.jpg",
       caption: "W. CLARK",
@@ -46,6 +49,7 @@ window.case001 = {
     },
     { 
       id: "witness-harrington",
+      suspectKey: "harrington",
       name: "Lord Harrington", 
       image: "assets/suspects/harrington.jpg",
       caption: "LORD HARRINGTON",

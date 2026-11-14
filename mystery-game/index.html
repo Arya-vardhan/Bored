@@ -7,7 +7,7 @@
   <title>Bored?</title>
   <meta name="description" content="A single-page detective mystery case solver game.">
   <link rel="icon" type="image/png" href="assets/favicon.png">
-  <link rel="stylesheet" href="styles.css?v=7">
+  <link rel="stylesheet" href="styles.css?v=8">
   <link
     href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Permanent+Marker&family=Roboto:wght@300;400;700&family=Caveat:wght@400;700&family=Patrick+Hand&display=swap"
     rel="stylesheet">
@@ -291,25 +291,30 @@
     <!-- Floating Selection Dock (Active when picking evidence on corkboard) -->
     <div id="evidence-selection-dock" class="selection-dock hidden">
       <div class="dock-content">
-        <span class="dock-title">📍 SELECTING EVIDENCE</span>
+        <span class="dock-title">🧵 YARN BOARD</span>
+        <span class="badge-count" id="dock-suspect-badge">👤 NO SUSPECT PINNED</span>
         <span class="badge-count" id="dock-badge-count">0 / 2 CLUES LINKED</span>
+        <button type="button" id="clear-yarn-btn" class="submit-btn secondary-btn"
+          style="height: 38px; padding: 0 0.9rem; font-size: 0.8rem; border-color: #555;">
+          ✂️ CLEAR
+        </button>
         <button type="button" id="confirm-evidence-btn" class="submit-btn"
-          style="height: 40px; padding: 0 1.5rem; font-size: 0.9rem;">
+          style="height: 38px; padding: 0 1.2rem; font-size: 0.85rem;">
           CONFIRM SELECTION
         </button>
       </div>
     </div>
   </div>
 
-  <script src="js/cases/case-001.js?v=7"></script>
-  <script src="js/cases/case-002.js?v=7"></script>
-  <script src="js/cases/case-003.js?v=7"></script>
-  <script src="js/cases/case-004.js?v=7"></script>
-  <script src="js/cases/index.js?v=7"></script>
-  <script src="js/sound.js?v=7"></script>
-  <script src="js/puzzles.js?v=7"></script>
-  <script src="js/deductions.js?v=7"></script>
-  <script src="js/app.js?v=7"></script>
+  <script src="js/cases/case-001.js?v=8"></script>
+  <script src="js/cases/case-002.js?v=8"></script>
+  <script src="js/cases/case-003.js?v=8"></script>
+  <script src="js/cases/case-004.js?v=8"></script>
+  <script src="js/cases/index.js?v=8"></script>
+  <script src="js/sound.js?v=8"></script>
+  <script src="js/puzzles.js?v=8"></script>
+  <script src="js/deductions.js?v=8"></script>
+  <script src="js/app.js?v=8"></script>
 </body>
 
 </html>
