@@ -35,15 +35,27 @@ window.case004 = {
   // List of witness statements displayed on the corkboard
   witnesses: [
     { 
+      id: "witness-julian",
       name: "Julian Thorne (Apprentice)", 
+      image: "assets/suspects/julian.jpg",
+      caption: "JULIAN THORNE",
+      tag: "LEAD APPRENTICE",
       statement: "I was at the town square presenting the Great Clock tower from 11:30 PM to 12:15 AM. Hundreds of people saw me, and it was broadcasted live. Benedict was going to submit the patent application soon; he said it was the culmination of both our lives' work." 
     },
     { 
+      id: "witness-gideon",
       name: "Gideon Vance (Rival)", 
+      image: "assets/suspects/gideon.jpg",
+      caption: "GIDEON VANCE",
+      tag: "RIVAL HOROLOGIST",
       statement: "Benedict had been suing me for years over gear profiles, trying to ruin my business. I was drinking at the local tavern by the river junction from 10:00 PM onwards. I didn't see anyone, and I was drinking alone, but I had nothing to do with his death." 
     },
     { 
+      id: "witness-beatrix",
       name: "Beatrix Thorne (Daughter)", 
+      image: "assets/suspects/beatrix.jpg",
+      caption: "BEATRIX THORNE",
+      tag: "ELDEST DAUGHTER",
       statement: "My father disinherited me years ago because I chose music over gears. I was at my piano studio all night. I don't care about his clocks or his patents, and I certainly wouldn't know how to build those overly complex machines of his." 
     }
   ],

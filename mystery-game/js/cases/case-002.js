@@ -19,9 +19,30 @@ window.case002 = {
     { value: "inheritance", label: "Inherit the publishing house shares promised to Elias in a secret codicil" }
   ],
   witnesses: [
-    { name: "Rival Author (Elias)", statement: "I hated his guts, sure. Everyone says he stole my ideas for his latest bestseller. But I was at the pub all evening. Ask anyone." },
-    { name: "Butler (Jeeves)", statement: "Master Percival was furious earlier. He received a special delivery of artisanal sealing wax from an anonymous fan. He insisted on using it for his new manuscript." },
-    { name: "Publisher", statement: "Percival called me in a panic yesterday, saying he finally gathered undeniable proof that Elias was heavily plagiarizing him, and he was sending me the proof via mail today." }
+    { 
+      id: "witness-elias",
+      name: "Rival Author (Elias)", 
+      image: "assets/suspects/elias.jpg",
+      caption: "ELIAS THORNE",
+      tag: "PRIME SUSPECT",
+      statement: "I hated his guts, sure. Everyone says he stole my ideas for his latest bestseller. But I was at the pub all evening. Ask anyone." 
+    },
+    { 
+      id: "witness-jeeves",
+      name: "Butler (Jeeves)", 
+      image: "assets/suspects/jeeves.jpg",
+      caption: "JEEVES (BUTLER)",
+      tag: "HOUSEHOLD STAFF",
+      statement: "Master Percival was furious earlier. He received a special delivery of artisanal sealing wax from an anonymous fan. He insisted on using it for his new manuscript." 
+    },
+    { 
+      id: "witness-publisher",
+      name: "The Publisher", 
+      image: "assets/suspects/publisher.jpg",
+      caption: "M. STERLING",
+      tag: "KEY WITNESS",
+      statement: "Percival called me in a panic yesterday, saying he finally gathered undeniable proof that Elias was heavily plagiarizing him, and he was sending me the proof via mail today." 
+    }
   ],
   evidence: [
     { 

@@ -19,9 +19,30 @@ window.case003 = {
     { value: "janitor_frame", label: "Humiliate Boris and get him fired by framing him as a sloppy thief" }
   ],
   witnesses: [
-    { name: "Security Guard", statement: "The lights went out, I heard running footsteps, then something heavy hit me on the back of the head. I didn't see anything." },
-    { name: "Janitor (Boris)", statement: "I was cleaning the east wing. I didn't have a flashlight. I just stayed still until the lights came back on." },
-    { name: "Curator (Ms. Vance)", statement: "I was in my private office reading. Boris is incredibly clumsy, I've caught him admiring the priceless painting far too often." }
+    { 
+      id: "witness-guard",
+      name: "Security Guard", 
+      image: "assets/suspects/guard.jpg",
+      caption: "NIGHT GUARD",
+      tag: "ASSAULT VICTIM",
+      statement: "The lights went out, I heard running footsteps, then something heavy hit me on the back of the head. I didn't see anything." 
+    },
+    { 
+      id: "witness-boris",
+      name: "Janitor (Boris)", 
+      image: "assets/suspects/boris.jpg",
+      caption: "B. IVANOV",
+      tag: "SUSPECT",
+      statement: "I was cleaning the east wing. I didn't have a flashlight. I just stayed still until the lights came back on." 
+    },
+    { 
+      id: "witness-vance",
+      name: "Curator (Ms. Vance)", 
+      image: "assets/suspects/vance.jpg",
+      caption: "ELIZA VANCE",
+      tag: "CURATOR",
+      statement: "I was in my private office reading. Boris is incredibly clumsy, I've caught him admiring the priceless painting far too often." 
+    }
   ],
   evidence: [
     { 

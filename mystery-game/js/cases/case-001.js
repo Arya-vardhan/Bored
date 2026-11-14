@@ -20,10 +20,38 @@ window.case001 = {
     { value: "museum_donation", label: "Donate the sapphire anonymously to clear his heavy guilt" }
   ],
   witnesses: [
-    { name: "Maid (Mrs. Higgins)", statement: "I heard a loud thud from the study right around 8:00 PM. It sounded almost like a heavy block cracking on the hardwood floor." },
-    { name: "Nephew (Arthur)", statement: "I left the house at 7:30 PM for a drink at the docks. The heavy oak door was perfectly fine when I left. No one else was inside." },
-    { name: "Neighbor (Mr. Clark)", statement: "I was having a smoke outside. I saw someone pulling a thick string out from beneath the gap of the study window around 8:15 PM, but it was too dark to see a face." },
-    { name: "Lord Harrington", statement: "Arthur is the only other person who knew the safe's combination. His extensive gambling debts to the harbor syndicate are due on Friday... I fear the absolute worst." }
+    { 
+      id: "witness-higgins",
+      name: "Maid (Mrs. Higgins)", 
+      image: "assets/suspects/higgins.jpg",
+      caption: "MRS. HIGGINS",
+      tag: "HOUSEHOLD STAFF",
+      statement: "I heard a loud thud from the study right around 8:00 PM. It sounded almost like a heavy block cracking on the hardwood floor." 
+    },
+    { 
+      id: "witness-arthur",
+      name: "Nephew (Arthur)", 
+      image: "assets/suspects/arthur.jpg",
+      caption: "A. HARRINGTON",
+      tag: "PRIME SUSPECT",
+      statement: "I left the house at 7:30 PM for a drink at the docks. The heavy oak door was perfectly fine when I left. No one else was inside." 
+    },
+    { 
+      id: "witness-clark",
+      name: "Neighbor (Mr. Clark)", 
+      image: "assets/suspects/clark.jpg",
+      caption: "W. CLARK",
+      tag: "EYEWITNESS",
+      statement: "I was having a smoke outside. I saw someone pulling a thick string out from beneath the gap of the study window around 8:15 PM, but it was too dark to see a face." 
+    },
+    { 
+      id: "witness-harrington",
+      name: "Lord Harrington", 
+      image: "assets/suspects/harrington.jpg",
+      caption: "LORD HARRINGTON",
+      tag: "VICTIM / COMPLAINANT",
+      statement: "Arthur is the only other person who knew the safe's combination. His extensive gambling debts to the harbor syndicate are due on Friday... I fear the absolute worst." 
+    }
   ],
   evidence: [
     { 

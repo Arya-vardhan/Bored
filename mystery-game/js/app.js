@@ -448,12 +448,71 @@ document.addEventListener('DOMContentLoaded', () => {
     caseData.witnesses.forEach((witness, index) => {
       const card = document.createElement('div');
       card.className = 'card card-witness';
-      card.style.transform = `rotate(${Math.random() * 6 - 3}deg)`;
-      card.innerHTML = `
-        <p>"${witness.statement}"</p>
-        <h3>- ${witness.name}</h3>
-      `;
+      const cardRotation = (Math.random() * 4 - 2).toFixed(1);
+      card.style.transform = `rotate(${cardRotation}deg)`;
       card.style.animationDelay = `${index * 0.15}s`;
+
+      const hasImage = !!witness.image;
+      const photoRotation = (Math.random() * 4 - 2).toFixed(1);
+      const captionText = witness.caption || (witness.name ? witness.name.replace(/\s*\(.*\)/, '').toUpperCase() : 'SUSPECT');
+      const tagBadge = witness.tag ? `<span class="witness-tag">${witness.tag}</span>` : '';
+
+      // Photorealistic silver metallic paperclip SVG (classic trombone loop)
+      const paperclipSvg = `
+        <svg class="witness-paperclip" viewBox="0 0 24 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="clipShine-${index}" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ffffff" />
+              <stop offset="25%" stop-color="#e2e8f0" />
+              <stop offset="50%" stop-color="#94a3b8" />
+              <stop offset="75%" stop-color="#cbd5e1" />
+              <stop offset="100%" stop-color="#475569" />
+            </linearGradient>
+            <filter id="clipShadow-${index}" x="-40%" y="-20%" width="180%" height="150%">
+              <feDropShadow dx="1.5" dy="2.5" stdDeviation="1.5" flood-color="#000" flood-opacity="0.45" />
+            </filter>
+          </defs>
+          <path d="M12 3 C6.5 3 4 7 4 14 L4 51 C4 57.5 8.5 62 13.5 62 C18.5 62 21 57.5 21 51 L21 16 C21 11.5 17.5 8 13.5 8 C9.5 8 7 11.5 7 16 L7 48 C7 51 9 53 12 53 C15 53 17 51 17 48 L17 19" 
+                stroke="url(#clipShine-${index})" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" filter="url(#clipShadow-${index})" />
+        </svg>
+      `;
+
+      card.innerHTML = `
+        <div class="witness-polaroid-container" style="transform: rotate(${photoRotation}deg);">
+          ${paperclipSvg}
+          <div class="witness-polaroid" title="Click to inspect suspect photograph in forensic lens">
+            <div class="witness-photo" style="background-image: url('${hasImage ? witness.image : 'assets/favicon.png'}');">
+              <span class="witness-photo-overlay"></span>
+              <span class="witness-inspect-hint">🔍 INSPECT</span>
+            </div>
+            <div class="witness-polaroid-caption">${captionText}</div>
+          </div>
+        </div>
+        <div class="witness-content">
+          <div class="witness-meta-row">
+            ${tagBadge}
+          </div>
+          <p class="witness-statement">"${witness.statement}"</p>
+          <div class="witness-attribution">
+            <h3>- ${witness.name}</h3>
+          </div>
+        </div>
+      `;
+
+      // Allow clicking polaroid to inspect suspect in magnifying glass
+      const polaroidEl = card.querySelector('.witness-polaroid');
+      if (polaroidEl && hasImage) {
+        polaroidEl.addEventListener('click', (e) => {
+          e.stopPropagation();
+          openInspector({
+            type: 'photo',
+            image: witness.image,
+            title: `SUSPECT DOSSIER: ${witness.name}`,
+            text: `[POLICE ARCHIVE] ${witness.name}: "${witness.statement}"`
+          });
+        });
+      }
+
       evidenceGrid.appendChild(card);
     });
 
