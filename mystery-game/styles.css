@@ -1853,7 +1853,6 @@
     box-shadow: -5px 4px 15px rgba(0, 0, 0, 0.4);
     writing-mode: vertical-rl;
     text-orientation: mixed;
-    transform: rotate(180deg);
     transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
   }
 
@@ -1864,6 +1863,8 @@
   }
 
   .notebook-toggle-btn span {
+    transform: rotate(180deg);
+    display: inline-block;
     letter-spacing: 2px;
   }
 
