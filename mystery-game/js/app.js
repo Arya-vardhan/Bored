@@ -750,7 +750,7 @@ document.addEventListener('DOMContentLoaded', () => {
       requestDispatchBtn.innerHTML = `<span>✓ ALL DISPATCH LEADS RECEIVED</span>`;
     } else {
       requestDispatchBtn.disabled = false;
-      requestDispatchBtn.innerHTML = `<span class="dispatch-btn-icon">📞</span> <span class="dispatch-btn-label">REQUEST FORENSIC LEAD</span> (<span id="dispatch-remaining-count">${remaining}</span> LEFT)`;
+      requestDispatchBtn.innerHTML = `<span class="dispatch-btn-icon">📞</span> <span class="dispatch-btn-label">REQUEST LEAD</span> (<span id="dispatch-remaining-count">${remaining}</span> LEFT)`;
     }
   }
 
