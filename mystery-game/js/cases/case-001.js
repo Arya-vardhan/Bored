@@ -27,6 +27,26 @@ window.case001 = {
   ],
   evidence: [
     { 
+      id: "estate_dossier", 
+      type: "folder", 
+      title: "HARRINGTON ESTATE & REPOSITORY FILE", 
+      text: "Official archive containing architectural schematics, insurance policy amendments, and syndicate liens.",
+      documents: [
+        {
+          title: "ESTATE BLUEPRINTS & STUDY DEADBOLT SPECIFICATIONS",
+          content: "Metropolitan Police Engineering Survey (Oct 24, 1987):\n\nLocation: Harrington Hall, Study Room #4.\n\nKey Architectural Observations:\n1. The Display Room Door is solid 2.5-inch English Oak, fitted with a heavy interior cast-brass sliding deadbolt. When engaged from within, no keyway exists on the exterior face.\n2. The lower door gap measures 0.15 inches, preventing physical tool bypass. However, the study window sill features a 0.8-inch clearance gap directly beneath the iron security bars.\n3. Laboratory inspection of the brass deadbolt knob revealed microscopic shear grooves and polished surface burnishings, consistent with high-tension thread friction.\n4. Central heating registers were operating at maximum capacity (82°F boiler output), yet the study interior registered an ambient temperature of 38°F upon entry."
+        },
+        {
+          title: "INSURANCE UNDERWRITING & BENEFICIARY AMENDMENT",
+          content: "Lloyd's of London Underwriting File #8832-L:\n\nInsured Asset: 'The Eye of Leviathan' (98.4-carat flawless Ceylon sapphire). Appraised Value: £2,500,000.\n\nRecent Policy Amendments:\n- Dated: October 21, 1987 (72 hours prior to the theft).\n- Signatory: Lord Harrington (authorized estate signatory).\n- Amendment Note: Primary payout beneficiary reassigned from the Harrington Archaeological Trust to Arthur Harrington (nephew).\n\nNotes from Insurance Investigator Crane:\nArthur visited the underwriter's office in person twice on October 22 demanding written confirmation of the policy's casualty disbursement schedule."
+        },
+        {
+          title: "DOCKS LOAN SYNDICATE FORENSIC AUDIT",
+          content: "CID Harbor Patrol Financial Screening:\n\nSubject: Arthur Harrington (Junior Cargo Clerk, Docklands Pier 9).\n\nRecovered Artifacts:\n1. Loan shark ledger retrieved from the 'Blackwater Wharf Syndicate' lockbox. Outstanding principal: £50,000, marked with high-priority skull stamps and the inscription 'Pay or Swim by Friday'.\n2. Receipts from the Pier 4 Cold Storage Depot show Arthur purchased a 50lb industrial ice block on the morning of October 24.\n3. Ballistic & chemical screening confirms ice delivered to the harbor docks contains distinctive river silt and brackish estuarine sediment, matching puddle residue discovered inside the locked study."
+        }
+      ]
+    },
+    { 
       id: "thread", 
       type: "photo", 
       text: "Sturdy white thread caught in the internal window latch.", 

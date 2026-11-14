@@ -25,6 +25,26 @@ window.case003 = {
   ],
   evidence: [
     { 
+      id: "museum_dossier", 
+      type: "folder", 
+      title: "MUSEUM ARCHIVE & CRIME SCENE DOSSIER", 
+      text: "Comprehensive records of the auxiliary electrical substation, UV replica analysis, and offshore bank transfers.",
+      documents: [
+        {
+          title: "ELECTRICAL SUBSTATION & POWER DISRUPTION LOG",
+          content: "Metropolitan Museum Engineering Diagnostic (Dec 5, 1987):\n\nChronology of Event:\n- 23:45:00 - Main substation circuit breaker tripped manually in Sub-Basement Wing C.\n- 23:45:02 - Secondary automatic diesel generators fail to engage due to severed ignition solenoid.\n- 23:46:02 - Emergency backup power restored manually by night engineer.\n\nForensic Observations:\n1. The breaker trip was not an electrical surge; it was activated via a keyed security override panel requiring Level 4 Executive Curator credentials.\n2. Keycard access logs show Curator Ms. Vance's access badge was logged at the Sub-Basement junction door at 23:41, four minutes prior to the blackout.\n3. Flashlight casing recovered at the guard post contains traces of hair, cranial tissue, and oxidized brass finish matching museum issue inventory."
+        },
+        {
+          title: "ULTRAVIOLET FORENSIC SCREENING OF REPLICA CANVAS",
+          content: "Laboratory Analytical Report #ART-87-094:\n\nExamined Artifact: Counterfeit oil-on-canvas replacement of 'The Weeping Madonna' (1584).\n\nKey Findings:\n1. Pigment Age: The replacement canvas utilizes modern synthetic acrylic paints, aged artificially with tea extract and shellac craquelure.\n2. Invisible Phosphor Alignment: Under 365nm UV excitation, the inner edges of the ornate frame glow intensely. Faint phosphorescent dots are spaced at precise 2-inch intervals along the mounting bevel, allowing the frame to be aligned into wall brackets in complete, pitch-black darkness.\n3. Frame Tooling: The bevel cut and hanging mounts match the private workshop tools used in Ms. Vance's archival conservation studio."
+        },
+        {
+          title: "BANK OF ZURICH OVERDRAFT & EXPEDITION AUDIT",
+          content: "Special Fraud Squad Forensic Accounting Summary:\n\nAccount Holder: Margaret Vance (Director of Renaissance Antiquities).\n\nFinancial State:\n- Liabilities: Personal overdraft exceeding £1,200,000 across European lending institutions.\n- Private Venture: 'The Phoenician Basin Deep Archaeological Syndicate'. Private charter ships and excavation equipment chartered under Vance's sole liability.\n- Default Deadline: Creditors issued a final foreclosure notice set for December 15, 1987.\n\nBlack Market Liaison:\nWiretaps from Scotland Yard's Special Branch recorded communications between Vance and illicit art brokers in Tangier offering £2.5M for uncirculated masterworks of the Italian Renaissance."
+        }
+      ]
+    },
+    { 
       id: "shoes", 
       type: "photo", 
       text: "Expensive Oxford dress shoes caked in wet mud and dried leaves.", 

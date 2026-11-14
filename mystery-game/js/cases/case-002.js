@@ -25,6 +25,26 @@ window.case002 = {
   ],
   evidence: [
     { 
+      id: "autopsy_dossier", 
+      type: "folder", 
+      title: "CORONER INQUEST & LITERARY DOSSIER", 
+      text: "Official autopsy protocol, High Court plagiarism claim, and illicit customs seizure records.",
+      documents: [
+        {
+          title: "CORONER POST-MORTEM & TOXICOLOGY INQUEST",
+          content: "Coroner's Inquest Protocol #CP-87-1112:\n\nDeceased: Percival Blackwood (Age 52)\nFound: Seated at private mahogany writing desk, November 12, 1987, 21:15 Hours.\n\nPathological Findings:\n1. Cause of Death: Sudden cardiorespiratory arrest precipitated by acute transdermal neurotoxin intoxication ('Cyanogen-X').\n2. External Marks: The distal phalanges of the right thumb and index finger exhibited distinctive crimson wax residue and micro-petechial capillary ruptures.\n3. Toxicological Properties: Cyanogen-X is a synthetic alkaloid synthesized from rare tropical nightshade varieties. It remains stable and inert at solid ambient temperatures (60-70°F). However, when liquefied by direct flame or molten wax (>140°F), it releases potent vapor and penetrates epithelial skin layers within 15 seconds."
+        },
+        {
+          title: "HIGH COURT PLAGIARISM LITIGATION BRIEF",
+          content: "Chancery Division Brief: Blackwood vs. Thorne (Drafted Nov 10, 1987):\n\nStatement of Claim:\nPlaintiff Percival Blackwood prepares a formal filing alleging systemic, unauthorized copyright infringement against defendant Elias Thorne regarding the bestselling novel 'Shadows of the Thames'.\n\nSupporting Exhibits:\n- Exhibit A: Verbatim side-by-side manuscript excerpts demonstrating that Thorne copied three pivotal narrative climax chapters from Blackwood's private journals.\n- Exhibit B: Sworn deposition from editor Marcus Sterling acknowledging that Blackwood had provided initial draft copies to Thorne in confidence during the 1986 Writers' Guild symposium.\n\nLegal Consequence: A finding in favor of the plaintiff would carry complete commercial recall, bankruptcy damages of £400,000, and permanent revocation of Thorne's publishing credentials."
+        },
+        {
+          title: "HER MAJESTY'S CUSTOMS ILLICIT SUBSTANCE MANIFEST",
+          content: "HM Customs & Excise Special Investigation Log:\n\nInterception Notice: Postal Consignment #HM-44091 from Rangoon, Burma.\n\nDeclared Contents: 'Artisanal Bookbinding Wax and Vegetable Resins'.\nActual Contents: Unrefined organic concentrates of Cyanogen alkaloids, classified under the 1971 Poisons Act.\n\nRecipient Address: Residential Box #14, St. Jude's Lane (registered pseudonym: E. T. Booksellers, traced directly to Elias Thorne).\n\nFinancial Linkage: Bank transfers through the Mercantile Union confirm Thorne paid £8,500 to an unregistered chemical supplier three weeks before Blackwood's demise."
+        }
+      ]
+    },
+    { 
       id: "envelope", 
       type: "photo", 
       text: "An elegant vintage envelope with a partially melted red wax seal on the mahogany desk.", 
