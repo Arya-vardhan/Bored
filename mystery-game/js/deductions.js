@@ -1,5 +1,6 @@
 /**
  * Deduction Validation and Grading Module
+ * 1940s CID Forensic Evaluation System
  */
 
 window.verifyDeduction = function verifyDeduction(caseData, userChoices, linkedEvidenceIds) {
@@ -15,36 +16,60 @@ window.verifyDeduction = function verifyDeduction(caseData, userChoices, linkedE
 
   const isAllCorrect = isSuspectCorrect && isMethodCorrect && isMotiveCorrect && isEvidenceCorrect;
 
+  const correctSuspectOpt = caseData.suspectOptions.find(opt => opt.value === caseData.solution.suspect);
+  const suspectLabel = correctSuspectOpt ? correctSuspectOpt.label.split(' ')[0] : 'The suspect';
+
+  const reviewItems = [
+    {
+      index: '01',
+      id: 'suspect',
+      label: 'PRIMARY ACCUSED',
+      isCorrect: isSuspectCorrect,
+      statusBadge: isSuspectCorrect ? 'SUBSTANTIATED' : 'DEFICIENT',
+      detail: isSuspectCorrect
+        ? `Accusation substantiated. ${suspectLabel} matches the physical timeline and opportunity window.`
+        : "The accused individual's timeline or opportunity contradicts the physical crime scene parameters."
+    },
+    {
+      index: '02',
+      id: 'method',
+      label: 'EXECUTION METHOD',
+      isCorrect: isMethodCorrect,
+      statusBadge: isMethodCorrect ? 'SUBSTANTIATED' : 'DEFICIENT',
+      detail: isMethodCorrect
+        ? "Execution mechanics accurately reconstructed from physical traces."
+        : "The deduced mechanics of the crime contain fatal physical or logical flaws."
+    },
+    {
+      index: '03',
+      id: 'motive',
+      label: 'CRIMINAL MOTIVE',
+      isCorrect: isMotiveCorrect,
+      statusBadge: isMotiveCorrect ? 'SUBSTANTIATED' : 'DEFICIENT',
+      detail: isMotiveCorrect
+        ? "Perpetrator motive corroborated by archival financial and personal records."
+        : "The psychological driver does not align with the suspect's background or financial profile."
+    },
+    {
+      index: '04',
+      id: 'evidence',
+      label: 'PHYSICAL EXHIBITS',
+      isCorrect: isEvidenceCorrect,
+      statusBadge: isEvidenceCorrect ? 'SUBSTANTIATED' : 'DEFICIENT',
+      detail: isEvidenceCorrect
+        ? "Sealed exhibits provide irrefutable physical proof connecting suspect to crime vector."
+        : "The sealed exhibits fail to provide sufficient, conclusive proof to stand trial before the Magistrate."
+    }
+  ];
+
   let feedbackMsg = "Your case filing was reviewed by the Superintendent, but some parameters don't connect:<br><br>";
-  
-  if (!isSuspectCorrect) {
-    feedbackMsg += "• <strong>PRIMARY SUSPECT</strong>: The accused individual's timeline or opportunity doesn't match the crime scene parameters.<br>";
-  } else {
-    const correctSuspectOpt = caseData.suspectOptions.find(opt => opt.value === caseData.solution.suspect);
-    const suspectLabel = correctSuspectOpt ? correctSuspectOpt.label.split(' ')[0] : 'The suspect';
-    feedbackMsg += `• <strong>PRIMARY SUSPECT</strong>: Correct accusation. ${suspectLabel} is definitely the culprit.<br>`;
-  }
-  
-  if (!isMethodCorrect) {
-    feedbackMsg += "• <strong>EXECUTION METHOD</strong>: The physical mechanics of how the crime was committed contain logical flaws.<br>";
-  } else {
-    feedbackMsg += "• <strong>EXECUTION METHOD</strong>: Correct execution mechanics deduced.<br>";
-  }
-  
-  if (!isMotiveCorrect) {
-    feedbackMsg += "• <strong>CRIMINAL MOTIVE</strong>: The psychological reason driving the perpetrator doesn't align with their records.<br>";
-  } else {
-    feedbackMsg += "• <strong>CRIMINAL MOTIVE</strong>: Correct culprit motive deduced.<br>";
-  }
-  
-  if (!isEvidenceCorrect) {
-    feedbackMsg += "• <strong>LINKED EVIDENCE</strong>: The physical evidence linked does not provide sufficient, irrefutable proof of your theory.<br>";
-  } else {
-    feedbackMsg += "• <strong>LINKED EVIDENCE</strong>: Valid crime scene clues linked.<br>";
-  }
+  reviewItems.forEach(item => {
+    feedbackMsg += `• <strong>${item.label}</strong>: ${item.detail}<br>`;
+  });
 
   return {
     isAllCorrect,
-    feedbackMsg
+    feedbackMsg,
+    reviewItems
   };
-}
+};

@@ -7,7 +7,7 @@
   <title>Bored?</title>
   <meta name="description" content="A single-page detective mystery case solver game.">
   <link rel="icon" type="image/png" href="assets/favicon.png">
-  <link rel="stylesheet" href="styles.css?v=13">
+  <link rel="stylesheet" href="styles.css?v=14">
   <link
     href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Roboto:wght@300;400;500;700&family=Patrick+Hand&display=swap"
     rel="stylesheet">
@@ -192,30 +192,77 @@
       </div>
     </div>
 
-    <!-- Custom Feedback Modal -->
-    <div id="feedback-modal" class="overlay hidden">
-      <div class="overlay-content modal-content">
-        <h2 id="modal-title" class="solved-text" style="font-size: 2.5rem; letter-spacing: 2px;"></h2>
-        <p id="modal-body" style="text-align: left;"></p>
+    <!-- Custom Feedback / Superintendent Case Review Memorandum Modal -->
+    <div id="feedback-modal" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="overlay-content modal-content cid-memo-dossier" id="feedback-modal-card">
+        <!-- Archival Memo Header -->
+        <div class="memo-header">
+          <div class="memo-crest-row">
+            <svg class="cid-badge-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M12 3v3M12 18v3M3 12h3M18 12h3M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
+            </svg>
+            <div class="memo-dept-meta">
+              <span class="dept-title">METROPOLITAN POLICE // CRIMINAL INVESTIGATION DIVISION</span>
+              <span class="dept-subtitle">OFFICIAL SUPERINTENDENT CASE REVIEW • FORM NO. 44-R</span>
+            </div>
+            <div class="memo-serial" id="memo-serial-badge">MEMO #REV-1946</div>
+          </div>
+          <!-- Slanted Ink Rubber Stamp -->
+          <div class="memo-stamp-wrapper">
+            <div id="modal-stamp" class="rubber-stamp stamp-rejected">REJECTED BY SUPERINTENDENT</div>
+          </div>
+        </div>
+
+        <div class="memo-body-container">
+          <h2 id="modal-title" class="memo-headline">INDICTMENT REVIEW FINDINGS</h2>
+          <div id="modal-body" class="memo-content-box"></div>
+        </div>
+
         <div class="modal-actions" id="modal-actions">
-          <!-- Action buttons injected here -->
+          <!-- Action buttons dynamically injected here -->
         </div>
       </div>
     </div>
 
-    <!-- Success Overlay -->
-    <div id="solved-overlay" class="overlay hidden">
-      <div class="overlay-content modal-content" style="max-width: 650px;">
-        <h2 class="solved-text" data-text="CASE SOLVED!" style="font-size: 3rem;">CASE SOLVED!</h2>
-        <div id="solved-story-container"
-          style="text-align: left; margin-bottom: 2rem; color: #ddd; font-size: 1.05rem; line-height: 1.6;"></div>
-        <div class="modal-actions"
-          style="display: flex; gap: 15px; margin-top: 1.5rem; justify-content: center; width: 100%; flex-wrap: wrap;">
-          <button id="next-case-btn" class="submit-btn" style="flex: 1; min-width: 200px; height: 50px;">RETURN TO
-            FILES</button>
-          <button id="solved-reset-case-btn" class="submit-btn secondary-btn reset-case-btn"
-            style="flex: 1; min-width: 200px; height: 50px;">
-            <svg class="ui-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 6px;"><path d="M2.5 7.5A5.5 5.5 0 1 1 3.8 11.2"/><path d="M2.5 3.5v4h4"/></svg>RESET CASE</button>
+    <!-- Official Trial Conviction & Case Solved Overlay -->
+    <div id="solved-overlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="solved-title">
+      <div class="overlay-content modal-content cid-conviction-dossier">
+        <!-- Court Header -->
+        <div class="memo-header conviction-header">
+          <div class="memo-crest-row">
+            <svg class="cid-badge-icon" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z"/>
+              <path d="M9 12l2 2 4-4"/>
+            </svg>
+            <div class="memo-dept-meta">
+              <span class="dept-title">CENTRAL CRIMINAL COURT // OLD BAILEY PROCEEDINGS</span>
+              <span class="dept-subtitle">FINAL JUDICIAL VERDICT & CONVICTION DISPOSITION</span>
+            </div>
+            <div class="memo-serial">DOCKET #VERDICT-1946</div>
+          </div>
+          <!-- Case Solved Rubber Stamp -->
+          <div class="memo-stamp-wrapper">
+            <div class="rubber-stamp stamp-solved">CASE CONCLUDED // GUILTY VERDICT</div>
+          </div>
+        </div>
+
+        <div class="conviction-body-container">
+          <h2 id="solved-title" class="conviction-headline">CRIMINAL INDICTMENT UPHELD</h2>
+          <p class="conviction-sub">The Magistrate and Crown Prosecutor have evaluated your submitted evidence docket. The accused has been committed for trial without bail.</p>
+          
+          <div id="solved-story-container" class="conviction-story-scroll"></div>
+        </div>
+
+        <div class="modal-actions conviction-actions">
+          <button id="next-case-btn" class="submit-btn cid-action-btn primary-action">
+            <svg class="ui-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 6px;"><path d="M2 3.5h3.5l1.5 2H14v7.5H2z"/></svg>
+            ARCHIVE DOSSIER & RETURN TO FILES
+          </button>
+          <button id="solved-reset-case-btn" class="submit-btn secondary-btn cid-action-btn reset-case-btn">
+            <svg class="ui-icon" viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 6px;"><path d="M2.5 7.5A5.5 5.5 0 1 1 3.8 11.2"/><path d="M2.5 3.5v4h4"/></svg>
+            RE-OPEN CASE INVESTIGATION
+          </button>
         </div>
       </div>
     </div>
@@ -420,15 +467,15 @@
     </div>
   </div>
 
-  <script src="js/cases/case-001.js?v=13"></script>
-  <script src="js/cases/case-002.js?v=13"></script>
-  <script src="js/cases/case-003.js?v=13"></script>
-  <script src="js/cases/case-004.js?v=13"></script>
-  <script src="js/cases/index.js?v=13"></script>
-  <script src="js/sound.js?v=13"></script>
-  <script src="js/puzzles.js?v=13"></script>
-  <script src="js/deductions.js?v=13"></script>
-  <script src="js/app.js?v=13"></script>
+  <script src="js/cases/case-001.js?v=14"></script>
+  <script src="js/cases/case-002.js?v=14"></script>
+  <script src="js/cases/case-003.js?v=14"></script>
+  <script src="js/cases/case-004.js?v=14"></script>
+  <script src="js/cases/index.js?v=14"></script>
+  <script src="js/sound.js?v=14"></script>
+  <script src="js/puzzles.js?v=14"></script>
+  <script src="js/deductions.js?v=14"></script>
+  <script src="js/app.js?v=14"></script>
 </body>
 
 </html>

@@ -2639,57 +2639,366 @@
    background: rgba(255,255,255,0.2);
  }
 
+  /* Authentic 1940s CID Review Memorandum & Conviction Dossiers */
   .overlay-content {
     position: relative;
-    text-align: center;
-    background: #151515;
-    padding: 5rem 4rem;
-    border: 2px solid var(--accent);
-    border-radius: 12px;
-    box-shadow: 0 0 80px rgba(216, 49, 49, 0.25);
-    max-width: 600px;
+    text-align: left;
+    background: linear-gradient(135deg, #fdfbf7 0%, #f7f0e1 100%);
+    padding: 1.5rem 1.8rem;
+    border: 2px solid #5a452a;
+    outline: 1px solid #d4c5a9;
+    outline-offset: -5px;
+    border-radius: 4px;
+    box-shadow: 0 16px 50px rgba(0, 0, 0, 0.75), inset 0 0 50px rgba(180, 150, 110, 0.12);
+    max-width: 620px;
+    width: 90%;
+    color: #2b221a;
+    font-family: var(--font-typewriter);
+    box-sizing: border-box;
+    max-height: 92vh;
+    overflow-y: auto;
   }
 
- .solved-text {
-   font-family: var(--font-typewriter);
-   color: #fff;
-   font-size: 4.5rem;
-   margin: 0 0 1.5rem 0;
-   text-shadow: 0 0 20px rgba(216, 49, 49, 0.8), 0 0 40px rgba(216, 49, 49, 0.4);
-   letter-spacing: 4px;
- }
+  .cid-conviction-dossier {
+    max-width: 680px;
+  }
 
- .overlay-content p {
-   font-size: 1.2rem;
-   line-height: 1.6;
-   margin-bottom: 2.5rem;
-   color: #ccc;
- }
+  /* Archival Header inside Result Modals */
+  .memo-header {
+    border-bottom: 2px solid #5a452a;
+    padding-bottom: 0.6rem;
+    margin-bottom: 0.8rem;
+    position: relative;
+  }
 
- .modal-content {
-   padding: 3rem;
-   max-width: 500px;
- }
+  .memo-crest-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
 
- .modal-actions {
-   display: flex;
-   gap: 15px;
-   justify-content: center;
-   margin-top: 1.5rem;
- }
+  .cid-badge-icon {
+    color: #8c2222;
+    flex-shrink: 0;
+  }
 
- .secondary-btn {
-   background: transparent;
-   color: #fff;
-   border: 2px solid #555;
-   box-shadow: none;
- }
+  .conviction-header .cid-badge-icon {
+    color: #1e542b;
+  }
 
- .secondary-btn:hover {
-   background: #333;
-   border-color: #777;
-   box-shadow: none;
- }
+  .memo-dept-meta {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .memo-dept-meta .dept-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #3b2816;
+  }
+
+  .memo-dept-meta .dept-subtitle {
+    font-size: 0.62rem;
+    letter-spacing: 0.5px;
+    color: #7d654d;
+    font-style: italic;
+  }
+
+  .memo-serial {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #8c2222;
+    border: 1px dashed rgba(140, 34, 34, 0.4);
+    padding: 3px 7px;
+    border-radius: 3px;
+    background: rgba(140, 34, 34, 0.05);
+    white-space: nowrap;
+    letter-spacing: 0.8px;
+  }
+
+  .conviction-header .memo-serial {
+    color: #1e542b;
+    border-color: rgba(30, 84, 43, 0.4);
+    background: rgba(30, 84, 43, 0.06);
+  }
+
+  /* Diagonal Ink Rubber Stamps */
+  .memo-stamp-wrapper {
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .rubber-stamp {
+    display: inline-block;
+    padding: 4px 14px;
+    font-family: var(--font-typewriter);
+    font-size: 1.02rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transform: rotate(-2deg);
+    border: 2.5px double currentColor;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    user-select: none;
+    line-height: 1.25;
+  }
+
+  .stamp-rejected {
+    color: #8c2222;
+    background: rgba(140, 34, 34, 0.06);
+  }
+
+  .stamp-solved {
+    color: #1b5428;
+    background: rgba(27, 84, 40, 0.08);
+  }
+
+  .stamp-notice {
+    color: #634d36;
+    background: rgba(99, 77, 54, 0.08);
+  }
+
+  .stamp-purge {
+    color: #8c2222;
+    background: rgba(140, 34, 34, 0.08);
+  }
+
+  /* Memo Body Section */
+  .memo-body-container {
+    margin-bottom: 0.8rem;
+  }
+
+  .memo-headline {
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #3d2b1a;
+    margin: 0 0 0.5rem 0;
+    text-align: center;
+    border-bottom: 1px dashed rgba(90, 69, 42, 0.25);
+    padding-bottom: 4px;
+  }
+
+  .memo-content-box {
+    font-size: 0.82rem;
+    line-height: 1.45;
+    color: #3b2e22;
+  }
+
+  .memo-preamble {
+    margin: 0 0 0.5rem 0;
+    color: #554433;
+    font-style: italic;
+    font-size: 0.78rem;
+    line-height: 1.4;
+  }
+
+  .memo-closing {
+    margin: 0.6rem 0 0 0;
+    padding: 0.5rem 0.7rem;
+    background: rgba(90, 69, 42, 0.06);
+    border-left: 3px solid #8c2222;
+    font-size: 0.74rem;
+    color: #4a3828;
+    line-height: 1.4;
+  }
+
+  /* Structured Parameter Examination Ledger */
+  .verdict-ledger-table {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin: 0.4rem 0;
+  }
+
+  .verdict-ledger-row {
+    background: #f4ecdc;
+    border: 1px solid #dcd1ba;
+    border-radius: 3px;
+    padding: 0.45rem 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    transition: all 0.15s ease;
+  }
+
+  .verdict-ledger-row.is-substantiated {
+    border-left: 3.5px solid #1b5428;
+  }
+
+  .verdict-ledger-row.is-deficient {
+    border-left: 3.5px solid #8c2222;
+  }
+
+  .verdict-row-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .verdict-param-tag {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    color: #4a3828;
+  }
+
+  .verdict-badge {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 2px 6px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  .badge-substantiated {
+    color: #1b5428;
+    background: rgba(27, 84, 40, 0.12);
+    border: 1px solid #1b5428;
+  }
+
+  .badge-deficient {
+    color: #8c2222;
+    background: rgba(140, 34, 34, 0.12);
+    border: 1px solid #8c2222;
+  }
+
+  .verdict-param-desc {
+    font-size: 0.76rem;
+    color: #33271c;
+    margin: 0;
+    line-height: 1.35;
+  }
+
+  /* Conviction Dossier Body (Case Solved) */
+  .conviction-headline {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #1e542b;
+    margin: 0 0 0.4rem 0;
+    text-align: center;
+  }
+
+  .conviction-sub {
+    font-size: 0.82rem;
+    color: #63503d;
+    text-align: center;
+    margin: 0 0 1.2rem 0;
+    font-style: italic;
+    line-height: 1.45;
+  }
+
+  .conviction-story-scroll {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 48vh;
+    overflow-y: auto;
+    padding-right: 6px;
+    margin-bottom: 1.2rem;
+  }
+
+  .conviction-story-scroll::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .conviction-story-scroll::-webkit-scrollbar-thumb {
+    background: #bda98c;
+    border-radius: 3px;
+  }
+
+  .conviction-scroll-block {
+    background: #f4ecdc;
+    border: 1px solid #dbcfb8;
+    border-radius: 4px;
+    padding: 0.85rem 1rem;
+    border-left: 3.5px solid #1e542b;
+  }
+
+  .conviction-scroll-block.motive-block {
+    border-left-color: #8c2222;
+  }
+
+  .conviction-block-title {
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #4a3828;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .conviction-block-text {
+    font-size: 0.84rem;
+    line-height: 1.55;
+    color: #2b221a;
+    margin: 0;
+  }
+
+  /* Modal Actions Row */
+  .modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 1.2rem;
+    flex-wrap: wrap;
+  }
+
+  .cid-action-btn {
+    height: 44px;
+    padding: 0 1.4rem;
+    font-family: var(--font-typewriter);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    white-space: nowrap;
+  }
+
+  .cid-action-btn.primary-action,
+  .modal-actions .submit-btn:not(.secondary-btn) {
+    background: linear-gradient(180deg, #962626 0%, #701a1a 100%) !important;
+    border: 1.5px solid #521212 !important;
+    color: #fff !important;
+    box-shadow: 0 3px 8px rgba(82, 18, 18, 0.35) !important;
+  }
+
+  .cid-action-btn.primary-action:hover,
+  .modal-actions .submit-btn:not(.secondary-btn):hover {
+    background: linear-gradient(180deg, #aa2e2e 0%, #821f1f 100%) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 12px rgba(82, 18, 18, 0.45) !important;
+  }
+
+  .secondary-btn,
+  .cid-action-btn.secondary-btn {
+    background: rgba(90, 69, 42, 0.12) !important;
+    color: #3b2b1a !important;
+    border: 1.5px solid rgba(90, 69, 42, 0.35) !important;
+    box-shadow: none !important;
+  }
+
+  .secondary-btn:hover,
+  .cid-action-btn.secondary-btn:hover {
+    background: rgba(140, 34, 34, 0.12) !important;
+    border-color: #8c2222 !important;
+    color: #8c2222 !important;
+    transform: translateY(-1px);
+  }
 
  /* Keyframes */
  @keyframes fadeIn {
@@ -3646,13 +3955,94 @@
 
    /* Overlays and Modals */
    .overlay-content {
-     padding: 1.8rem 1.2rem !important;
-     width: 95% !important;
+     padding: 1.4rem 1rem !important;
+     width: 94% !important;
+     max-height: 90dvh !important;
      box-sizing: border-box !important;
    }
 
-   .solved-text {
-     font-size: 2rem !important;
+   .rubber-stamp {
+     font-size: 0.88rem !important;
+     padding: 5px 12px !important;
+     letter-spacing: 1.5px !important;
+   }
+
+   .memo-crest-row {
+     gap: 8px !important;
+   }
+
+   .memo-dept-meta .dept-title {
+     font-size: 0.72rem !important;
+   }
+
+   .memo-dept-meta .dept-subtitle {
+     font-size: 0.58rem !important;
+   }
+
+   .memo-serial {
+     font-size: 0.6rem !important;
+     padding: 2px 5px !important;
+   }
+
+   .memo-headline,
+   .conviction-headline {
+     font-size: 0.95rem !important;
+   }
+
+   .verdict-param-tag {
+     font-size: 0.68rem !important;
+   }
+
+   .verdict-badge {
+     font-size: 0.6rem !important;
+     padding: 2px 5px !important;
+   }
+
+   .verdict-param-desc {
+     font-size: 0.74rem !important;
+   }
+
+   .conviction-headline {
+     font-size: 1.15rem !important;
+     margin-bottom: 0.3rem !important;
+   }
+
+   .conviction-sub {
+     font-size: 0.72rem !important;
+     margin-bottom: 0.6rem !important;
+     line-height: 1.35 !important;
+   }
+
+   .conviction-story-scroll {
+     max-height: 28vh !important;
+     gap: 8px !important;
+     margin-bottom: 0.8rem !important;
+   }
+
+   .conviction-scroll-block {
+     padding: 0.6rem 0.75rem !important;
+   }
+
+   .conviction-block-title {
+     font-size: 0.66rem !important;
+     margin-bottom: 4px !important;
+   }
+
+   .conviction-block-text {
+     font-size: 0.76rem !important;
+     line-height: 1.35 !important;
+   }
+
+   .conviction-actions {
+     margin-top: 0.8rem !important;
+     gap: 8px !important;
+   }
+
+   .cid-action-btn {
+     width: 100% !important;
+     height: 38px !important;
+     font-size: 0.75rem !important;
+     padding: 0 0.8rem !important;
    }
 
    .deduction-modal-content.cid-indictment-dossier {

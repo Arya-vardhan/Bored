@@ -1815,7 +1815,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const userChoices = { suspect: suspectVal, method: methodVal, motive: motiveVal };
-    const { isAllCorrect, feedbackMsg } = verifyDeduction(currentCaseData, userChoices, linkedEvidenceIds);
+    const { isAllCorrect, feedbackMsg, reviewItems } = verifyDeduction(currentCaseData, userChoices, linkedEvidenceIds);
 
     if (isAllCorrect) {
       // Success Logic
@@ -1833,8 +1833,11 @@ document.addEventListener('DOMContentLoaded', () => {
       
       showFeedbackModal(
         "CONCLUSION REJECTED", 
-        feedbackMsg + "<br>Re-examine the testimonies, official F.I.R., and inspect all evidence cards carefully.",
-        [{ text: "RE-THINK", class: "secondary-btn" }]
+        reviewItems || feedbackMsg,
+        [
+          { text: "RE-EXAMINE CASE DOSSIER", class: "cid-action-btn primary-action" }
+        ],
+        { isReviewLedger: true }
       );
     }
   });
@@ -1849,14 +1852,70 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Modal helper
-  function showFeedbackModal(title, body, buttons) {
+  function showFeedbackModal(title, body, buttons, options = {}) {
+    const modalStamp = document.getElementById('modal-stamp');
+    const memoSerialBadge = document.getElementById('memo-serial-badge');
+
     modalTitle.textContent = title;
-    modalBody.innerHTML = body;
     modalActions.innerHTML = '';
-    
+
+    // Set contextual rubber stamp and serial reference
+    if (modalStamp) {
+      modalStamp.className = 'rubber-stamp';
+      if (title === 'CONCLUSION REJECTED') {
+        modalStamp.textContent = 'REJECTED BY SUPERINTENDENT';
+        modalStamp.classList.add('stamp-rejected');
+        if (memoSerialBadge && currentCaseData) {
+          memoSerialBadge.textContent = `MEMO #REV-${currentCaseData.id.toUpperCase()}`;
+        }
+      } else if (title === 'INCOMPLETE INDICTMENT') {
+        modalStamp.textContent = 'INCOMPLETE INDICTMENT';
+        modalStamp.classList.add('stamp-rejected');
+      } else if (title === 'INSUFFICIENT EVIDENCE') {
+        modalStamp.textContent = 'INSUFFICIENT EVIDENCE';
+        modalStamp.classList.add('stamp-rejected');
+      } else if (title && title.includes('RESET')) {
+        modalStamp.textContent = 'ARCHIVE PURGE NOTICE';
+        modalStamp.classList.add('stamp-purge');
+      } else if (title && title.includes('LABORATORY')) {
+        modalStamp.textContent = 'LAB ANALYSIS REQUIRED';
+        modalStamp.classList.add('stamp-notice');
+      } else {
+        modalStamp.textContent = 'OFFICIAL NOTICE';
+        modalStamp.classList.add('stamp-notice');
+      }
+    }
+
+    if (options.isReviewLedger && Array.isArray(body)) {
+      let ledgerHtml = `
+        <p class="memo-preamble">To Investigating Detective: The submitted criminal indictment has been examined by the Superintendent. Legal parameters evaluated as follows:</p>
+        <div class="verdict-ledger-table">
+      `;
+      body.forEach(item => {
+        ledgerHtml += `
+          <div class="verdict-ledger-row ${item.isCorrect ? 'is-substantiated' : 'is-deficient'}">
+            <div class="verdict-row-header">
+              <span class="verdict-param-tag">${item.index} // ${item.label}</span>
+              <span class="verdict-badge ${item.isCorrect ? 'badge-substantiated' : 'badge-deficient'}">${item.isCorrect ? '✓ SUBSTANTIATED' : '✗ DEFICIENT'}</span>
+            </div>
+            <p class="verdict-param-desc">${item.detail}</p>
+          </div>
+        `;
+      });
+      ledgerHtml += `
+        </div>
+        <div class="memo-closing">
+          <strong>SUPERINTENDENT DIRECTIVE:</strong> Re-examine the testimonies, official F.I.R., and inspect all evidence cards carefully before re-submitting findings to the Magistrate.
+        </div>
+      `;
+      modalBody.innerHTML = ledgerHtml;
+    } else {
+      modalBody.innerHTML = typeof body === 'string' ? body : '';
+    }
+
     buttons.forEach(btnInfo => {
       const btn = document.createElement('button');
-      btn.className = `submit-btn ${btnInfo.class || ''}`;
+      btn.className = `submit-btn ${btnInfo.class || 'cid-action-btn'}`;
       btn.textContent = btnInfo.text;
       btn.addEventListener('click', () => {
         sfx.playClick();
@@ -1865,7 +1924,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       modalActions.appendChild(btn);
     });
-    
+
     feedbackModal.classList.remove('hidden');
   }
 
@@ -1877,8 +1936,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // Inject final narrative and motive text
     const storyContainer = document.getElementById('solved-story-container');
     storyContainer.innerHTML = `
-      <p style="margin-bottom: 1.5rem;"><strong>THE DEDUCTION:</strong><br>${currentCaseData.solution.narrative}</p>
-      <p><strong>THE MOTIVE:</strong><br>${currentCaseData.solution.motiveText}</p>
+      <div class="conviction-scroll-block">
+        <div class="conviction-block-title">
+          <svg class="ui-icon" viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" style="vertical-align: -1px; margin-right: 4px;"><path d="M2 3.5h3.5l1.5 2H14v7.5H2z"/></svg>
+          OFFICIAL FORENSIC DEDUCTION & TIMELINE
+        </div>
+        <p class="conviction-block-text">${currentCaseData.solution.narrative}</p>
+      </div>
+      <div class="conviction-scroll-block motive-block">
+        <div class="conviction-block-title">
+          <svg class="ui-icon" viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" style="vertical-align: -1px; margin-right: 4px;"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+          ESTABLISHED CRIMINAL MOTIVE & CONFESSION
+        </div>
+        <p class="conviction-block-text">${currentCaseData.solution.motiveText}</p>
+      </div>
     `;
 
     overlay.classList.remove('hidden');
