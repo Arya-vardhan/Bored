@@ -7,7 +7,7 @@
   <title>Bored?</title>
   <meta name="description" content="A single-page detective mystery case solver game.">
   <link rel="icon" type="image/png" href="assets/favicon.png">
-  <link rel="stylesheet" href="styles.css?v=12">
+  <link rel="stylesheet" href="styles.css?v=13">
   <link
     href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Roboto:wght@300;400;500;700&family=Patrick+Hand&display=swap"
     rel="stylesheet">
@@ -363,6 +363,16 @@
               <!-- Dynamically populated physical evidence pockets -->
             </div>
             <div id="selected-clues-preview" class="selected-clues-preview-box" style="display: none;"></div>
+
+            <!-- In-Dossier Evidence Direct Selector -->
+            <div class="evidence-picker-banner">
+              <span class="picker-label">CASE EXHIBITS REPOSITORY:</span>
+              <span class="picker-sub">Tap verified exhibits below to seal directly into Case Indictment</span>
+            </div>
+            <div id="dossier-evidence-grid" class="dossier-evidence-grid" role="group" aria-label="Available Case Exhibits">
+              <!-- Dynamically populated evidence selection cards -->
+            </div>
+
             <button type="button" id="select-evidence-trigger-btn" class="submit-btn secondary-btn indictment-corkboard-btn">
               <svg class="ui-icon" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1v5M4 6h8l-1 5H5L4 6zM8 11v4"/></svg>
               PIN EVIDENCE ON CORKBOARD
@@ -410,15 +420,15 @@
     </div>
   </div>
 
-  <script src="js/cases/case-001.js?v=12"></script>
-  <script src="js/cases/case-002.js?v=12"></script>
-  <script src="js/cases/case-003.js?v=12"></script>
-  <script src="js/cases/case-004.js?v=12"></script>
-  <script src="js/cases/index.js?v=12"></script>
-  <script src="js/sound.js?v=12"></script>
-  <script src="js/puzzles.js?v=12"></script>
-  <script src="js/deductions.js?v=12"></script>
-  <script src="js/app.js?v=12"></script>
+  <script src="js/cases/case-001.js?v=13"></script>
+  <script src="js/cases/case-002.js?v=13"></script>
+  <script src="js/cases/case-003.js?v=13"></script>
+  <script src="js/cases/case-004.js?v=13"></script>
+  <script src="js/cases/index.js?v=13"></script>
+  <script src="js/sound.js?v=13"></script>
+  <script src="js/puzzles.js?v=13"></script>
+  <script src="js/deductions.js?v=13"></script>
+  <script src="js/app.js?v=13"></script>
 </body>
 
 </html>

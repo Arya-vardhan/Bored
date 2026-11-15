@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const methodCardsContainer = document.getElementById('method-cards-container');
   const motiveCardsContainer = document.getElementById('motive-cards-container');
   const evidencePocketsContainer = document.getElementById('evidence-pockets-container');
+  const dossierEvidenceGrid = document.getElementById('dossier-evidence-grid');
   const suspectSelectionHint = document.getElementById('suspect-selection-hint');
   const methodSelectionHint = document.getElementById('method-selection-hint');
   const motiveSelectionHint = document.getElementById('motive-selection-hint');
@@ -775,6 +776,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function toggleLinkClue(evidenceId, cardElement, caseData) {
+    if (!cardElement) {
+      cardElement = document.getElementById(`card-${evidenceId}`);
+    }
     sfx.playPin();
     sfx.playYarnPluck();
     const idx = linkedEvidenceIds.indexOf(evidenceId);
@@ -977,7 +981,10 @@ document.addEventListener('DOMContentLoaded', () => {
       selectedCluesPreview.appendChild(previewWrapper);
     }
 
-    // 4. Render procedural multi-node Red Yarn board
+    // 4. Update in-dossier evidence selection repository
+    renderDossierEvidencePicker(caseData);
+
+    // 5. Render procedural multi-node Red Yarn board
     drawActiveStrings();
   }
 
@@ -1287,6 +1294,83 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     }
+
+    // 4. Update in-dossier direct evidence exhibit selector
+    renderDossierEvidencePicker(caseData);
+  }
+
+  // Render Direct Evidence Exhibit Picker inside Section 04 of Indictment Dossier
+  function renderDossierEvidencePicker(caseData) {
+    if (!dossierEvidenceGrid || !caseData || !caseData.evidence) return;
+    dossierEvidenceGrid.innerHTML = '';
+
+    const filterable = caseData.evidence.filter(ev => ev.type !== 'folder');
+    filterable.forEach((ev) => {
+      const isPuzzleCard = !!ev.puzzle;
+      const isSolved = localStorage.getItem(`${caseData.id}-puzzle-${ev.id}-solved`) === 'true' || 
+                       localStorage.getItem(`${caseData.id}-puzzle-solved`) === 'true';
+      const isLocked = isPuzzleCard && !isSolved;
+      const slotIndex = linkedEvidenceIds.indexOf(ev.id);
+      const isSealed = slotIndex !== -1;
+
+      const card = document.createElement('div');
+      card.className = `dossier-evidence-card ${isSealed ? 'is-sealed' : ''} ${isLocked ? 'is-locked' : ''}`;
+      card.setAttribute('role', 'button');
+      card.setAttribute('tabindex', isLocked ? '-1' : '0');
+      card.setAttribute('aria-label', `Evidence: ${ev.title || 'Specimen'}`);
+
+      const title = ev.title || (ev.text ? ev.text.split('.')[0] : 'Specimen');
+      const typeLabel = isLocked ? 'LAB WORKSTATION REQUIRED' : (ev.type ? `PHYSICAL ${ev.type.toUpperCase()}` : 'EXHIBIT');
+
+      let badgeText = '+ SEAL EXHIBIT';
+      if (isLocked) {
+        badgeText = '🔒 ANALYZE IN LAB';
+      } else if (isSealed) {
+        badgeText = `✓ SEALED #0${slotIndex + 1}`;
+      }
+
+      card.innerHTML = `
+        <div class="dossier-evidence-card-info">
+          <span class="dossier-evidence-card-type">${typeLabel}</span>
+          <span class="dossier-evidence-card-title" title="${title}">${title}</span>
+        </div>
+        <span class="dossier-evidence-card-badge">${badgeText}</span>
+      `;
+
+      card.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (isLocked) {
+          sfx.playClick();
+          showFeedbackModal(
+            "LABORATORY ANALYSIS REQUIRED",
+            `The specimen <strong>${title}</strong> contains unverified traces. You must analyze it at the Laboratory Workstation on the Corkboard before it can be entered as official evidence in an indictment.`,
+            [
+              {
+                text: "GO TO LAB",
+                onClick: () => {
+                  if (deductionModal) deductionModal.classList.add('hidden');
+                  openPuzzle(ev);
+                }
+              },
+              { text: "DISMISS", class: "secondary-btn" }
+            ]
+          );
+          return;
+        }
+
+        const cardEl = document.getElementById(`card-${ev.id}`);
+        toggleLinkClue(ev.id, cardEl, caseData);
+      });
+
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          card.click();
+        }
+      });
+
+      dossierEvidenceGrid.appendChild(card);
+    });
   }
 
   // Check if case is already solved on load
