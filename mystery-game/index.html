@@ -277,29 +277,34 @@
         </div>
 
         <form id="solution-form">
+          <!-- Section 1: Primary Accused (Suspect Dropdown & Interactive Lineup) -->
+          <div class="indictment-section" id="section-accused-suspect">
+            <div class="indictment-section-header">
+              <span class="sec-number">01</span>
+              <span class="sec-label">PRIMARY ACCUSED CULPRIT</span>
+              <span class="sec-hint" id="suspect-selection-hint">Select suspect or stamp polaroid</span>
+            </div>
+
+            <!-- Visible Vintage Police Department Suspect Select Dropdown -->
+            <div class="suspect-select-wrapper">
+              <select id="suspect-select" class="indictment-suspect-select" required aria-label="Select Primary Accused Suspect">
+                <option value="" disabled selected>-- CHOOSE PRIMARY ACCUSED SUSPECT --</option>
+              </select>
+            </div>
+
+            <div id="suspect-lineup-container" class="suspect-polaroid-lineup" role="radiogroup" aria-label="Primary Accused Suspect Gallery">
+              <!-- Dynamically populated mini-polaroids -->
+            </div>
+          </div>
+
           <!-- Hidden accessible selects (maintained for compatibility and validation) -->
           <div class="sr-hidden-select-group" style="position: absolute; opacity: 0; pointer-events: none; height: 0; width: 0; overflow: hidden;" aria-hidden="true">
-            <select id="suspect-select" tabindex="-1">
-              <option value="" disabled selected>Select suspect...</option>
-            </select>
             <select id="method-select" tabindex="-1">
               <option value="" disabled selected>Select method...</option>
             </select>
             <select id="motive-select" tabindex="-1">
               <option value="" disabled selected>Select motive...</option>
             </select>
-          </div>
-
-          <!-- Section 1: Primary Accused (Suspect Polaroid Lineup) -->
-          <div class="indictment-section" id="section-accused-suspect">
-            <div class="indictment-section-header">
-              <span class="sec-number">01</span>
-              <span class="sec-label">PRIMARY ACCUSED CULPRIT</span>
-              <span class="sec-hint" id="suspect-selection-hint">Stamp accused suspect</span>
-            </div>
-            <div id="suspect-lineup-container" class="suspect-polaroid-lineup" role="radiogroup" aria-label="Primary Accused Suspect">
-              <!-- Dynamically populated mini-polaroids -->
-            </div>
           </div>
 
           <!-- Section 2: Execution Mechanism & Forensic Vector -->

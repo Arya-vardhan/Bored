@@ -332,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
     evidenceGrid.innerHTML = '<svg id="string-board"></svg>';
     
     // Populate dropdown selects
-    suspectSelect.innerHTML = '<option value="" disabled selected>Select suspect...</option>';
+    suspectSelect.innerHTML = '<option value="" disabled selected>-- CHOOSE PRIMARY ACCUSED SUSPECT --</option>';
     caseData.suspectOptions.forEach(opt => {
       const option = document.createElement('option');
       option.value = opt.value;
@@ -463,15 +463,17 @@ document.addEventListener('DOMContentLoaded', () => {
     renderGamifiedDeductionUI(caseData);
 
     suspectSelect.onchange = () => {
-      sfx.playClick();
+      sfx.playStamp();
       if (currentCaseData) {
         localStorage.setItem(`${currentCaseData.id}-suspect-select`, suspectSelect.value);
-        const match = currentCaseData.witnesses.find(w => w.suspectKey === suspectSelect.value);
+        const match = currentCaseData.witnesses ? currentCaseData.witnesses.find(w => w.suspectKey === suspectSelect.value) : null;
         if (match) {
           const wCard = document.getElementById(`card-${match.id}`);
           toggleLinkSuspect(match.id, match.suspectKey, wCard, currentCaseData, true);
+        } else {
+          updateLinkedCluesUI(currentCaseData);
+          renderGamifiedDeductionUI(currentCaseData);
         }
-        renderGamifiedDeductionUI(currentCaseData);
       }
     };
     methodSelect.onchange = () => {
@@ -1083,10 +1085,14 @@ document.addEventListener('DOMContentLoaded', () => {
       indictmentSerialBadge.textContent = `FILE CID-${caseData.id.toUpperCase()}`;
     }
 
-    // 1. Primary Accused (Suspect Polaroid Lineup)
+    // 1. Primary Accused (Suspect Dropdown & Polaroid Lineup)
     if (suspectLineupContainer && caseData.suspectOptions) {
       suspectLineupContainer.innerHTML = '';
-      const currentSuspectVal = suspectSelect.value || linkedSuspectKey;
+      const currentSuspectVal = suspectSelect ? (suspectSelect.value || linkedSuspectKey) : linkedSuspectKey;
+
+      if (suspectSelect && currentSuspectVal) {
+        suspectSelect.value = currentSuspectVal;
+      }
 
       caseData.suspectOptions.forEach((opt) => {
         const witness = caseData.witnesses ? caseData.witnesses.find(w => w.suspectKey === opt.value) : null;
@@ -1125,9 +1131,14 @@ document.addEventListener('DOMContentLoaded', () => {
         roleEl.className = 'suspect-lineup-role';
         roleEl.textContent = displayRole || opt.label;
 
+        const actionBtn = document.createElement('div');
+        actionBtn.className = `suspect-accuse-btn ${isAccused ? 'is-accused' : ''}`;
+        actionBtn.innerHTML = isAccused ? `✓ ACCUSED` : `ACCUSE`;
+
         item.appendChild(photoWrap);
         item.appendChild(nameEl);
         item.appendChild(roleEl);
+        item.appendChild(actionBtn);
 
         if (isAccused) {
           const stamp = document.createElement('div');
@@ -1138,14 +1149,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const selectSuspectHandler = () => {
           sfx.playStamp();
-          suspectSelect.value = opt.value;
-          localStorage.setItem(`${caseData.id}-suspect-select`, opt.value);
+          if (suspectSelect) {
+            suspectSelect.value = opt.value;
+            localStorage.setItem(`${caseData.id}-suspect-select`, opt.value);
+          }
 
           if (witness) {
             const wCard = document.getElementById(`card-${witness.id}`);
             toggleLinkSuspect(witness.id, witness.suspectKey, wCard, caseData, true);
+          } else {
+            updateLinkedCluesUI(caseData);
+            renderGamifiedDeductionUI(caseData);
           }
-          renderGamifiedDeductionUI(caseData);
         };
 
         item.addEventListener('click', selectSuspectHandler);
@@ -1166,7 +1181,7 @@ document.addEventListener('DOMContentLoaded', () => {
           suspectSelectionHint.style.color = '#8c2222';
           suspectSelectionHint.style.fontWeight = 'bold';
         } else {
-          suspectSelectionHint.textContent = 'Stamp accused suspect';
+          suspectSelectionHint.textContent = 'Select suspect or stamp polaroid';
           suspectSelectionHint.style.color = '';
           suspectSelectionHint.style.fontWeight = '';
         }

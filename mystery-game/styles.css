@@ -1641,10 +1641,25 @@
     box-sizing: border-box;
   }
 
+  #deduction-modal #close-deduction-btn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 36px;
+    height: 36px;
+    font-size: 1.3rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+
   /* Archival Dossier Header */
   .indictment-header {
     margin-bottom: 1.25rem;
     padding-bottom: 0.75rem;
+    padding-right: 44px;
     border-bottom: 2px solid #8c2222;
   }
 
@@ -1769,6 +1784,77 @@
     font-size: 0.72rem;
     color: #735e46;
     font-style: italic;
+  }
+
+  /* Suspect Select Dropdown & Action Button */
+  .suspect-select-wrapper {
+    margin-bottom: 10px;
+    width: 100%;
+  }
+
+  .indictment-suspect-select {
+    width: 100%;
+    height: 44px;
+    background: #fffdf8 url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238c2222' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat right 1rem center;
+    background-size: 1rem;
+    border: 1.5px solid rgba(120, 95, 60, 0.45);
+    border-radius: 4px;
+    color: #241e17;
+    font-family: var(--font-typewriter);
+    font-size: 0.88rem;
+    font-weight: 700;
+    padding: 0 2.5rem 0 1rem;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    box-sizing: border-box;
+  }
+
+  .indictment-suspect-select:focus {
+    outline: none;
+    border-color: #8c2222;
+    box-shadow: 0 0 0 3px rgba(140, 34, 34, 0.18);
+  }
+
+  .indictment-suspect-select option {
+    background: #fffdf9;
+    color: #241e17;
+    font-family: var(--font-typewriter);
+    font-size: 0.88rem;
+    padding: 8px;
+  }
+
+  .suspect-accuse-btn {
+    display: inline-block;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: var(--font-typewriter);
+    font-size: 0.62rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    text-align: center;
+    padding: 3px 4px;
+    margin-top: 5px;
+    border-radius: 3px;
+    border: 1px solid rgba(120, 95, 60, 0.35);
+    background: rgba(90, 69, 42, 0.07);
+    color: #6b553e;
+    transition: all 0.15s ease;
+  }
+
+  .suspect-lineup-item:hover .suspect-accuse-btn {
+    border-color: #8c2222;
+    color: #8c2222;
+    background: rgba(140, 34, 34, 0.08);
+  }
+
+  .suspect-accuse-btn.is-accused {
+    background: #8c2222 !important;
+    color: #fff !important;
+    border-color: #701a1a !important;
+    box-shadow: 0 1px 3px rgba(140, 34, 34, 0.3);
   }
 
   /* Suspect Polaroid Lineup (Section 01) */
@@ -3386,13 +3472,30 @@
    }
 
    .deduction-modal-content.cid-indictment-dossier {
-     padding: 1.2rem 0.85rem !important;
-     max-height: 94vh !important;
-     width: 96% !important;
+     padding: 1.1rem 0.8rem 2.2rem 0.8rem !important;
+     max-height: 92vh !important;
+     width: 95% !important;
+     box-sizing: border-box !important;
+   }
+
+   #deduction-modal #close-deduction-btn {
+     position: absolute !important;
+     width: 32px !important;
+     height: 32px !important;
+     font-size: 1.2rem !important;
+     top: 10px !important;
+     right: 10px !important;
+     z-index: 100 !important;
+   }
+
+   .indictment-header {
+     padding-right: 38px !important;
+     margin-bottom: 0.9rem !important;
    }
 
    .indictment-crest-row {
      gap: 8px !important;
+     align-items: center !important;
    }
 
    .indictment-dept-meta .dept-title {
@@ -3403,24 +3506,171 @@
      font-size: 0.65rem !important;
    }
 
+   .indictment-case-badge {
+     font-size: 0.65rem !important;
+     padding: 2px 6px !important;
+     margin-left: auto !important;
+   }
+
+   .indictment-banner {
+     padding: 0.6rem 0.75rem !important;
+     margin-bottom: 0.9rem !important;
+   }
+
+   .indictment-banner-tag {
+     font-size: 0.65rem !important;
+     padding: 2px 6px !important;
+     margin-bottom: 0.35rem !important;
+   }
+
+   .indictment-banner-text {
+     font-size: 0.76rem !important;
+     line-height: 1.35 !important;
+   }
+
+   .indictment-section-title {
+     font-size: 0.72rem !important;
+     margin-bottom: 6px !important;
+     flex-wrap: wrap !important;
+     gap: 4px !important;
+   }
+
+   .indictment-section-title .sec-badge {
+     font-size: 0.6rem !important;
+     padding: 1px 4px !important;
+   }
+
+   .indictment-section-title .sec-status {
+     font-size: 0.65rem !important;
+     margin-left: auto !important;
+   }
+
+   .suspect-select-wrapper {
+     margin-bottom: 8px !important;
+   }
+
+   .indictment-suspect-select {
+     height: 40px !important;
+     font-size: 0.8rem !important;
+     padding: 0 2.2rem 0 0.75rem !important;
+   }
+
+   .suspect-polaroid-lineup {
+     display: grid !important;
+     grid-template-columns: repeat(auto-fit, minmax(72px, 1fr)) !important;
+     gap: 6px !important;
+     overflow-x: visible !important;
+     padding-bottom: 4px !important;
+   }
+
    .suspect-lineup-item {
-     width: 96px !important;
-     padding: 5px 4px 6px 4px !important;
+     width: 100% !important;
+     max-width: 100% !important;
+     padding: 4px 3px 5px 3px !important;
+     box-sizing: border-box !important;
    }
 
    .suspect-lineup-photo-wrap {
-     height: 80px !important;
+     height: 68px !important;
+   }
+
+   .suspect-lineup-caption {
+     font-size: 0.58rem !important;
+     margin-top: 3px !important;
+     letter-spacing: 0 !important;
+   }
+
+   .suspect-lineup-tag {
+     font-size: 0.5rem !important;
+     margin-bottom: 2px !important;
+   }
+
+   .suspect-accuse-btn {
+     font-size: 0.54rem !important;
+     padding: 2px 2px !important;
+     margin-top: 3px !important;
+   }
+
+   .suspect-stamp-watermark {
+     font-size: 0.72rem !important;
+     letter-spacing: 1px !important;
+     padding: 2px 4px !important;
+     border-width: 1.5px !important;
+   }
+
+   .forensic-vector-slip {
+     padding: 7px 9px !important;
+     margin-bottom: 5px !important;
+     min-height: 42px !important;
+     gap: 8px !important;
+   }
+
+   .vector-slip-tag {
+     font-size: 0.62rem !important;
+     padding: 2px 5px !important;
+   }
+
+   .vector-slip-text {
+     font-size: 0.78rem !important;
+     line-height: 1.35 !important;
+   }
+
+   .vector-slip-radio {
+     width: 18px !important;
+     height: 18px !important;
+     min-width: 18px !important;
+     font-size: 0.65rem !important;
    }
 
    .evidence-pockets-grid {
      grid-template-columns: 1fr !important;
-     gap: 8px !important;
+     gap: 6px !important;
+   }
+
+   .evidence-pocket {
+     min-height: 52px !important;
+     padding: 5px 8px !important;
+   }
+
+   .pocket-thumbnail-wrap {
+     width: 44px !important;
+     height: 44px !important;
+   }
+
+   .pocket-meta .pocket-slot-label {
+     font-size: 0.6rem !important;
+   }
+
+   .pocket-meta .pocket-clue-title {
+     font-size: 0.78rem !important;
+     white-space: nowrap !important;
+     overflow: hidden !important;
+     text-overflow: ellipsis !important;
+     max-width: 210px !important;
+   }
+
+   .pocket-clear-btn {
+     width: 26px !important;
+     height: 26px !important;
+     font-size: 1rem !important;
+   }
+
+   .indictment-corkboard-btn {
+     height: 38px !important;
+     font-size: 0.75rem !important;
+     margin-top: 6px !important;
+   }
+
+   .indictment-submit-row {
+     margin-top: 12px !important;
+     padding-top: 10px !important;
    }
 
    .cid-wax-seal-btn {
      min-height: 48px !important;
      padding: 6px 12px !important;
      gap: 10px !important;
+     margin-bottom: 6px !important;
    }
 
    .wax-seal-medallion {
@@ -3428,12 +3678,18 @@
      height: 30px !important;
    }
 
+   .wax-seal-medallion svg {
+     width: 17px !important;
+     height: 17px !important;
+   }
+
    .wax-seal-text .wax-title {
-     font-size: 0.8rem !important;
+     font-size: 0.78rem !important;
+     letter-spacing: 0.6px !important;
    }
 
    .wax-seal-text .wax-subtitle {
-     font-size: 0.62rem !important;
+     font-size: 0.6rem !important;
    }
 
    #select-evidence-trigger-btn {
