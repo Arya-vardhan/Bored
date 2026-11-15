@@ -534,10 +534,9 @@ document.addEventListener('DOMContentLoaded', () => {
       card.innerHTML = `
         <div class="witness-polaroid-container" style="transform: rotate(${photoRotation}deg);">
           ${paperclipSvg}
-          <div class="witness-polaroid" title="Click to inspect suspect photograph in forensic lens">
-            <div class="witness-photo" style="background-image: url('${hasImage ? witness.image : 'assets/favicon.png'}');">
+          <div class="witness-polaroid" title="Click photograph to accuse ${witness.name}">
+            <div class="witness-photo" style="background-image: url('${hasImage ? witness.image : 'assets/favicon.png'}'); cursor: pointer;">
               <span class="witness-photo-overlay"></span>
-              <span class="witness-inspect-hint">${UI_ICONS.inspect}INSPECT</span>
             </div>
             <div class="witness-polaroid-caption">${captionText}</div>
           </div>
@@ -552,7 +551,6 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         </div>
         <div class="witness-actions">
-          <button type="button" class="card-inspect-btn witness-inspect-btn" data-id="${witnessDomId}">${UI_ICONS.inspect}INSPECT</button>
           <button type="button" class="card-link-btn witness-link-btn ${isSuspectLinked ? 'is-linked' : ''}" 
                   data-id="${witnessDomId}" 
                   data-suspect="${witness.suspectKey || ''}">
@@ -561,30 +559,14 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       `;
 
-      // Allow clicking polaroid or inspect button to examine suspect in magnifying glass
+      // Clicking photograph directly selects and accuses the suspect
       const polaroidEl = card.querySelector('.witness-polaroid');
-      if (polaroidEl && hasImage) {
+      if (polaroidEl) {
+        polaroidEl.style.cursor = 'pointer';
         polaroidEl.addEventListener('click', (e) => {
           e.stopPropagation();
-          openInspector({
-            type: 'photo',
-            image: witness.image,
-            title: `SUSPECT DOSSIER: ${witness.name}`,
-            text: `[POLICE ARCHIVE] ${witness.name}: "${witness.statement}"`
-          });
-        });
-      }
-
-      const inspectBtn = card.querySelector('.witness-inspect-btn');
-      if (inspectBtn && hasImage) {
-        inspectBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          openInspector({
-            type: 'photo',
-            image: witness.image,
-            title: `SUSPECT DOSSIER: ${witness.name}`,
-            text: `[POLICE ARCHIVE] ${witness.name}: "${witness.statement}"`
-          });
+          sfx.playStamp();
+          toggleLinkSuspect(witnessDomId, witness.suspectKey, card, caseData);
         });
       }
 
@@ -1667,21 +1649,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  function highlightIncompleteSection(sectionId) {
+    const sec = document.getElementById(sectionId);
+    if (sec) {
+      sec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      sec.classList.remove('section-incomplete-pulse');
+      void sec.offsetWidth;
+      sec.classList.add('section-incomplete-pulse');
+    }
+  }
+
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     sfx.playStamp();
     if (!currentCaseData) return;
     
-    const suspectVal = suspectSelect.value;
-    const methodVal = methodSelect.value;
-    const motiveVal = motiveSelect.value;
+    const suspectVal = suspectSelect ? suspectSelect.value : '';
+    const methodVal = methodSelect ? methodSelect.value : '';
+    const motiveVal = motiveSelect ? motiveSelect.value : '';
     
     if (!suspectVal) {
       showFeedbackModal(
         "INCOMPLETE INDICTMENT",
         "You must identify and stamp the Primary Accused Culprit before filing the indictment.",
-        [{ text: "DISMISS", class: "secondary-btn" }]
+        [
+          { text: "ACCUSE SUSPECT", onClick: () => highlightIncompleteSection('section-accused-suspect') },
+          { text: "DISMISS", class: "secondary-btn", onClick: () => highlightIncompleteSection('section-accused-suspect') }
+        ]
       );
+      highlightIncompleteSection('section-accused-suspect');
       return;
     }
 
@@ -1689,8 +1685,12 @@ document.addEventListener('DOMContentLoaded', () => {
       showFeedbackModal(
         "INCOMPLETE INDICTMENT",
         "You must designate the Execution Mechanism & Forensic Vector before filing the indictment.",
-        [{ text: "DISMISS", class: "secondary-btn" }]
+        [
+          { text: "SELECT VECTOR", onClick: () => highlightIncompleteSection('section-execution-method') },
+          { text: "DISMISS", class: "secondary-btn", onClick: () => highlightIncompleteSection('section-execution-method') }
+        ]
       );
+      highlightIncompleteSection('section-execution-method');
       return;
     }
 
@@ -1698,18 +1698,35 @@ document.addEventListener('DOMContentLoaded', () => {
       showFeedbackModal(
         "INCOMPLETE INDICTMENT",
         "You must establish the Criminal Motive before submitting findings to the Magistrate.",
-        [{ text: "DISMISS", class: "secondary-btn" }]
+        [
+          { text: "SELECT MOTIVE", onClick: () => highlightIncompleteSection('section-criminal-motive') },
+          { text: "DISMISS", class: "secondary-btn", onClick: () => highlightIncompleteSection('section-criminal-motive') }
+        ]
       );
+      highlightIncompleteSection('section-criminal-motive');
       return;
     }
 
     if (linkedEvidenceIds.length < 2) {
-      deductionModal.classList.add('hidden');
       showFeedbackModal(
         "INSUFFICIENT EVIDENCE",
-        "You must link exactly 2 physical evidence cards from the corkboard to back up your deduction. Click 'LINK CLUE' on cards to pin them.",
-        [{ text: "DISMISS", class: "secondary-btn" }]
+        "You must link exactly 2 physical evidence cards from the corkboard to back up your deduction. Click 'PIN ON CORKBOARD' to seal physical exhibits.",
+        [
+          {
+            text: "PIN ON CORKBOARD",
+            onClick: () => {
+              if (deductionModal) deductionModal.classList.add('hidden');
+              if (selectEvidenceTriggerBtn) selectEvidenceTriggerBtn.click();
+            }
+          },
+          {
+            text: "DISMISS",
+            class: "secondary-btn",
+            onClick: () => highlightIncompleteSection('section-supporting-evidence')
+          }
+        ]
       );
+      highlightIncompleteSection('section-supporting-evidence');
       return;
     }
 
@@ -1737,6 +1754,15 @@ document.addEventListener('DOMContentLoaded', () => {
       );
     }
   });
+
+  const submitBtnEl = document.getElementById('submit-btn');
+  if (submitBtnEl) {
+    submitBtnEl.addEventListener('click', () => {
+      if (form) {
+        form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+      }
+    });
+  }
 
   // Modal helper
   function showFeedbackModal(title, body, buttons) {
@@ -2015,6 +2041,15 @@ document.addEventListener('DOMContentLoaded', () => {
   function openInspector(evidence) {
     sfx.playFolder();
     inspectorModal.classList.remove('hidden');
+
+    const inspectorSerialBadge = document.getElementById('inspector-serial-badge');
+    const inspectorReadoutBox = document.getElementById('inspector-readout');
+    const inspectorReadoutText = document.getElementById('inspector-readout-text');
+
+    if (inspectorSerialBadge) {
+      const rawId = evidence.id ? evidence.id.toUpperCase() : 'EX-001';
+      inspectorSerialBadge.textContent = `SPECIMEN ${rawId.replace(/^CARD-/, '')}`;
+    }
     
     if (evidence.type === 'folder') {
       inspectorModal.classList.add('large-inspector');
@@ -2022,9 +2057,11 @@ document.addEventListener('DOMContentLoaded', () => {
         dossierZoomBtn.classList.remove('hidden');
         if (dossierZoomHelper) dossierZoomHelper.reset();
       }
+      if (inspectorReadoutBox) inspectorReadoutBox.style.display = 'none';
     } else {
       inspectorModal.classList.remove('large-inspector');
       if (dossierZoomBtn) dossierZoomBtn.classList.add('hidden');
+      if (inspectorReadoutBox) inspectorReadoutBox.style.display = 'flex';
       if (inspectorModalContent) {
         inspectorModalContent.style.width = '';
         inspectorModalContent.style.minWidth = '';
@@ -2081,7 +2118,19 @@ document.addEventListener('DOMContentLoaded', () => {
       // Get hidden clue configurations from case data
       const clueText = evidence.inspector ? evidence.inspector.clueText : '';
       const clueStyle = evidence.inspector ? evidence.inspector.clueStyle : '';
-      const hiddenClueTag = clueText ? `<div class="hidden-clue" style="${clueStyle}">${clueText}</div>` : '';
+      const hiddenClueTag = clueText ? `<div class="hidden-clue" style="${clueStyle}"><span class="clue-tag-badge">MICROSCOPIC TRACE</span><span class="clue-tag-text">${clueText}</span></div>` : '';
+
+      if (inspectorReadoutText) {
+        if (clueText) {
+          inspectorReadoutText.textContent = `Latent Clue Decoded: "${clueText}"`;
+          inspectorReadoutText.style.color = '#8c2222';
+          inspectorReadoutText.style.fontWeight = 'bold';
+        } else {
+          inspectorReadoutText.textContent = 'Scanning specimen surface... no latent marks found.';
+          inspectorReadoutText.style.color = '#555';
+          inspectorReadoutText.style.fontWeight = 'normal';
+        }
+      }
 
       if (evidence.type === 'photo') {
         innerHTML = `

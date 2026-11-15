@@ -25,7 +25,7 @@
       <div class="selection-actions"
         style="margin-top: auto; display: flex; justify-content: center; padding-top: 2rem; flex-shrink: 0;">
         <button id="reset-all-btn" class="submit-btn secondary-btn" style="height: 42px; font-size: 0.85rem;">
-          <svg class="ui-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 6px;"><path d="M2.5 8a5.5 5.5 0 1 1 1.6 3.9L2 14M2 9.5V14h4.5"/></svg>
+          <svg class="ui-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 6px;"><path d="M3 4.5h10M6 4.5V3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1.5M4 4.5l.8 9a1.5 1.5 0 0 0 1.5 1.5h3.4a1.5 1.5 0 0 0 1.5-1.5l.8-9M6.5 7.5v4.5M9.5 7.5v4.5"/></svg>
           PURGE ARCHIVED DOSSIERS
         </button>
       </div>
@@ -44,7 +44,7 @@
                 <span class="btn-full-text">VIEW OFFICIAL </span>F.I.R.
               </button>
               <button id="reset-case-btn" class="view-fir-btn reset-case-btn">
-                <svg class="ui-icon" viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 5px;"><path d="M2.5 8a5.5 5.5 0 1 1 1.6 3.9L2 14M2 9.5V14h4.5"/></svg>
+                <svg class="ui-icon" viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 5px;"><path d="M2.5 7.5A5.5 5.5 0 1 1 3.8 11.2"/><path d="M2.5 3.5v4h4"/></svg>
                 RESET<span class="btn-full-text"> CASE</span>
               </button>
             </div>
@@ -129,25 +129,46 @@
       </footer>
     </div> <!-- End Active Case View -->
 
-    <!-- Detail Inspector Modal -->
+    <!-- Detail Inspector Modal (CID Forensic Examination Dossier) -->
     <div id="inspector-modal" class="overlay hidden">
-      <button type="button" id="close-inspector-btn" class="close-fir-btn" aria-label="Close Inspector">&times;</button>
       <button type="button" id="dossier-zoom-btn" class="doc-zoom-btn hidden" aria-label="Toggle Dossier Zoom">
         <svg class="ui-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M10 10l4.5 4.5"/></svg><span class="zoom-text">ZOOM 100%</span>
       </button>
-      <div class="overlay-content inspector-modal-content">
-        <h2 class="fir-doc-type"
-          style="margin-top: 0; font-size: 1.6rem; text-align: center; text-decoration: none; letter-spacing: 2px; color: var(--accent);">
-          DETAIL INSPECTOR</h2>
-        <p id="inspector-instructions"
-          style="font-size: 0.85rem; color: #ccc; text-align: center; margin-bottom: 1.5rem; font-family: var(--font-typewriter);">
-          Hover cursor over the card to slide the circular brass lens and scan for hidden microscopic clues.</p>
+      <div class="overlay-content modal-content inspector-modal-content cid-forensic-dossier">
+        <button type="button" id="close-inspector-btn" class="close-fir-btn" aria-label="Close Inspector">&times;</button>
+        
+        <!-- Archival Forensic Dossier Header -->
+        <div class="indictment-header forensic-header">
+          <div class="indictment-crest-row">
+            <svg class="cid-badge-icon" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M12 3v3M12 18v3M3 12h3M18 12h3M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
+            </svg>
+            <div class="indictment-dept-meta">
+              <span class="dept-title">METROPOLITAN POLICE // FORENSIC ANALYSIS LAB</span>
+              <span class="dept-subtitle">OFFICIAL SPECIMEN EXAMINATION DOSSIER • FORM NO. 102-L</span>
+            </div>
+            <div class="indictment-serial" id="inspector-serial-badge">SPECIMEN EX-001</div>
+          </div>
+          <div class="indictment-stamp-banner">
+            <span class="indictment-badge-pill">OPTICAL ANALYSIS</span>
+            <span class="indictment-memo" id="inspector-instructions">Slide the brass optical magnifier across the specimen to isolate latent microscopic traces and tool marks.</span>
+          </div>
+        </div>
 
-        <div id="inspector-workspace" class="inspector-workspace">
+        <!-- Examination Lightbox / Stage -->
+        <div id="inspector-workspace" class="inspector-workspace forensic-stage">
           <div id="inspector-base-layer" class="inspector-card-layer base-gray"></div>
           <div id="magnifying-lens" class="magnifying-lens">
+            <div class="lens-crosshair"></div>
             <div id="inspector-zoom-layer" class="inspector-card-layer zoom-sepia"></div>
           </div>
+        </div>
+
+        <!-- Live Latent Finding Readout -->
+        <div id="inspector-readout" class="inspector-readout-box">
+          <span class="readout-label">LATENT TRACE:</span>
+          <span id="inspector-readout-text" class="readout-text">Scanning specimen surface...</span>
         </div>
       </div>
     </div>
@@ -194,7 +215,7 @@
             FILES</button>
           <button id="solved-reset-case-btn" class="submit-btn secondary-btn reset-case-btn"
             style="flex: 1; min-width: 200px; height: 50px;">
-            <svg class="ui-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 6px;"><path d="M2.5 8a5.5 5.5 0 1 1 1.6 3.9L2 14M2 9.5V14h4.5"/></svg>RESET CASE</button>
+            <svg class="ui-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 6px;"><path d="M2.5 7.5A5.5 5.5 0 1 1 3.8 11.2"/><path d="M2.5 3.5v4h4"/></svg>RESET CASE</button>
         </div>
       </div>
     </div>
@@ -276,7 +297,7 @@
           </div>
         </div>
 
-        <form id="solution-form">
+        <form id="solution-form" novalidate>
           <!-- Section 1: Primary Accused (Suspect Dropdown & Interactive Lineup) -->
           <div class="indictment-section" id="section-accused-suspect">
             <div class="indictment-section-header">
