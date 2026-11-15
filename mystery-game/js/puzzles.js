@@ -7,7 +7,7 @@ window.loadOscilloscopePuzzle = function loadOscilloscopePuzzle(workspaceEl, puz
   workspaceEl.innerHTML = `
     <div class="oscilloscope-container">
       <div class="oscilloscope-screen">
-        <div class="oscilloscope-label">🔬 COMPOSITIONAL SPECTROMETER</div>
+        <div class="oscilloscope-label">COMPOSITIONAL SPECTROMETER</div>
         <canvas id="osci-canvas" width="600" height="120" class="osci-canvas"></canvas>
       </div>
       <div class="puzzle-controls">

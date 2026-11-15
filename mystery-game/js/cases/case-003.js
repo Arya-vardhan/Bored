@@ -74,7 +74,7 @@ window.case003 = {
       text: "Expensive Oxford dress shoes caked in wet mud and dried leaves.", 
       image: "assets/shoes.png",
       inspector: {
-        clueText: '🍂 soil particles: peat & river moss',
+        clueText: 'soil particles: peat & river moss',
         clueStyle: 'bottom: 60px; left: 80px; font-size: 1.2rem;'
       }
     },
@@ -84,7 +84,7 @@ window.case003 = {
       text: "A heavy metallic flashlight rolling on the museum floor, bulb still faintly glowing.", 
       image: "assets/flashlight.png",
       inspector: {
-        clueText: '🩸 guard head skin fibers & dried blood splatter',
+        clueText: 'guard head skin fibers & dried blood splatter',
         clueStyle: 'top: 100px; left: 110px; transform: rotate(10deg); font-size: 1.2rem; color: #a31c1c;'
       }
     },
@@ -106,7 +106,7 @@ window.case003 = {
       title: "REPLICA EXAMINATION", 
       text: "The fake painting has faint traces of glow-in-the-dark paint around the edges, suggesting someone needed to see the edges of the frame specifically in the pitch black.",
       inspector: {
-        clueText: '🎨 glow-in-the-dark margins: ms. vance',
+        clueText: 'glow-in-the-dark margins: ms. vance',
         clueStyle: 'top: 70px; left: 90px; transform: rotate(-5deg); font-size: 1.1rem; color: #39a85a;'
       }
     },
@@ -117,9 +117,9 @@ window.case003 = {
       text: "Ms. Vance's personal accounts are severely overdrawn, transferring millions into an offshore 'Expedition Fund' over the last six months.",
       puzzle: {
         type: "shredder",
-        title: "🧩 RESTORE SHREDDED STATEMENT",
+        title: "RESTORE SHREDDED STATEMENT",
         instructions: "Click two shredded paper strips to swap them and reconstruct the transaction statement.",
-        btnLabel: "🧩 RESTORE",
+        btnLabel: "RESTORE",
         stampText: "RESTORED"
       }
     }

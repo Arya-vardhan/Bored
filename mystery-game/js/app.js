@@ -48,6 +48,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const inspectorBaseLayer = document.getElementById('inspector-base-layer');
   const inspectorZoomLayer = document.getElementById('inspector-zoom-layer');
   const magnifyingLens = document.getElementById('magnifying-lens');
+
+  // Centralized SVG micro-icons for unslop period aesthetic
+  const UI_ICONS = {
+    inspect: `<svg class="ui-icon" viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M10 10l4.5 4.5"/></svg>`,
+    pin: `<svg class="ui-icon" viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;"><path d="M8 1v5M4 6h8l-1 5H5L4 6zM8 11v4"/></svg>`,
+    folder: `<svg class="ui-icon" viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;"><path d="M2 3.5h3.5l1.5 2H14v7.5H2z"/></svg>`,
+    dispatch: `<svg class="ui-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 5px;"><path d="M2.5 3.5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2v-2zM5.5 7.5v3a2.5 2.5 0 0 0 5 0v-3M8 13.5v1.5"/></svg>`,
+    lab: `<svg class="ui-icon" viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;"><path d="M6 2h4M7 2v3.5L3 13a1 1 0 0 0 .9 1.5h8.2a1 1 0 0 0 .9-1.5L9 5.5V2"/></svg>`
+  };
   const inspectorWorkspace = document.getElementById('inspector-workspace');
   const inspectorInstructions = document.getElementById('inspector-instructions');
   const inspectorModalContent = document.querySelector('.inspector-modal-content');
@@ -505,7 +514,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="witness-polaroid" title="Click to inspect suspect photograph in forensic lens">
             <div class="witness-photo" style="background-image: url('${hasImage ? witness.image : 'assets/favicon.png'}');">
               <span class="witness-photo-overlay"></span>
-              <span class="witness-inspect-hint">🔍 INSPECT</span>
+              <span class="witness-inspect-hint">${UI_ICONS.inspect}INSPECT</span>
             </div>
             <div class="witness-polaroid-caption">${captionText}</div>
           </div>
@@ -520,11 +529,11 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         </div>
         <div class="witness-actions">
-          <button type="button" class="card-inspect-btn witness-inspect-btn" data-id="${witnessDomId}">🔍 INSPECT</button>
+          <button type="button" class="card-inspect-btn witness-inspect-btn" data-id="${witnessDomId}">${UI_ICONS.inspect}INSPECT</button>
           <button type="button" class="card-link-btn witness-link-btn ${isSuspectLinked ? 'is-linked' : ''}" 
                   data-id="${witnessDomId}" 
                   data-suspect="${witness.suspectKey || ''}">
-            ${isSuspectLinked ? '📍 SUSPECT PINNED' : '📌 LINK SUSPECT'}
+            ${isSuspectLinked ? `${UI_ICONS.pin}SUSPECT PINNED` : `${UI_ICONS.pin}PIN SUSPECT`}
           </button>
         </div>
       `;
@@ -597,11 +606,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (ev.puzzle.lockedText) {
           cardText = ev.puzzle.lockedText;
         } else if (ev.id === 'water') {
-          cardText = "🔬 WATER SPECTROSCOPY ANALYSIS REQUIRED. Perform compositional wave alignment matching to verify the study floor water source.";
+          cardText = "WATER SPECTROSCOPY ANALYSIS REQUIRED. Perform compositional wave alignment matching to verify the study floor water source.";
         } else if (ev.id === 'records' || ev.id === 'logs') {
-          cardText = `🔓 ENCRYPTED TRANSMISSION / RECORD. Solve the alphabetical cipher shift to read the confidential file.`;
+          cardText = `ENCRYPTED TRANSMISSION / RECORD. Solve the alphabetical cipher shift to read the confidential file.`;
         } else if (ev.id === 'bank') {
-          cardText = "🧩 BANK STATEMENT SHREDDED. Reconstruct the document columns to read the overdrawn Expedition Fund transfers.";
+          cardText = "BANK STATEMENT SHREDDED. Reconstruct the document columns to read the overdrawn Expedition Fund transfers.";
         }
       }
 
@@ -629,7 +638,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } else if (ev.type === 'folder') {
         card.className = 'card card-folder';
         innerHTML = `
-          <div class="card-folder-tab-label">📂 DOSSIER</div>
+          <div class="card-folder-tab-label">${UI_ICONS.folder}DOSSIER</div>
           <h3>${ev.title}</h3>
           <p>${cardText}</p>
         `;
@@ -643,14 +652,14 @@ document.addEventListener('DOMContentLoaded', () => {
       // Dynamic buttons
       let actionButtons = '';
       if (isPuzzleCard && !isSolved) {
-        const btnLabel = ev.puzzle.btnLabel || "🔬 ANALYZE";
+        const btnLabel = ev.puzzle.btnLabel || `${UI_ICONS.lab}ANALYZE`;
         actionButtons = `<button type="button" class="card-analyze-btn glowing-btn" data-id="${ev.id}">${btnLabel}</button>`;
       } else {
         if (ev.type !== 'folder') {
-          actionButtons = `<button type="button" class="card-link-btn" data-id="${ev.id}">📌 LINK CLUE</button>`;
+          actionButtons = `<button type="button" class="card-link-btn" data-id="${ev.id}">${UI_ICONS.pin}LINK CLUE</button>`;
         }
         if (!isPuzzleCard && (ev.type === 'photo' || ev.type === 'document' || ev.type === 'lab' || ev.type === 'folder')) {
-          const btnLabel = ev.type === 'folder' ? "📂 OPEN FILE" : "🔍 INSPECT";
+          const btnLabel = ev.type === 'folder' ? `${UI_ICONS.folder}OPEN DOSSIER` : `${UI_ICONS.inspect}INSPECT`;
           actionButtons += `<button type="button" class="card-inspect-btn" data-id="${ev.id}">${btnLabel}</button>`;
         }
       }
@@ -713,7 +722,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const linkBtn = cardElement.querySelector('.witness-link-btn');
         if (linkBtn) {
           linkBtn.classList.remove('is-linked');
-          linkBtn.textContent = "📌 LINK SUSPECT";
+          linkBtn.innerHTML = `${UI_ICONS.pin}PIN SUSPECT`;
         }
       }
     } else {
@@ -725,7 +734,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const oldBtn = prevCard.querySelector('.witness-link-btn');
           if (oldBtn) {
             oldBtn.classList.remove('is-linked');
-            oldBtn.textContent = "📌 LINK SUSPECT";
+            oldBtn.innerHTML = `${UI_ICONS.pin}PIN SUSPECT`;
           }
         }
       }
@@ -736,7 +745,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const linkBtn = cardElement.querySelector('.witness-link-btn');
         if (linkBtn) {
           linkBtn.classList.add('is-linked');
-          linkBtn.textContent = "📍 SUSPECT PINNED";
+          linkBtn.innerHTML = `${UI_ICONS.pin}SUSPECT PINNED`;
         }
       }
 
@@ -769,7 +778,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const linkBtn = cardElement.querySelector('.card-link-btn');
         if (linkBtn) {
           linkBtn.classList.remove('is-linked');
-          linkBtn.textContent = "📌 LINK CLUE";
+          linkBtn.innerHTML = `${UI_ICONS.pin}LINK CLUE`;
         }
       }
     } else {
@@ -783,7 +792,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const oldBtn = oldestCard.querySelector('.card-link-btn');
           if (oldBtn) {
             oldBtn.classList.remove('is-linked');
-            oldBtn.textContent = "📌 LINK CLUE";
+            oldBtn.innerHTML = `${UI_ICONS.pin}LINK CLUE`;
           }
         }
       }
@@ -794,7 +803,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const linkBtn = cardElement.querySelector('.card-link-btn');
         if (linkBtn) {
           linkBtn.classList.add('is-linked');
-          linkBtn.textContent = "📍 LINKED";
+          linkBtn.innerHTML = `${UI_ICONS.pin}CLUE PINNED`;
         }
       }
     }
@@ -807,17 +816,17 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function updateLinkedCluesUI(caseData) {
-    // 1. Update Floating Selection Dock Badges
+    // 1. Update Floating Selection Dock Badges & Desk Rail Status
     const dockSuspectBadge = document.getElementById('dock-suspect-badge');
     if (dockSuspectBadge) {
       if (linkedSuspectId && caseData.witnesses) {
         const found = caseData.witnesses.find(w => w.id === linkedSuspectId);
         const sName = found ? found.name.split('(')[0].trim() : 'SUSPECT';
-        dockSuspectBadge.textContent = `👤 ${sName}`;
-        dockSuspectBadge.style.color = '#ff6b6b';
-        dockSuspectBadge.style.borderColor = '#ff6b6b';
+        dockSuspectBadge.textContent = sName;
+        dockSuspectBadge.style.color = '#c95151';
+        dockSuspectBadge.style.borderColor = '#8c2222';
       } else {
-        dockSuspectBadge.textContent = '👤 NO SUSPECT PINNED';
+        dockSuspectBadge.textContent = 'NO SUSPECT PINNED';
         dockSuspectBadge.style.color = '';
         dockSuspectBadge.style.borderColor = '';
       }
@@ -825,6 +834,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (dockBadgeCount) {
       dockBadgeCount.textContent = `${linkedEvidenceIds.length} / 2 CLUES LINKED`;
+    }
+
+    const deskCaseStatus = document.getElementById('desk-case-status');
+    if (deskCaseStatus) {
+      const parts = [];
+      if (linkedSuspectId) {
+        const found = caseData.witnesses ? caseData.witnesses.find(w => w.id === linkedSuspectId) : null;
+        const sName = found ? found.name.split('(')[0].trim() : 'SUSPECT';
+        parts.push(`CULPRIT: ${sName.toUpperCase()}`);
+      }
+      if (linkedEvidenceIds.length > 0) {
+        parts.push(`${linkedEvidenceIds.length}/2 CLUES PINNED`);
+      }
+      const label = parts.length > 0 ? parts.join(' • ') : 'ACTIVE CASE DOSSIER';
+      deskCaseStatus.innerHTML = `<span class="status-pip ${linkedEvidenceIds.length === 2 && linkedSuspectId ? 'ready' : ''}"></span><span class="status-label">${label}</span>`;
     }
 
     // 2. Update Selected Clues Preview Box inside Deduction Modal
@@ -842,16 +866,16 @@ document.addEventListener('DOMContentLoaded', () => {
       if (linkedSuspectId && caseData.witnesses) {
         const found = caseData.witnesses.find(w => w.id === linkedSuspectId);
         const sName = found ? found.name : 'Unknown Suspect';
-        suspectRow.innerHTML = `<span style="color: #ff5252; font-weight: bold; letter-spacing: 1px;">👤 ACCUSED CULPRIT:</span> <span style="color: #f1f1f1; font-weight: bold;">${sName} (Pinned via Yarn)</span>`;
+        suspectRow.innerHTML = `<span style="color: #c95151; font-weight: bold; letter-spacing: 0.5px;">ACCUSED CULPRIT:</span> <span style="color: #f1f1f1; font-weight: bold;">${sName} (Pinned via Yarn)</span>`;
       } else {
-        suspectRow.innerHTML = `<span style="color: #888; font-style: italic;">👤 Suspect: Select from dropdown or pin suspect on corkboard.</span>`;
+        suspectRow.innerHTML = `<span style="color: #999; font-style: italic;">Suspect: Select from dropdown or pin suspect on corkboard.</span>`;
       }
       previewWrapper.appendChild(suspectRow);
 
       // Clues Preview Line
       if (linkedEvidenceIds.length === 0) {
         const noClues = document.createElement('div');
-        noClues.innerHTML = '<span style="color: #888; font-style: italic;">📍 Supporting Clues: Click "SELECT EVIDENCE FROM CORKBOARD" to pin 2 physical clues.</span>';
+        noClues.innerHTML = '<span style="color: #999; font-style: italic;">Supporting Clues: Click "PIN EVIDENCE ON CORKBOARD" to link 2 physical clues.</span>';
         previewWrapper.appendChild(noClues);
       } else {
         const cluesRow = document.createElement('div');
@@ -1016,10 +1040,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (remaining === 0) {
       requestDispatchBtn.disabled = true;
-      requestDispatchBtn.innerHTML = `<span>✓ ALL DISPATCH LEADS RECEIVED</span>`;
+      requestDispatchBtn.innerHTML = `<span>ALL DISPATCH CABLES RECEIVED</span>`;
     } else {
       requestDispatchBtn.disabled = false;
-      requestDispatchBtn.innerHTML = `<span class="dispatch-btn-icon">📞</span> <span class="dispatch-btn-label">REQUEST LEAD</span> (<span id="dispatch-remaining-count">${remaining}</span> LEFT)`;
+      requestDispatchBtn.innerHTML = `${UI_ICONS.dispatch} <span class="dispatch-btn-label">REQUEST DISPATCH CABLE</span> (<span id="dispatch-remaining-count">${remaining}</span> REMAINING)`;
     }
   }
 
@@ -1271,7 +1295,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const sb = sc.querySelector('.witness-link-btn');
           if (sb) {
             sb.classList.remove('is-linked');
-            sb.textContent = "📌 LINK SUSPECT";
+            sb.innerHTML = `${UI_ICONS.pin}PIN SUSPECT`;
           }
         }
         linkedSuspectId = null;
@@ -1285,7 +1309,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const eb = ec.querySelector('.card-link-btn');
           if (eb) {
             eb.classList.remove('is-linked');
-            eb.textContent = "📌 LINK CLUE";
+            eb.innerHTML = `${UI_ICONS.pin}LINK CLUE`;
           }
         }
       });
@@ -1319,7 +1343,7 @@ document.addEventListener('DOMContentLoaded', () => {
       deductionModal.classList.add('hidden');
       showFeedbackModal(
         "INSUFFICIENT EVIDENCE",
-        "You must link exactly 2 physical evidence cards from the corkboard to back up your deduction. Click '📌 LINK CLUE' on cards to pin them.",
+        "You must link exactly 2 physical evidence cards from the corkboard to back up your deduction. Click 'LINK CLUE' on cards to pin them.",
         [{ text: "DISMISS", class: "secondary-btn" }]
       );
       return;
@@ -1882,7 +1906,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const puzzleInfo = evidence.puzzle;
     if (!puzzleInfo) return;
 
-    puzzleTitle.textContent = puzzleInfo.title || "🔬 LAB WORKSTATION";
+    const cleanTitle = puzzleInfo.title ? puzzleInfo.title.replace(/^[^\w\s]+/, '').trim() : "LABORATORY WORKSTATION";
+    puzzleTitle.innerHTML = `${UI_ICONS.lab} ${cleanTitle}`;
     puzzleInstructions.textContent = puzzleInfo.instructions || "Perform advanced analytics to verify evidence parameters.";
 
     // Clean up any previously running puzzle

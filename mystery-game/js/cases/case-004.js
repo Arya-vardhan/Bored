@@ -107,7 +107,7 @@ window.case004 = {
       image: "assets/gear.png",
       text: "A custom spring-tensioned gear assembly locked into the workshop's primary structural drive-shaft.",
       inspector: {
-        clueText: "⚙️ 4.5mm lathe pitch • planetary reduction gear locked to drive axle",
+        clueText: "4.5mm lathe pitch • planetary reduction gear locked to drive axle",
         clueStyle: "bottom: 30px; left: 40px; font-size: 1.1rem; color: #a31c1c; font-weight: bold;"
       }
     },
@@ -117,7 +117,7 @@ window.case004 = {
       image: "assets/watch.png",
       text: "Benedict's shattered silver pocket watch recovered beside the workshop desk.",
       inspector: {
-        clueText: "🔍 balance spring intact: manual post-mortem winding to simulate 12:00",
+        clueText: "balance spring intact: manual post-mortem winding to simulate 12:00",
         clueStyle: "bottom: 35px; left: 35px; font-size: 1.1rem; color: #1b365d; font-weight: bold;"
       }
     },
@@ -127,7 +127,7 @@ window.case004 = {
       title: "PENDULUM FORENSICS", 
       text: "The main pendulum of the grandfather clock. It was snapped by a horizontal blow from a trip-latch mechanism welded to the waterwheel timing shafts.",
       inspector: {
-        clueText: "⚙️ horizontal strike shear mark: triggered by waterwheel trip-latch at midnight",
+        clueText: "horizontal strike shear mark: triggered by waterwheel trip-latch at midnight",
         clueStyle: "bottom: 40px; left: 40px; font-size: 1.15rem; color: #a31c1c;"
       }
     },
@@ -137,7 +137,7 @@ window.case004 = {
       title: "FORENSIC FLUID REPORT", 
       text: "A stained leather glove found in the locker. The stains contain organic oils and porcine blood, matching high-tension drive belt lubricants rather than human trauma.",
       inspector: {
-        clueText: "🧪 porcine lipids & belt curing oils: rules out manual assault",
+        clueText: "porcine lipids & belt curing oils: rules out manual assault",
         clueStyle: "bottom: 35px; left: 50px; font-size: 1.15rem; color: #39a85a;"
       }
     },
@@ -147,7 +147,7 @@ window.case004 = {
       title: "AETHELGARD PATENT DRAFT", 
       text: "A draft patent listing Benedict Thorne as the sole inventor of the hydrostatic perpetual motion timing mechanism.",
       inspector: {
-        clueText: "✒️ Sole Inventor: Benedict Thorne (Julian Thorne completely omitted)",
+        clueText: "Sole Inventor: Benedict Thorne (Julian Thorne completely omitted)",
         clueStyle: "bottom: 40px; right: 40px; font-size: 1.15rem; color: #a31c1c;"
       }
     },
@@ -157,16 +157,16 @@ window.case004 = {
       title: "REDUCTION GEAR DESIGN", 
       text: "Calculations detailing a 12:1 reduction gear ratio on a waterwheel drive axle, designed to release tension after exactly 120 minutes of operation.",
       inspector: {
-        clueText: "📐 12:1 planetary reduction ratio: 60 RPM waterwheel = exactly 120 min delay",
+        clueText: "12:1 planetary reduction ratio: 60 RPM waterwheel = exactly 120 min delay",
         clueStyle: "bottom: 40px; left: 40px; font-size: 1.15rem; color: #1b365d;"
       },
       puzzle: {
         type: "cipher",
-        title: "🔓 DECRYPT APPRENTICE TIMING CIPHER",
+        title: "DECRYPT APPRENTICE TIMING CIPHER",
         instructions: "Rotate the brass dial code disc to find the alphabetical ROT key and decipher Julian's handwritten timing notes.",
-        btnLabel: "🔓 DECRYPT SCHEMATIC",
+        btnLabel: "DECRYPT SCHEMATIC",
         stampText: "DECRYPTED",
-        lockedText: "🔓 ENCRYPTED HOROLOGICAL CALCULATIONS. Decipher the apprentice's secret gear ratio notes to reveal the timing mechanism.",
+        lockedText: "ENCRYPTED HOROLOGICAL CALCULATIONS. Decipher the apprentice's secret gear ratio notes to reveal the timing mechanism.",
         config: {
           scrambled: "VIHYGXMSR KIEV VEXMS XAIPZI XS SRI. VIPIEWI PERGI EX XIR TQ ERH LEPX TIRHYPYQ EX QMHRMKLX.",
           decrypted: "REDUCTION GEAR RATIO TWELVE TO ONE. RELEASE LANCE AT TEN PM AND HALT PENDULUM AT MIDNIGHT.",

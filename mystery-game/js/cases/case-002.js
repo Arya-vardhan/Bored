@@ -84,7 +84,7 @@ window.case002 = {
       text: "A beautiful ornate glass inkwell tipped over, black ink pooling around it.", 
       image: "assets/ink.png",
       inspector: {
-        clueText: '🧪 residue code label: Cyanogen-X',
+        clueText: 'residue code label: Cyanogen-X',
         clueStyle: 'bottom: 40px; left: 80px; font-size: 1.2rem;'
       }
     },
@@ -107,9 +107,9 @@ window.case002 = {
       text: "Elias recently purchased 'rare botanical extracts' from a questionable overseas vendor known for supplying illicit toxic substances.",
       puzzle: {
         type: "cipher",
-        title: "🔓 DECRYPT CIPHER WHEEL",
+        title: "DECRYPT CIPHER WHEEL",
         instructions: "Rotate the brass dial code disc to find the alphabetical ROT key and decipher Thorne's ledger.",
-        btnLabel: "🔓 DECRYPT",
+        btnLabel: "DECRYPT",
         stampText: "DECRYPTED"
       }
     },

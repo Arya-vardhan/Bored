@@ -84,7 +84,7 @@ window.case001 = {
       text: "Sturdy white thread caught in the internal window latch.", 
       image: "assets/thread.png",
       inspector: {
-        clueText: '🧵 deadbolt latch shear grooves',
+        clueText: 'deadbolt latch shear grooves',
         clueStyle: 'top: 90px; left: 110px; font-size: 1.2rem;'
       }
     },
@@ -94,7 +94,7 @@ window.case001 = {
       text: "A pool of water and a melting block of ice near the door mechanism.", 
       image: "assets/ice.png",
       inspector: {
-        clueText: '🔬 dock silt scales & fish grit',
+        clueText: 'dock silt scales & fish grit',
         clueStyle: 'bottom: 50px; left: 70px; font-size: 1.1rem;'
       }
     },
@@ -104,7 +104,7 @@ window.case001 = {
       text: "A receipt for a 50lb block of ice found in Arthur's coat pocket.", 
       image: "assets/receipt.png",
       inspector: {
-        clueText: '✒️ Arthur\'s note: "lockeddeadbolt window gap 8PM"',
+        clueText: 'Arthur\'s note: "lockeddeadbolt window gap 8PM"',
         clueStyle: 'bottom: 25px; right: 25px; transform: rotate(-5deg); font-size: 1.1rem;'
       }
     },
@@ -115,9 +115,9 @@ window.case001 = {
       text: "The water sample from the study floor contains high traces of brackish river silt and fish scales, matching the commercial ice sold at the local harbor docks where Arthur works.",
       puzzle: {
         type: "oscilloscope",
-        title: "🔬 SPECTROMETRIC SILT ALIGNMENT",
+        title: "SPECTROMETRIC SILT ALIGNMENT",
         instructions: "Harmonize the composite wave (red) with reference dock silt (green) using the oscilloscope dials.",
-        btnLabel: "🔬 ANALYZE",
+        btnLabel: "ANALYZE",
         stampText: "MATCH CONFIRMED"
       }
     },
@@ -127,7 +127,7 @@ window.case001 = {
       title: "INSURANCE AMENDMENT", 
       text: "Policy No. 8832 on 'The Eye of Leviathan'. Beneficiary recently updated to Arthur Harrington. The amendment is dated exactly three days prior to the incident.",
       inspector: {
-        clueText: '✒️ signed date: three days prior to theft',
+        clueText: 'signed date: three days prior to theft',
         clueStyle: 'bottom: 50px; right: 50px; font-size: 1.2rem;'
       }
     },
@@ -143,7 +143,7 @@ window.case001 = {
       title: "SYNDICATE LEDGER", 
       text: "A recovered loan shark ledger reveals Arthur owes £50,000 to the local docks syndicate. Marked 'Pay or Swim'.",
       inspector: {
-        clueText: '🦈 local harbor loan sharks syndicate stamp mark',
+        clueText: 'local harbor loan sharks syndicate stamp mark',
         clueStyle: 'bottom: 40px; left: 80px; font-size: 1.2rem; color: #a31c1c;'
       }
     }
