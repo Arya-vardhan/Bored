@@ -118,4 +118,54 @@ window.SoundEffects = class SoundEffects {
       console.warn("Audio yarn pluck blocked/failed", e);
     }
   }
+
+  playStamp() {
+    try {
+      this.init();
+      if (this.ctx.state === 'suspended') this.ctx.resume();
+      
+      // 1. Low muffled impact thump
+      const osc = this.ctx.createOscillator();
+      const oscGain = this.ctx.createGain();
+      osc.connect(oscGain);
+      oscGain.connect(this.ctx.destination);
+      
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(170, this.ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(42, this.ctx.currentTime + 0.11);
+      
+      oscGain.gain.setValueAtTime(0.08, this.ctx.currentTime);
+      oscGain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.12);
+      
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.13);
+
+      // 2. Paper surface friction click
+      const bufferSize = Math.floor(this.ctx.sampleRate * 0.05);
+      const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize);
+      }
+      
+      const noise = this.ctx.createBufferSource();
+      noise.buffer = buffer;
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 600;
+      
+      const noiseGain = this.ctx.createGain();
+      noiseGain.gain.setValueAtTime(0.05, this.ctx.currentTime);
+      noiseGain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.05);
+      
+      noise.connect(filter);
+      filter.connect(noiseGain);
+      noiseGain.connect(this.ctx.destination);
+      
+      noise.start();
+      noise.stop(this.ctx.currentTime + 0.06);
+    } catch (e) {
+      console.warn("Audio stamp play blocked/failed", e);
+    }
+  }
 }

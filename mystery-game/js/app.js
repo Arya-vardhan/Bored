@@ -28,6 +28,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const selectedCluesPreview = document.getElementById('selected-clues-preview');
   const selectEvidenceTriggerBtn = document.getElementById('select-evidence-trigger-btn');
 
+  // CID Formal Indictment Dossier gamified selectors
+  const suspectLineupContainer = document.getElementById('suspect-lineup-container');
+  const methodCardsContainer = document.getElementById('method-cards-container');
+  const motiveCardsContainer = document.getElementById('motive-cards-container');
+  const evidencePocketsContainer = document.getElementById('evidence-pockets-container');
+  const suspectSelectionHint = document.getElementById('suspect-selection-hint');
+  const methodSelectionHint = document.getElementById('method-selection-hint');
+  const motiveSelectionHint = document.getElementById('motive-selection-hint');
+  const evidenceSlotsCountHint = document.getElementById('evidence-slots-count-hint');
+  const indictmentSerialBadge = document.getElementById('indictment-serial-badge');
+
   // Floating Selection Dock selectors
   const evidenceSelectionDock = document.getElementById('evidence-selection-dock');
   const dockBadgeCount = document.getElementById('dock-badge-count');
@@ -448,6 +459,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (savedMethod) methodSelect.value = savedMethod;
     if (savedMotive) motiveSelect.value = savedMotive;
 
+    // Render gamified Indictment Dossier (Suspect lineup, forensic method cards, motive slips)
+    renderGamifiedDeductionUI(caseData);
+
     suspectSelect.onchange = () => {
       sfx.playClick();
       if (currentCaseData) {
@@ -457,15 +471,22 @@ document.addEventListener('DOMContentLoaded', () => {
           const wCard = document.getElementById(`card-${match.id}`);
           toggleLinkSuspect(match.id, match.suspectKey, wCard, currentCaseData, true);
         }
+        renderGamifiedDeductionUI(currentCaseData);
       }
     };
     methodSelect.onchange = () => {
       sfx.playClick();
-      if(currentCaseData) localStorage.setItem(`${currentCaseData.id}-method-select`, methodSelect.value);
+      if (currentCaseData) {
+        localStorage.setItem(`${currentCaseData.id}-method-select`, methodSelect.value);
+        renderGamifiedDeductionUI(currentCaseData);
+      }
     };
     motiveSelect.onchange = () => {
       sfx.playClick();
-      if(currentCaseData) localStorage.setItem(`${currentCaseData.id}-motive-select`, motiveSelect.value);
+      if (currentCaseData) {
+        localStorage.setItem(`${currentCaseData.id}-motive-select`, motiveSelect.value);
+        renderGamifiedDeductionUI(currentCaseData);
+      }
     };
 
     // Render Witness Cards
@@ -717,6 +738,8 @@ document.addEventListener('DOMContentLoaded', () => {
       // Unlink suspect
       linkedSuspectId = null;
       linkedSuspectKey = null;
+      if (suspectSelect) suspectSelect.value = '';
+      if (caseData) localStorage.removeItem(`${caseData.id}-suspect-select`);
       if (cardElement) {
         cardElement.classList.remove('card-linked');
         const linkBtn = cardElement.querySelector('.witness-link-btn');
@@ -764,6 +787,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     updateLinkedCluesUI(caseData);
+    renderGamifiedDeductionUI(caseData);
   }
 
   function toggleLinkClue(evidenceId, cardElement, caseData) {
@@ -851,7 +875,79 @@ document.addEventListener('DOMContentLoaded', () => {
       deskCaseStatus.innerHTML = `<span class="status-pip ${linkedEvidenceIds.length === 2 && linkedSuspectId ? 'ready' : ''}"></span><span class="status-label">${label}</span>`;
     }
 
-    // 2. Update Selected Clues Preview Box inside Deduction Modal
+    // 2. Update Physical Evidence Pockets inside CID Indictment Dossier
+    if (evidencePocketsContainer && caseData.evidence) {
+      evidencePocketsContainer.innerHTML = '';
+      if (evidenceSlotsCountHint) {
+        evidenceSlotsCountHint.textContent = `${linkedEvidenceIds.length} / 2 Exhibits Sealed`;
+        if (linkedEvidenceIds.length === 2) {
+          evidenceSlotsCountHint.style.color = '#8c2222';
+          evidenceSlotsCountHint.style.fontWeight = 'bold';
+        } else {
+          evidenceSlotsCountHint.style.color = '';
+          evidenceSlotsCountHint.style.fontWeight = '';
+        }
+      }
+
+      for (let i = 0; i < 2; i++) {
+        const pocket = document.createElement('div');
+        const exhibitId = linkedEvidenceIds[i];
+
+        if (exhibitId) {
+          const ev = caseData.evidence.find(e => e.id === exhibitId);
+          pocket.className = 'evidence-pocket is-filled';
+          const labelText = ev ? (ev.title || ev.text.split('.')[0]) : 'Unknown Clue';
+          const imgUrl = ev && ev.image ? ev.image : './images/magnifying-glass.svg';
+
+          pocket.innerHTML = `
+            <div class="pocket-thumb-wrap">
+              <img src="${imgUrl}" alt="${labelText}" loading="lazy">
+              <div class="pocket-yarn-pin" title="Sealed with Red Yarn Pin"></div>
+            </div>
+            <div class="pocket-meta">
+              <span class="pocket-exhibit-tag">EXHIBIT #0${i + 1} // VERIFIED</span>
+              <span class="pocket-clue-title" title="${labelText}">${labelText}</span>
+            </div>
+            <button type="button" class="pocket-unlink-btn" title="Unlink exhibit" aria-label="Unlink exhibit">✕</button>
+          `;
+
+          const unlinkBtn = pocket.querySelector('.pocket-unlink-btn');
+          if (unlinkBtn) {
+            unlinkBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              const cardEl = document.getElementById(`card-${exhibitId}`);
+              toggleLinkClue(exhibitId, cardEl, caseData);
+            });
+          }
+        } else {
+          pocket.className = 'evidence-pocket is-empty';
+          pocket.setAttribute('tabindex', '0');
+          pocket.setAttribute('role', 'button');
+          pocket.setAttribute('aria-label', `Link physical evidence for Slot ${i + 1}`);
+          pocket.innerHTML = `
+            <span class="empty-slot-title">[ EXHIBIT SLOT 0${i + 1}: EMPTY ]</span>
+            <span class="empty-slot-sub">Click to pin physical evidence from corkboard</span>
+          `;
+
+          const openDockHandler = () => {
+            sfx.playClick();
+            deductionModal.classList.add('hidden');
+            evidenceSelectionDock.classList.remove('hidden');
+          };
+          pocket.addEventListener('click', openDockHandler);
+          pocket.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              openDockHandler();
+            }
+          });
+        }
+
+        evidencePocketsContainer.appendChild(pocket);
+      }
+    }
+
+    // 3. Update legacy Selected Clues Preview Box (hidden fallback)
     if (selectedCluesPreview) {
       selectedCluesPreview.innerHTML = '';
       const previewWrapper = document.createElement('div');
@@ -897,7 +993,7 @@ document.addEventListener('DOMContentLoaded', () => {
       selectedCluesPreview.appendChild(previewWrapper);
     }
 
-    // 3. Render procedural multi-node Red Yarn board
+    // 4. Render procedural multi-node Red Yarn board
     drawActiveStrings();
   }
 
@@ -977,6 +1073,223 @@ document.addEventListener('DOMContentLoaded', () => {
         activeStringBoard.appendChild(knot);
       });
     });
+  }
+
+  // Render CID Formal Indictment Dossier (Gamified Suspect Lineup, Method Slips, Motive Slips)
+  function renderGamifiedDeductionUI(caseData) {
+    if (!caseData) return;
+
+    if (indictmentSerialBadge) {
+      indictmentSerialBadge.textContent = `FILE CID-${caseData.id.toUpperCase()}`;
+    }
+
+    // 1. Primary Accused (Suspect Polaroid Lineup)
+    if (suspectLineupContainer && caseData.suspectOptions) {
+      suspectLineupContainer.innerHTML = '';
+      const currentSuspectVal = suspectSelect.value || linkedSuspectKey;
+
+      caseData.suspectOptions.forEach((opt) => {
+        const witness = caseData.witnesses ? caseData.witnesses.find(w => w.suspectKey === opt.value) : null;
+        const portraitUrl = witness ? (witness.image || witness.portrait || './images/magnifying-glass.svg') : './images/magnifying-glass.svg';
+        const rawName = witness ? witness.name : opt.label;
+        const displayName = witness && witness.caption ? witness.caption : (witness ? witness.name.split('(')[0].trim() : opt.label.split('(')[0].trim());
+        const displayRole = witness && witness.tag ? witness.tag : (opt.label.includes('(') ? opt.label.split('(')[1].replace(')', '').trim() : '');
+
+        const item = document.createElement('div');
+        item.className = 'suspect-lineup-item';
+        item.setAttribute('role', 'radio');
+        item.setAttribute('tabindex', '0');
+        item.setAttribute('aria-label', `Accuse ${rawName}`);
+
+        const isAccused = (currentSuspectVal === opt.value);
+        if (isAccused) {
+          item.classList.add('is-accused');
+          item.setAttribute('aria-checked', 'true');
+        } else {
+          item.setAttribute('aria-checked', 'false');
+        }
+
+        const photoWrap = document.createElement('div');
+        photoWrap.className = 'suspect-lineup-photo-wrap';
+        const img = document.createElement('img');
+        img.src = portraitUrl;
+        img.alt = displayName;
+        img.loading = 'lazy';
+        photoWrap.appendChild(img);
+
+        const nameEl = document.createElement('div');
+        nameEl.className = 'suspect-lineup-name';
+        nameEl.textContent = displayName;
+
+        const roleEl = document.createElement('div');
+        roleEl.className = 'suspect-lineup-role';
+        roleEl.textContent = displayRole || opt.label;
+
+        item.appendChild(photoWrap);
+        item.appendChild(nameEl);
+        item.appendChild(roleEl);
+
+        if (isAccused) {
+          const stamp = document.createElement('div');
+          stamp.className = 'accused-stamp';
+          stamp.textContent = 'ACCUSED';
+          item.appendChild(stamp);
+        }
+
+        const selectSuspectHandler = () => {
+          sfx.playStamp();
+          suspectSelect.value = opt.value;
+          localStorage.setItem(`${caseData.id}-suspect-select`, opt.value);
+
+          if (witness) {
+            const wCard = document.getElementById(`card-${witness.id}`);
+            toggleLinkSuspect(witness.id, witness.suspectKey, wCard, caseData, true);
+          }
+          renderGamifiedDeductionUI(caseData);
+        };
+
+        item.addEventListener('click', selectSuspectHandler);
+        item.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            selectSuspectHandler();
+          }
+        });
+
+        suspectLineupContainer.appendChild(item);
+      });
+
+      if (suspectSelectionHint) {
+        if (currentSuspectVal) {
+          const matchedOpt = caseData.suspectOptions.find(o => o.value === currentSuspectVal);
+          suspectSelectionHint.textContent = matchedOpt ? `Accused: ${matchedOpt.label}` : 'Suspect selected';
+          suspectSelectionHint.style.color = '#8c2222';
+          suspectSelectionHint.style.fontWeight = 'bold';
+        } else {
+          suspectSelectionHint.textContent = 'Stamp accused suspect';
+          suspectSelectionHint.style.color = '';
+          suspectSelectionHint.style.fontWeight = '';
+        }
+      }
+    }
+
+    // 2. Execution Mechanism (Forensic Vector Cards)
+    if (methodCardsContainer && caseData.methodOptions) {
+      methodCardsContainer.innerHTML = '';
+      const currentMethodVal = methodSelect.value;
+
+      caseData.methodOptions.forEach((opt, idx) => {
+        const slip = document.createElement('div');
+        slip.className = 'forensic-vector-slip';
+        slip.setAttribute('role', 'radio');
+        slip.setAttribute('tabindex', '0');
+        slip.setAttribute('aria-label', opt.label);
+
+        const isSelected = (currentMethodVal === opt.value);
+        if (isSelected) {
+          slip.classList.add('is-selected');
+          slip.setAttribute('aria-checked', 'true');
+        } else {
+          slip.setAttribute('aria-checked', 'false');
+        }
+
+        slip.innerHTML = `
+          <span class="vector-index-badge">VECTOR 0${idx + 1}</span>
+          <span class="vector-label-text">${opt.label}</span>
+          <span class="vector-check-indicator">${isSelected ? '✓' : ''}</span>
+        `;
+
+        const selectMethodHandler = () => {
+          sfx.playClick();
+          methodSelect.value = opt.value;
+          localStorage.setItem(`${caseData.id}-method-select`, opt.value);
+          renderGamifiedDeductionUI(caseData);
+        };
+
+        slip.addEventListener('click', selectMethodHandler);
+        slip.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            selectMethodHandler();
+          }
+        });
+
+        methodCardsContainer.appendChild(slip);
+      });
+
+      if (methodSelectionHint) {
+        if (currentMethodVal) {
+          const mIdx = caseData.methodOptions.findIndex(o => o.value === currentMethodVal);
+          methodSelectionHint.textContent = mIdx !== -1 ? `Vector 0${mIdx + 1} Designated` : 'Method designated';
+          methodSelectionHint.style.color = '#8c2222';
+          methodSelectionHint.style.fontWeight = 'bold';
+        } else {
+          methodSelectionHint.textContent = 'Select vector';
+          methodSelectionHint.style.color = '';
+          methodSelectionHint.style.fontWeight = '';
+        }
+      }
+    }
+
+    // 3. Criminal Motive Analysis Slips
+    if (motiveCardsContainer && caseData.motiveOptions) {
+      motiveCardsContainer.innerHTML = '';
+      const currentMotiveVal = motiveSelect.value;
+
+      caseData.motiveOptions.forEach((opt, idx) => {
+        const slip = document.createElement('div');
+        slip.className = 'forensic-vector-slip';
+        slip.setAttribute('role', 'radio');
+        slip.setAttribute('tabindex', '0');
+        slip.setAttribute('aria-label', opt.label);
+
+        const isSelected = (currentMotiveVal === opt.value);
+        if (isSelected) {
+          slip.classList.add('is-selected');
+          slip.setAttribute('aria-checked', 'true');
+        } else {
+          slip.setAttribute('aria-checked', 'false');
+        }
+
+        const factorCode = String.fromCharCode(65 + idx);
+        slip.innerHTML = `
+          <span class="vector-index-badge">FACTOR ${factorCode}</span>
+          <span class="vector-label-text">${opt.label}</span>
+          <span class="vector-check-indicator">${isSelected ? '✓' : ''}</span>
+        `;
+
+        const selectMotiveHandler = () => {
+          sfx.playClick();
+          motiveSelect.value = opt.value;
+          localStorage.setItem(`${caseData.id}-motive-select`, opt.value);
+          renderGamifiedDeductionUI(caseData);
+        };
+
+        slip.addEventListener('click', selectMotiveHandler);
+        slip.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            selectMotiveHandler();
+          }
+        });
+
+        motiveCardsContainer.appendChild(slip);
+      });
+
+      if (motiveSelectionHint) {
+        if (currentMotiveVal) {
+          const motIdx = caseData.motiveOptions.findIndex(o => o.value === currentMotiveVal);
+          const fCode = motIdx !== -1 ? String.fromCharCode(65 + motIdx) : '';
+          motiveSelectionHint.textContent = fCode ? `Factor ${fCode} Established` : 'Motive established';
+          motiveSelectionHint.style.color = '#8c2222';
+          motiveSelectionHint.style.fontWeight = 'bold';
+        } else {
+          motiveSelectionHint.textContent = 'Select motive';
+          motiveSelectionHint.style.color = '';
+          motiveSelectionHint.style.fontWeight = '';
+        }
+      }
+    }
   }
 
   // Check if case is already solved on load
@@ -1235,9 +1548,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // Case Conclusion Modal filing triggers
   if (openDeductionBtn) {
     openDeductionBtn.addEventListener('click', () => {
-      sfx.playClick();
+      sfx.playFolder();
       deductionModal.classList.remove('hidden');
-      if (currentCaseData) updateLinkedCluesUI(currentCaseData);
+      if (currentCaseData) {
+        updateLinkedCluesUI(currentCaseData);
+        renderGamifiedDeductionUI(currentCaseData);
+      }
     });
   }
 
@@ -1279,7 +1595,10 @@ document.addEventListener('DOMContentLoaded', () => {
       sfx.playClick();
       evidenceSelectionDock.classList.add('hidden');
       deductionModal.classList.remove('hidden');
-      if (currentCaseData) updateLinkedCluesUI(currentCaseData);
+      if (currentCaseData) {
+        updateLinkedCluesUI(currentCaseData);
+        renderGamifiedDeductionUI(currentCaseData);
+      }
     });
   }
 
@@ -1300,6 +1619,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         linkedSuspectId = null;
         linkedSuspectKey = null;
+        if (suspectSelect) suspectSelect.value = '';
       }
       // Unlink clues
       linkedEvidenceIds.forEach(id => {
@@ -1318,7 +1638,9 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem(`${currentCaseData.id}-linked-suspect`);
         localStorage.removeItem(`${currentCaseData.id}-linked-suspect-key`);
         localStorage.removeItem(`${currentCaseData.id}-linked-clues`);
+        localStorage.removeItem(`${currentCaseData.id}-suspect-select`);
         updateLinkedCluesUI(currentCaseData);
+        renderGamifiedDeductionUI(currentCaseData);
       }
     });
   }
@@ -1332,13 +1654,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    sfx.playClick();
+    sfx.playStamp();
     if (!currentCaseData) return;
     
     const suspectVal = suspectSelect.value;
     const methodVal = methodSelect.value;
     const motiveVal = motiveSelect.value;
     
+    if (!suspectVal) {
+      showFeedbackModal(
+        "INCOMPLETE INDICTMENT",
+        "You must identify and stamp the Primary Accused Culprit before filing the indictment.",
+        [{ text: "DISMISS", class: "secondary-btn" }]
+      );
+      return;
+    }
+
+    if (!methodVal) {
+      showFeedbackModal(
+        "INCOMPLETE INDICTMENT",
+        "You must designate the Execution Mechanism & Forensic Vector before filing the indictment.",
+        [{ text: "DISMISS", class: "secondary-btn" }]
+      );
+      return;
+    }
+
+    if (!motiveVal) {
+      showFeedbackModal(
+        "INCOMPLETE INDICTMENT",
+        "You must establish the Criminal Motive before submitting findings to the Magistrate.",
+        [{ text: "DISMISS", class: "secondary-btn" }]
+      );
+      return;
+    }
+
     if (linkedEvidenceIds.length < 2) {
       deductionModal.classList.add('hidden');
       showFeedbackModal(

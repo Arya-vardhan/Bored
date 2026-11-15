@@ -251,57 +251,113 @@
       </div>
     </div>
 
-    <!-- Case Conclusion Filing Modal -->
+    <!-- Case Conclusion Filing Modal (CID Indictment Dossier) -->
     <div id="deduction-modal" class="overlay hidden">
-      <div class="overlay-content modal-content deduction-modal-content">
+      <div class="overlay-content modal-content deduction-modal-content cid-indictment-dossier">
         <button type="button" id="close-deduction-btn" class="close-fir-btn"
           aria-label="Close Case File">&times;</button>
-        <h2 class="fir-doc-type"
-          style="margin-top: 0; font-size: 1.8rem; text-align: center; text-decoration: none; letter-spacing: 2px; color: var(--accent);">
-          CASE CONCLUSION</h2>
-        <p
-          style="font-size: 0.9rem; color: #ccc; text-align: center; margin-bottom: 2rem; font-family: var(--font-typewriter);">
-          File your official findings below. All parameters must connect with the physical clues.</p>
+        
+        <!-- Archival Dossier Header -->
+        <div class="indictment-header">
+          <div class="indictment-crest-row">
+            <svg class="cid-badge-icon" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z"/>
+              <path d="M12 8v4M12 16h.01"/>
+            </svg>
+            <div class="indictment-dept-meta">
+              <span class="dept-title">METROPOLITAN POLICE DEPARTMENT // CID</span>
+              <span class="dept-subtitle">OFFICIAL CRIMINAL INDICTMENT CHARGE SHEET</span>
+            </div>
+            <div class="indictment-serial" id="indictment-serial-badge">FORM NO. 104-B</div>
+          </div>
+          <div class="indictment-stamp-banner">
+            <span class="indictment-badge-pill">CASE FILE CID-FINAL</span>
+            <span class="indictment-memo">Findings must withstand physical cross-examination. All parameters must connect with physical corkboard exhibits.</span>
+          </div>
+        </div>
 
         <form id="solution-form">
-          <div class="modal-form-inputs">
-            <div class="input-group select-group"
-              style="margin-bottom: 1.2rem; display: flex; flex-direction: column; text-align: left;">
-              <label for="suspect-select">PRIMARY SUSPECT</label>
-              <select id="suspect-select" required>
-                <option value="" disabled selected>Select suspect...</option>
-              </select>
+          <!-- Hidden accessible selects (maintained for compatibility and validation) -->
+          <div class="sr-hidden-select-group" style="position: absolute; opacity: 0; pointer-events: none; height: 0; width: 0; overflow: hidden;" aria-hidden="true">
+            <select id="suspect-select" tabindex="-1">
+              <option value="" disabled selected>Select suspect...</option>
+            </select>
+            <select id="method-select" tabindex="-1">
+              <option value="" disabled selected>Select method...</option>
+            </select>
+            <select id="motive-select" tabindex="-1">
+              <option value="" disabled selected>Select motive...</option>
+            </select>
+          </div>
+
+          <!-- Section 1: Primary Accused (Suspect Polaroid Lineup) -->
+          <div class="indictment-section" id="section-accused-suspect">
+            <div class="indictment-section-header">
+              <span class="sec-number">01</span>
+              <span class="sec-label">PRIMARY ACCUSED CULPRIT</span>
+              <span class="sec-hint" id="suspect-selection-hint">Stamp accused suspect</span>
             </div>
-            <div class="input-group select-group"
-              style="margin-bottom: 1.2rem; display: flex; flex-direction: column; text-align: left;">
-              <label for="method-select">EXECUTION METHOD</label>
-              <select id="method-select" required>
-                <option value="" disabled selected>Select method...</option>
-              </select>
-            </div>
-            <div class="input-group select-group"
-              style="margin-bottom: 1.2rem; display: flex; flex-direction: column; text-align: left;">
-              <label for="motive-select">CRIMINAL MOTIVE</label>
-              <select id="motive-select" required>
-                <option value="" disabled selected>Select motive...</option>
-              </select>
-            </div>
-            <div class="input-group evidence-selector-group"
-              style="margin-bottom: 2rem; display: flex; flex-direction: column; text-align: left; width: 100%;">
-              <label>SUPPORTING EVIDENCE (SELECT 2)</label>
-              <div id="selected-clues-preview" class="selected-clues-preview-box">
-                <!-- Dynamically populated selected clues -->
-              </div>
-              <button type="button" id="select-evidence-trigger-btn" class="submit-btn secondary-btn"
-                style="width: 100%; height: 44px; margin-top: 0.5rem; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
-                <svg class="ui-icon" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1v5M4 6h8l-1 5H5L4 6zM8 11v4"/></svg>
-                PIN EVIDENCE ON CORKBOARD
-              </button>
+            <div id="suspect-lineup-container" class="suspect-polaroid-lineup" role="radiogroup" aria-label="Primary Accused Suspect">
+              <!-- Dynamically populated mini-polaroids -->
             </div>
           </div>
 
-          <button type="submit" class="submit-btn" id="submit-btn" style="width: 100%; height: 50px;">FILE OFFICIAL
-            REPORT</button>
+          <!-- Section 2: Execution Mechanism & Forensic Vector -->
+          <div class="indictment-section" id="section-execution-method">
+            <div class="indictment-section-header">
+              <span class="sec-number">02</span>
+              <span class="sec-label">EXECUTION MECHANISM & FORENSIC VECTOR</span>
+              <span class="sec-hint" id="method-selection-hint">Select vector</span>
+            </div>
+            <div id="method-cards-container" class="forensic-cards-grid" role="radiogroup" aria-label="Execution Method">
+              <!-- Dynamically populated method slips -->
+            </div>
+          </div>
+
+          <!-- Section 3: Criminal Motive Analysis -->
+          <div class="indictment-section" id="section-criminal-motive">
+            <div class="indictment-section-header">
+              <span class="sec-number">03</span>
+              <span class="sec-label">ESTABLISHED CRIMINAL MOTIVE</span>
+              <span class="sec-hint" id="motive-selection-hint">Select motive</span>
+            </div>
+            <div id="motive-cards-container" class="forensic-cards-grid" role="radiogroup" aria-label="Criminal Motive">
+              <!-- Dynamically populated motive slips -->
+            </div>
+          </div>
+
+          <!-- Section 4: Sealed Supporting Evidence (2 Physical Pockets) -->
+          <div class="indictment-section" id="section-supporting-evidence">
+            <div class="indictment-section-header">
+              <span class="sec-number">04</span>
+              <span class="sec-label">SEALED PHYSICAL EVIDENCE (EXACTLY 2 EXHIBITS)</span>
+              <span class="sec-hint" id="evidence-slots-count-hint">0 / 2 Exhibits Sealed</span>
+            </div>
+            <div id="evidence-pockets-container" class="evidence-pockets-grid">
+              <!-- Dynamically populated physical evidence pockets -->
+            </div>
+            <div id="selected-clues-preview" class="selected-clues-preview-box" style="display: none;"></div>
+            <button type="button" id="select-evidence-trigger-btn" class="submit-btn secondary-btn indictment-corkboard-btn">
+              <svg class="ui-icon" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1v5M4 6h8l-1 5H5L4 6zM8 11v4"/></svg>
+              PIN EVIDENCE ON CORKBOARD
+            </button>
+          </div>
+
+          <!-- Section 5: Department Sealing Wax Action -->
+          <div class="indictment-submit-row">
+            <button type="submit" class="cid-wax-seal-btn" id="submit-btn">
+              <div class="wax-seal-medallion">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z"/>
+                  <path d="M9 12l2 2 4-4"/>
+                </svg>
+              </div>
+              <div class="wax-seal-text">
+                <span class="wax-title">AFFIX POLICE SEAL & FILE INDICTMENT</span>
+                <span class="wax-subtitle">OFFICIAL SUBMISSION TO MAGISTRATE</span>
+              </div>
+            </button>
+          </div>
         </form>
       </div>
     </div>
