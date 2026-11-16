@@ -7,7 +7,7 @@
   <title>Bored?</title>
   <meta name="description" content="A single-page detective mystery case solver game.">
   <link rel="icon" type="image/png" href="assets/favicon.png">
-  <link rel="stylesheet" href="styles.css?v=14">
+  <link rel="stylesheet" href="styles.css?v=15">
   <link
     href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Roboto:wght@300;400;500;700&family=Patrick+Hand&display=swap"
     rel="stylesheet">
@@ -16,24 +16,73 @@
 <body>
   <div id="app">
 
-    <!-- Case Selection View -->
-    <div id="case-selection" class="case-selection">
-      <h2>CONFIDENTIAL FILES</h2>
-      <div class="folder-grid" id="folder-grid">
-        <!-- Case folders injected here -->
-      </div>
-      <div class="selection-actions"
-        style="margin-top: auto; display: flex; justify-content: center; padding-top: 2rem; flex-shrink: 0;">
-        <button id="reset-all-btn" class="submit-btn secondary-btn" style="height: 42px; font-size: 0.85rem;">
-          <svg class="ui-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor"
-            stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"
-            style="vertical-align: -2px; margin-right: 6px;">
-            <path
-              d="M3 4.5h10M6 4.5V3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1.5M4 4.5l.8 9a1.5 1.5 0 0 0 1.5 1.5h3.4a1.5 1.5 0 0 0 1.5-1.5l.8-9M6.5 7.5v4.5M9.5 7.5v4.5" />
+    <!-- Case Selection / Scotland Yard CID Central Archive View -->
+    <div id="case-selection" class="case-selection" role="main" aria-label="Central Case Archives">
+      <!-- Archival Bureau Header -->
+      <header class="archive-bureau-header">
+        <div class="archive-crest-row">
+          <svg class="cid-badge-icon" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 3v3M12 18v3M3 12h3M18 12h3M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
           </svg>
-          PURGE ARCHIVED DOSSIERS
-        </button>
+          <div class="archive-dept-meta">
+            <span class="dept-title">METROPOLITAN POLICE // CRIMINAL INVESTIGATION DIVISION</span>
+            <span class="dept-subtitle">CENTRAL RECORDS BUREAU • CLASSIFIED CASE ARCHIVES</span>
+          </div>
+          <div class="archive-serial-badge">CID DEPT-REF #1946</div>
+        </div>
+
+        <h1 class="archive-main-title">SCOTLAND YARD CASE FILES</h1>
+        <p class="archive-intro-text">Select an active investigation docket to examine crime scene exhibits, analyze suspect alibis, and submit your formal indictment.</p>
+
+        <!-- Compact 3-Step Investigative Protocol Ribbon -->
+        <div class="investigation-protocol-ribbon" role="region" aria-label="Investigation Protocol">
+          <div class="protocol-step">
+            <span class="step-num">01</span>
+            <div class="step-desc">
+              <span class="step-title">EXAMINE EXHIBITS</span>
+              <span class="step-sub">Inspect crime scenes, lab reports & latent traces</span>
+            </div>
+          </div>
+          <span class="protocol-arrow" aria-hidden="true">→</span>
+          <div class="protocol-step">
+            <span class="step-num">02</span>
+            <div class="step-desc">
+              <span class="step-title">WEIGH MOTIVES</span>
+              <span class="step-sub">Interrogate testimonies & corroborate suspect alibis</span>
+            </div>
+          </div>
+          <span class="protocol-arrow" aria-hidden="true">→</span>
+          <div class="protocol-step">
+            <span class="step-num">03</span>
+            <div class="step-desc">
+              <span class="step-title">FILE INDICTMENT</span>
+              <span class="step-sub">Seal physical proof & submit charges to Magistrate</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Grid of Physical Manila Case Dockets -->
+      <div class="folder-grid" id="folder-grid" role="list" aria-label="Case Dockets List">
+        <!-- Case folders dynamically rendered here -->
       </div>
+
+      <!-- Bureau Clearance Footer & Archive Maintenance -->
+      <footer class="archive-bureau-footer">
+        <div class="archive-clearance-status">
+          <span class="clearance-label">BUREAU CLEARANCE:</span>
+          <span class="clearance-count" id="bureau-clearance-count">0 / 4 CASES CONCLUDED</span>
+        </div>
+        <button id="reset-all-btn" class="archive-purge-btn" type="button" aria-label="Reset all case archives">
+          <svg class="ui-icon" viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor"
+            stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"
+            style="vertical-align: -2px; margin-right: 5px;">
+            <path d="M3 4.5h10M6 4.5V3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1.5M4 4.5l.8 9a1.5 1.5 0 0 0 1.5 1.5h3.4a1.5 1.5 0 0 0 1.5-1.5l.8-9M6.5 7.5v4.5M9.5 7.5v4.5" />
+          </svg>
+          RESET ARCHIVES
+        </button>
+      </footer>
     </div>
 
     <!-- Active Case View -->
@@ -564,15 +613,15 @@
     </div>
   </div>
 
-  <script src="js/cases/case-001.js?v=14"></script>
-  <script src="js/cases/case-002.js?v=14"></script>
-  <script src="js/cases/case-003.js?v=14"></script>
-  <script src="js/cases/case-004.js?v=14"></script>
-  <script src="js/cases/index.js?v=14"></script>
-  <script src="js/sound.js?v=14"></script>
-  <script src="js/puzzles.js?v=14"></script>
-  <script src="js/deductions.js?v=14"></script>
-  <script src="js/app.js?v=14"></script>
+  <script src="js/cases/case-001.js?v=15"></script>
+  <script src="js/cases/case-002.js?v=15"></script>
+  <script src="js/cases/case-003.js?v=15"></script>
+  <script src="js/cases/case-004.js?v=15"></script>
+  <script src="js/cases/index.js?v=15"></script>
+  <script src="js/sound.js?v=15"></script>
+  <script src="js/puzzles.js?v=15"></script>
+  <script src="js/deductions.js?v=15"></script>
+  <script src="js/app.js?v=15"></script>
 </body>
 
 </html>

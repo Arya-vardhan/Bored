@@ -4,6 +4,8 @@ window.case004 = {
 
   // Title displayed in case selection and header
   title: "The Clockwork Alibi",
+  category: "HOROLOGICAL HOMICIDE",
+  teaser: "A master horologist was struck down by a spring-tensioned clock drive as the workshop clock struck midnight.",
 
   // Incident date formatted as string
   date: "January 1, 1987",

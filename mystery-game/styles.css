@@ -1367,114 +1367,419 @@
   }
 
  /* Case Selection UI */
+  /* Case Selection & Scotland Yard CID Central Archive UI */
   .case-selection {
-    background-color: #1e120c;
+    background-color: #170e08;
     background-image:
-      /* Ambient spotlight overlay */
-      radial-gradient(circle at 50% 30%, rgba(255, 218, 155, 0.15) 0%, rgba(0, 0, 0, 0.85) 75%),
+      /* Soft ambient bureau spotlight overlay */
+      radial-gradient(circle at 50% 15%, rgba(255, 218, 155, 0.12) 0%, rgba(8, 5, 3, 0.95) 85%),
       /* Wood plank separation lines */
-      linear-gradient(90deg, rgba(0,0,0,0.4) 0px, transparent 2px, transparent 180px, rgba(0,0,0,0.4) 182px),
+      linear-gradient(90deg, rgba(0,0,0,0.5) 0px, transparent 2px, transparent 180px, rgba(0,0,0,0.5) 182px),
       /* Fine wood grain lines */
-      repeating-linear-gradient(0deg, rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 1px, transparent 4px),
-      repeating-linear-gradient(90deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 2px, transparent 2px, transparent 6px);
+      repeating-linear-gradient(0deg, rgba(0,0,0,0.18) 0px, rgba(0,0,0,0.18) 1px, transparent 1px, transparent 4px),
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 2px, transparent 2px, transparent 6px);
     background-size: 100% 100%, 180px 100%, 100% 4px, 6px 100%;
+    min-height: 100%;
     height: 100%;
     overflow-y: auto;
-    padding: 4rem;
+    padding: 2.8rem 2.2rem 3rem 2.2rem;
     display: flex;
     flex-direction: column;
-    box-shadow: inset 0 0 100px rgba(0,0,0,0.95);
+    box-shadow: inset 0 0 120px rgba(0,0,0,0.98);
     position: relative;
+    box-sizing: border-box;
   }
 
- .case-selection h2 {
-   font-family: var(--font-typewriter);
-   color: var(--accent);
-   text-align: center;
-   font-size: 3.5rem;
-   letter-spacing: 5px;
-   margin-bottom: 4rem;
-   text-shadow: 0 0 15px rgba(216,49,49,0.4), 0 2px 4px #000;
- }
+  /* Archival Bureau Header */
+  .archive-bureau-header {
+    text-align: center;
+    max-width: 920px;
+    margin: 0 auto 2rem auto;
+    width: 100%;
+  }
 
- .folder-grid {
-   display: flex;
-   flex-wrap: wrap;
-   gap: 4rem;
-   justify-content: center;
- }
+  .archive-crest-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 0.8rem;
+  }
 
+  .archive-crest-row .cid-badge-icon {
+    color: #bfa57d;
+    flex-shrink: 0;
+  }
+
+  .archive-dept-meta {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+  }
+
+  .archive-dept-meta .dept-title {
+    font-size: 0.84rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #dfd2be;
+    font-family: var(--font-typewriter);
+  }
+
+  .archive-dept-meta .dept-subtitle {
+    font-size: 0.68rem;
+    letter-spacing: 1px;
+    color: #8c765f;
+    font-style: italic;
+    font-family: var(--font-typewriter);
+  }
+
+  .archive-serial-badge {
+    border: 1px dashed rgba(191, 165, 125, 0.45);
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 0.65rem;
+    color: #dfd2be;
+    letter-spacing: 1px;
+    background: rgba(0, 0, 0, 0.4);
+    font-family: var(--font-typewriter);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .archive-main-title {
+    font-family: var(--font-typewriter);
+    color: #f0e6d6;
+    font-size: 2.2rem;
+    letter-spacing: 4px;
+    margin: 0.8rem 0 0.5rem 0;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+  }
+
+  .archive-intro-text {
+    font-family: var(--font-typewriter);
+    color: #a69279;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    margin: 0 auto 1.8rem auto;
+    max-width: 660px;
+    font-style: italic;
+  }
+
+  /* Quiet 3-Step Investigative Protocol Ribbon */
+  .investigation-protocol-ribbon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    background: rgba(26, 17, 11, 0.85);
+    border: 1px solid #4a3726;
+    outline: 1px solid rgba(212, 197, 169, 0.1);
+    outline-offset: -3px;
+    border-radius: 6px;
+    padding: 0.75rem 1.4rem;
+    max-width: 860px;
+    margin: 0 auto 2.4rem auto;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  }
+
+  .protocol-step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-align: left;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .protocol-step .step-num {
+    font-family: var(--font-typewriter);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #c94b4b;
+    border: 1px solid rgba(201, 75, 75, 0.4);
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: rgba(201, 75, 75, 0.08);
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .protocol-step .step-desc {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .protocol-step .step-title {
+    font-family: var(--font-typewriter);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #dfd2be;
+  }
+
+  .protocol-step .step-sub {
+    font-family: var(--font-typewriter);
+    font-size: 0.62rem;
+    color: #8c765f;
+    line-height: 1.35;
+    margin-top: 2px;
+  }
+
+  .protocol-arrow {
+    color: #634b35;
+    font-size: 1rem;
+    user-select: none;
+    flex-shrink: 0;
+  }
+
+  /* Folder Grid (Responsive CSS Grid, No Orphans) */
+  .folder-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.8rem;
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+
+  @media (max-width: 1120px) {
+    .folder-grid {
+      grid-template-columns: repeat(2, 1fr);
+      max-width: 680px;
+    }
+  }
+
+  /* Authentic Manila Case Docket */
   .folder-card {
-    width: 250px;
-    height: 320px;
     background-color: #dbb87d;
-    /* Manila paper micro-texture */
     background-image: 
-      radial-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 0),
-      radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 0);
-    background-size: 4px 4px;
-    background-position: 0 0, 2px 2px;
-    border-radius: 0 15px 5px 5px;
+      radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+      radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+      linear-gradient(145deg, #dfc699 0%, #cbac74 100%);
+    background-size: 4px 4px, 4px 4px, 100% 100%;
+    background-position: 0 0, 2px 2px, 0 0;
+    border: 1.5px solid #8e6a3d;
+    border-radius: 0 10px 6px 6px;
     position: relative;
     cursor: pointer;
-    box-shadow: 5px 10px 25px rgba(0,0,0,0.6), inset 0 2px 2px rgba(255,255,255,0.2), inset 0 -3px 5px rgba(0,0,0,0.1);
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
-    padding: 2.5rem 1.5rem 1.5rem 1.5rem;
-    color: #3b2a1a;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.65), inset 0 1px 1px rgba(255, 255, 255, 0.5), inset 0 -2px 4px rgba(0, 0, 0, 0.15);
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+    padding: 1.5rem 1.3rem 1.3rem 1.3rem;
+    color: #2b1f14;
     font-family: var(--font-typewriter);
-    border: 1px solid #c29d60;
+    display: flex;
+    flex-direction: column;
+    min-height: 310px;
+    text-align: left;
+    box-sizing: border-box;
   }
 
-  /* Folder Tab */
-  .folder-card::before {
-    content: '';
+  .folder-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.75), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  }
+
+  /* Folder Tab at top */
+  .folder-top-tab {
     position: absolute;
     top: -16px;
-    left: 15px;
-    width: 90px;
-    height: 17px;
-    background-color: #dbb87d;
-    background-image: 
-      radial-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 0);
-    background-size: 4px 4px;
-    border-radius: 8px 8px 0 0;
-    border: 1px solid #c29d60;
+    left: 14px;
+    height: 16px;
+    padding: 0 10px;
+    background-color: #dfc699;
+    background-image: linear-gradient(180deg, #dfc699 0%, #cbac74 100%);
+    border: 1.5px solid #8e6a3d;
     border-bottom: none;
-    box-shadow: 0 -2px 5px rgba(0,0,0,0.15);
+    border-radius: 6px 6px 0 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.25);
   }
 
- .folder-card:hover {
-   transform: translateY(-8px) scale(1.02);
-   box-shadow: 8px 12px 25px rgba(0,0,0,0.6);
- }
-
-  .folder-card h3 {
-    margin-top: 25px;
-    font-size: 1.2rem;
-    text-transform: uppercase;
-    border-bottom: 2px dashed rgba(59, 42, 26, 0.3);
-    padding-bottom: 8px;
-    color: #5a3d28;
-    font-weight: bold;
+  .folder-tab-ref {
+    font-size: 0.64rem;
+    font-weight: 700;
+    color: #422d19;
+    letter-spacing: 0.8px;
   }
 
-  .solved-stamp-folder {
-    position: absolute;
-    bottom: 30px;
-    right: -20px;
-    color: rgba(216, 49, 49, 0.85);
-    border: 4px dashed rgba(216, 49, 49, 0.85);
-    padding: 8px 16px;
+  .folder-eyelet {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #695033;
+    box-shadow: inset 0 1px 2px #000, 0 0 0 1px #a48255;
+    display: inline-block;
+  }
+
+  /* Folder Docket Body */
+  .folder-docket-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .folder-classification-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(90, 61, 33, 0.22);
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+  }
+
+  .folder-category-tag {
+    font-size: 0.62rem;
+    font-weight: 700;
+    color: #8c2222;
+    border: 1px solid rgba(140, 34, 34, 0.4);
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: rgba(140, 34, 34, 0.06);
+    letter-spacing: 0.8px;
+  }
+
+  .folder-case-date {
+    font-size: 0.65rem;
+    color: #6e543c;
+    font-style: italic;
+  }
+
+  .folder-case-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #241407;
+    margin: 0 0 8px 0;
+    line-height: 1.3;
+    letter-spacing: 0.5px;
+  }
+
+  .folder-teaser-text {
+    font-size: 0.78rem;
+    color: #423020;
+    line-height: 1.45;
+    margin: 0 0 1.2rem 0;
+    flex: 1;
+  }
+
+  /* Docket Footer & Interactive State */
+  .folder-docket-footer {
+    margin-top: auto;
+    border-top: 1px dashed rgba(90, 61, 33, 0.3);
+    padding-top: 10px;
+  }
+
+  .folder-docket-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .docket-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #73481e;
+    letter-spacing: 0.6px;
+  }
+
+  .status-pulse-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #b84141;
+    display: inline-block;
+  }
+
+  .docket-open-hint {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #2e1c0d;
+    letter-spacing: 0.8px;
+    transition: transform 0.15s ease, color 0.15s ease;
+  }
+
+  .folder-card:hover .docket-open-hint {
+    transform: translateX(3px);
+    color: #8c2222;
+  }
+
+  /* Solved Stamp on Case Folder */
+  .folder-solved-stamp {
     font-family: var(--font-typewriter);
-    font-weight: bold;
-    font-size: 1.8rem;
-    transform: rotate(-12deg) scale(1);
-    letter-spacing: 3px;
-    pointer-events: none;
-    text-shadow: 1px 1px 1px rgba(216, 49, 49, 0.2);
-    /* Distressed stamp texture look */
-    background: radial-gradient(circle, rgba(216, 49, 49, 0.05) 20%, transparent 80%);
-    box-shadow: 0 0 15px rgba(216, 49, 49, 0.15), inset 0 0 10px rgba(216, 49, 49, 0.1);
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #1e542b;
+    border: 2px solid #1e542b;
+    padding: 5px 8px;
+    border-radius: 4px;
+    background: rgba(30, 84, 43, 0.08);
+    letter-spacing: 1px;
+    transform: rotate(-3deg);
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+    box-shadow: 0 2px 4px rgba(30, 84, 43, 0.15);
+  }
+
+  /* Bureau Clearance Footer */
+  .archive-bureau-footer {
+    margin-top: 3.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #3d2b1c;
+    padding-top: 1.5rem;
+    width: 100%;
+    max-width: 1180px;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+  }
+
+  .archive-clearance-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-typewriter);
+    font-size: 0.74rem;
+  }
+
+  .archive-clearance-status .clearance-label {
+    letter-spacing: 1px;
+    color: #7d6952;
+  }
+
+  .archive-clearance-status .clearance-count {
+    font-weight: 700;
+    color: #dfd2be;
+  }
+
+  .archive-purge-btn {
+    background: transparent;
+    border: 1px solid #4a3826;
+    color: #8c765e;
+    font-family: var(--font-typewriter);
+    font-size: 0.72rem;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .archive-purge-btn:hover {
+    border-color: #8c2222;
+    color: #d67a7a;
+    background: rgba(140, 34, 34, 0.1);
   }
 
  .hidden,
@@ -3930,27 +4235,73 @@
      padding: 0 0.8rem !important;
    }
 
-   /* Case Selection Screen */
+   /* Case Selection / Central Archives Screen */
    .case-selection {
-     padding: 1.5rem 1rem;
+     padding: 1.6rem 1rem 2.2rem 1rem;
    }
 
-   .case-selection h2 {
-     font-size: 1.6rem;
-     margin-bottom: 1.5rem;
-     letter-spacing: 1.5px;
+   .archive-crest-row {
+     flex-wrap: wrap;
+     gap: 8px;
+     justify-content: flex-start;
+     text-align: left;
+   }
+
+   .archive-dept-meta {
+     flex: 1;
+     min-width: 200px;
+   }
+
+   .archive-dept-meta .dept-title {
+     font-size: 0.76rem;
+   }
+
+   .archive-serial-badge {
+     margin-left: auto;
+   }
+
+   .archive-main-title {
+     font-size: 1.45rem;
+     letter-spacing: 2px;
+     margin: 0.8rem 0 0.4rem 0;
+   }
+
+   .archive-intro-text {
+     font-size: 0.8rem;
+     margin-bottom: 1.3rem;
+     line-height: 1.4;
+   }
+
+   .investigation-protocol-ribbon {
+     flex-direction: column;
+     align-items: stretch;
+     gap: 10px;
+     padding: 0.85rem 1rem;
+     margin-bottom: 2rem;
+   }
+
+   .protocol-arrow {
+     display: none;
    }
 
    .folder-grid {
-     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-     gap: 1.2rem;
+     grid-template-columns: 1fr;
+     gap: 1.4rem;
      width: 100%;
+     max-width: 380px;
    }
 
    .folder-card {
-     max-width: 100%;
-     aspect-ratio: 4 / 5;
-     padding: 1.2rem;
+     min-height: auto;
+     padding: 1.3rem 1.1rem 1.1rem 1.1rem;
+   }
+
+   .archive-bureau-footer {
+     flex-direction: column;
+     gap: 12px;
+     margin-top: 2rem;
+     align-items: center;
+     text-align: center;
    }
 
    /* Overlays and Modals */

@@ -1,6 +1,8 @@
 window.case003 = {
   id: "case-003",
   title: "The Midnight Phantom",
+  category: "ART HEIST",
+  teaser: "A 16th-century masterpiece was swapped in pitch blackness during a sudden 60-second power blackout.",
   date: "December 05, 1987",
   fir: "Incident: Art Theft. Missing: 'The Weeping Madonna' original 16th-century painting. The museum experienced a sudden, 60-second power outage. When backup generators kicked in, the painting had been replaced by a cheap replica. The security guard was found knocked unconscious.",
   suspectOptions: [

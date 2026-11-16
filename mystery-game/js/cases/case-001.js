@@ -1,6 +1,8 @@
 window.case001 = {
   id: "case-001",
   title: "The Locked Room Enigma",
+  category: "GRAND LARCENY",
+  teaser: "A £2.5M sapphire vanished from a study secured from within by a heavy brass deadbolt.",
   date: "October 24, 1987",
   fir: "Incident: Grand Larceny. Property: 'The Eye of Leviathan', a rare sapphire worth £2.5M. The display room was found secured from the inside with a brass deadbolt engaged. No signs of forced entry. The only ventilation is a small barred window. Strangely, the room's temperature was remarkably cold, despite the central heating running on high for hours.",
   suspectOptions: [

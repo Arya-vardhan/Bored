@@ -1,6 +1,8 @@
 window.case002 = {
   id: "case-002",
   title: "The Poisoned Pen",
+  category: "CAPITAL HOMICIDE",
+  teaser: "A wealthy author collapsed at his mahogany desk from contact toxin on a half-sealed envelope.",
   date: "November 12, 1987",
   fir: "Incident: Murder. Victim: Percival Blackwood, a wealthy author. Found dead at his mahogany desk. Cause of death determined to be a fast-acting poison absorbed through the skin. A half-sealed letter was found on his desk addressed to his publisher.",
   suspectOptions: [

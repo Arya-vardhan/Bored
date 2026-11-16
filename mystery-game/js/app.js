@@ -257,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderCaseSelection() {
     // Reset view
-    document.title = "Bored?";
+    document.title = "Bored? // Scotland Yard CID Archives";
     caseSelectionView.classList.remove('hidden');
     activeCaseView.classList.add('hidden');
     folderGrid.innerHTML = '';
@@ -267,23 +267,60 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const solvedCases = getSolvedCases();
 
-    allCases.forEach((c) => {
+    // Update bureau clearance counter
+    const clearanceCountEl = document.getElementById('bureau-clearance-count');
+    if (clearanceCountEl) {
+      clearanceCountEl.textContent = `${solvedCases.length} OF ${allCases.length} CASES CONCLUDED`;
+    }
+
+    allCases.forEach((c, index) => {
       const isSolved = solvedCases.includes(c.id);
       const folder = document.createElement('div');
-      folder.className = 'folder-card';
+      folder.className = `folder-card ${isSolved ? 'is-solved' : 'is-active'}`;
+      folder.setAttribute('role', 'button');
+      folder.setAttribute('tabindex', '0');
+      folder.setAttribute('aria-label', `Case Docket ${c.title}. ${isSolved ? 'Case Solved.' : 'Investigation Active.'}`);
+      
+      const docketNum = `DOCKET #${String(index + 1).padStart(3, '0')}`;
+      const categoryTag = c.category || 'CONFIDENTIAL INQUIRY';
+      const teaserText = c.teaser || (c.fir ? c.fir.split('.')[0] : 'Classified incident file awaiting forensic deduction.');
       
       folder.innerHTML = `
-        <h3>Case File</h3>
-        <p><strong>Ref:</strong> ${c.id.toUpperCase()}</p>
-        <p><strong>Subject:</strong> ${c.title}</p>
-        <p><strong>Date:</strong> ${c.date}</p>
-        ${isSolved ? '<div class="solved-stamp-folder">SOLVED</div>' : ''}
+        <div class="folder-top-tab">
+          <span class="folder-tab-ref">${docketNum}</span>
+          <span class="folder-eyelet" aria-hidden="true"></span>
+        </div>
+        <div class="folder-docket-body">
+          <div class="folder-classification-row">
+            <span class="folder-category-tag">${categoryTag}</span>
+            <span class="folder-case-date">${c.date}</span>
+          </div>
+          <h2 class="folder-case-title">${c.title}</h2>
+          <p class="folder-teaser-text">${teaserText}</p>
+          <div class="folder-docket-footer">
+            ${isSolved 
+              ? `<div class="folder-solved-stamp">✓ CONVICTION SECURED</div>` 
+              : `<div class="folder-docket-action">
+                   <span class="docket-status-badge"><span class="status-pulse-dot"></span>INQUIRY ACTIVE</span>
+                   <span class="docket-open-hint">EXAMINE DOSSIER →</span>
+                 </div>`
+            }
+          </div>
+        </div>
       `;
 
       folder.addEventListener('click', () => {
         sfx.playFolder();
         loadCase(c);
       });
+
+      folder.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          folder.click();
+        }
+      });
+
       folderGrid.appendChild(folder);
     });
   }
